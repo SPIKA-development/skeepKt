@@ -17,11 +17,11 @@ jobs:
         run: chmod +x gradlew
       - name: Buid JS bundle
         run: |
-          ./gradlew jsBrowserProductionWebpack
+          ./gradlew :client:jsBrowserProductionWebpack
       - name: Deploy 🚀 to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: github-pages # The branch the action should deploy to.
-          FOLDER: build/distributions # The folder the action should deploy.
+          FOLDER: client/build/distributions # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
