@@ -1,13 +1,18 @@
+package scene
+
+import SpawningSystem
+import SpriteAssets
+import ViewLayer
 import com.github.quillraven.fleks.World
 import components.Sprite
 import korlibs.korge.scene.*
 import korlibs.korge.view.*
-import korlibs.korge.view.align.centerOnStage
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.mp.KoinPlatform.getKoin
+import world
 
 class Game : Scene() {
 

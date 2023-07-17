@@ -1,3 +1,5 @@
+package scene
+
 import korlibs.korge.Korge
 import korlibs.korge.scene.sceneContainer
 
