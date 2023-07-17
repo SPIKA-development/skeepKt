@@ -10,9 +10,9 @@ import world
 class Game : Scene() {
 
     override suspend fun SContainer.sceneInit() {
+        println("A")
         scaleAvg = 4.5f
         injector.apply {
-            mapSingleton { coroutineContext }
             mapSingleton { sceneContainer }
             mapSingleton {
                 world(get()) {
@@ -25,9 +25,11 @@ class Game : Scene() {
                 }
             }
         }
+        println("B")
     }
 
     override suspend fun SContainer.sceneMain() {
+        println("C")
         injector.get<World>().apply {
             entity {
                 it += Sprite(
@@ -37,6 +39,7 @@ class Game : Scene() {
                 )
             }
         }
+        println("D")
     }
 
 }
