@@ -1,6 +1,6 @@
 package scene
 
-import SpawningSystem
+import system.SpawningSystem
 import SpriteAssets
 import ViewLayer
 import com.github.quillraven.fleks.World

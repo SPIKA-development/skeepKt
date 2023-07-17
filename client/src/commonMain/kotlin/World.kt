@@ -1,10 +1,10 @@
 import com.github.quillraven.fleks.WorldConfiguration
-import com.github.quillraven.fleks.world
+import com.github.quillraven.fleks.configureWorld
 import components.Sprite
 import korlibs.korge.scene.SceneContainer
 import korlibs.korge.view.addUpdater
 
-fun world(sceneContainer: SceneContainer, init: WorldConfiguration.() -> Unit = {}) = world {
+fun world(sceneContainer: SceneContainer, init: WorldConfiguration.() -> Unit = {}) = configureWorld {
     components {
 
         onAdd(Sprite, Sprite.onComponentAdded)
