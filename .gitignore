@@ -1,0 +1,12 @@
+/.gradle
+/client/build
+/server/build
+/shared/build
+/build
+/.idea
+/stale_outputs_checked
+*.iws
+*.iml
+/kotlin-js-store
+/deps
+/modules
