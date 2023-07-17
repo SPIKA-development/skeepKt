@@ -44,14 +44,20 @@ jobs:
 
       - name: Commit files
         run: |
+          mkdir git-temp
+          cd git-temp
           URL=$(git remote get-url origin)
-          cd ./client/build/distributions
           git init
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add .
-          git commit -a -m "changes"
-          git branch artifact
-          git switch artifact
           git remote add origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git pull origin artifact || true
+          git branch artifact || true
+          git switch artifact
+          cp -r ../client/build/distributions/** ./
+          git add .
+          git commit -a -m "changes" || true
+          
+          
+          
           git push origin artifact --force
