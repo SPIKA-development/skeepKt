@@ -8,7 +8,6 @@ korge {
     targetJs()
     support3d()
     supportExperimental3d()
-
 }
 
 dependencies {
@@ -17,5 +16,5 @@ dependencies {
 
 dependencies {
     add("commonMainApi", project(":deps"))
-    add("commonMainApi", "io.insert-koin:koin-core:3.4.2")
 }
+

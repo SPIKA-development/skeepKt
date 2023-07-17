@@ -1,17 +1,12 @@
-import korlibs.image.atlas.MutableAtlasUnit
 import korlibs.image.format.*
 import korlibs.io.async.async
-import korlibs.io.async.launch
-import korlibs.io.async.launchImmediately
 import korlibs.io.file.std.resourcesVfs
-import korlibs.time.DateTime
-import kotlinx.coroutines.*
-import org.koin.core.component.KoinComponent
-import org.koin.core.context.loadKoinModules
-import org.koin.dsl.module
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 
-class SpriteAssets(coroutineContext: CoroutineContext) : KoinComponent {
+object SpriteAssets {
     @DelicateCoroutinesApi
     private var images: Map<String, ImageDataContainer> = GlobalScope.async {
             mapOf("test" to resourcesVfs["test.ase"])
