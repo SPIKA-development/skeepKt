@@ -49,10 +49,9 @@ jobs:
           git init
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git branch artifact
-          git switch artifact
           git add .
           git commit -a -m "changes"
+          git branch -m artifact
           git remote add origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push origin artifact --force
 
