@@ -18,7 +18,8 @@ class Game : Scene() {
         SpriteAssets.load()
         println("A")
         println("scaleAvg2")
-        println("scaleAvg2")
+        println("scaleAvg3")
+        println("scaleAvg4")
         scaleAvg = 5f
         injector.apply {
             mapSingleton { sceneContainer }
