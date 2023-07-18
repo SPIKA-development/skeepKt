@@ -44,7 +44,7 @@ class Game : Scene() {
                 it += Sprite(
                     image = "test",
                     animation = "",
-                    layer = inject("layer0")
+                    layer = container()//inject("layer0")
                 )
             }
         }
