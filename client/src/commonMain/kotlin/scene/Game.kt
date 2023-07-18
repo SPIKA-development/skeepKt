@@ -18,13 +18,12 @@ class Game : Scene() {
         SpriteAssets.load()
         println("A")
         println("scaleAvg2")
-        scaleAvg = 15f
         injector.apply {
             mapSingleton { sceneContainer }
             mapSingleton {
                 world(get()) {
                     injectables {
-                        add("layer0", container())
+                        add("layer0", container().apply { scaleAvg = 10f })
                     }
                     systems {
                         add(SpawningSystem)
@@ -42,7 +41,7 @@ class Game : Scene() {
                 it += Sprite(
                     image = "test",
                     animation = "",
-                    layer = container()//inject("layer0")
+                    layer = inject("layer0")
                 )
             }
         }
