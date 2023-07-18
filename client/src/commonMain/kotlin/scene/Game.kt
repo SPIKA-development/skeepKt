@@ -17,7 +17,7 @@ class Game : Scene() {
     override suspend fun SContainer.sceneInit() {
         SpriteAssets.load()
         println("A")
-        scaleAvg = 4.5f
+        scaleAvg = 4f
         injector.apply {
             mapSingleton { sceneContainer }
             mapSingleton {
