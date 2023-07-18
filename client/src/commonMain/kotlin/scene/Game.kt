@@ -20,7 +20,7 @@ class Game : Scene() {
         println("scaleAvg2")
         println("scaleAvg3")
         println("scaleAvg4")
-        scaleAvg = 5f
+        scaleAvg = 15f
         injector.apply {
             mapSingleton { sceneContainer }
             mapSingleton {
