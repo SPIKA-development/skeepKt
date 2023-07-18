@@ -23,14 +23,12 @@ class Sprite(
     override fun type(): ComponentType<Sprite> = Sprite
 
     companion object : ComponentType<Sprite>() {
-        val onComponentAdded: ComponentHook<Sprite> = { entity, component ->
-            val world = this
+        val onComponentAdded: ComponentHook<Sprite> = world@{ entity, component ->
             component.apply {
                 val image = SpriteAssets.getImage(image)
                 val animations = image.animationsByName
-                println(image.defaultAnimation.firstFrame)
                 imageAnimView.animation = animations[animation]?: image.defaultAnimation
-                imageAnimView.onPlayFinished = { world -= entity }
+                imageAnimView.onPlayFinished = { this@world -= entity }
                 imageAnimView.addTo(layer)
                 imageAnimView.centerOnStage()
             }

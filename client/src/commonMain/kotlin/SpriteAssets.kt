@@ -7,17 +7,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 
 object SpriteAssets {
-    @DelicateCoroutinesApi
-    private var images: Map<String, ImageDataContainer> = GlobalScope.async {
-            mapOf("test" to resourcesVfs["test.ase"])
-                .mapValues { it.value.readImageDataContainer(ASE.toProps()) }
-        }.awaitGet()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    fun <T> Deferred<T>.awaitGet(): T {
-        @Suppress("ControlFlowWithEmptyBody")
-        while (!isCompleted) {}
-        return getCompleted()
+    private var images = mapOf<String, ImageDataContainer>()
+
+    suspend fun load() {
+        images = mapOf("test" to resourcesVfs["test.ase"])
+            .mapValues { it.value.readImageDataContainer(ASE.toProps()) }
     }
 
     fun getImage(name: String, slice: String = "") : ImageData {
