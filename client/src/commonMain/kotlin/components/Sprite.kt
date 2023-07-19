@@ -10,6 +10,7 @@ import korlibs.korge.view.Image
 import korlibs.korge.view.addTo
 import korlibs.korge.view.align.centerOnStage
 import korlibs.korge.view.animation.ImageAnimationView
+import korlibs.korge.view.animation.imageAnimationView
 
 class Sprite(
     val image: String,
@@ -18,8 +19,7 @@ class Sprite(
 ) : Component<Sprite> {
 
     var isPlaying: Boolean = false
-    var imageAnimView: ImageAnimationView<Image> =
-        ImageAnimationView { Image(Bitmaps.transparent) }.apply { smoothing = false }
+    lateinit var imageAnimView: ImageAnimationView<Image>
     override fun type(): ComponentType<Sprite> = Sprite
 
     companion object : ComponentType<Sprite>() {
@@ -27,10 +27,13 @@ class Sprite(
             component.apply {
                 val image = SpriteAssets.getImage(image)
                 val animations = image.animationsByName
-                imageAnimView.animation = animations[animation]?: image.defaultAnimation
-                imageAnimView.onPlayFinished = { this@world -= entity }
-                imageAnimView.addTo(layer)
-                imageAnimView.centerOnStage()
+                val animation = animations[animation]?: image.defaultAnimation
+                imageAnimView = layer.imageAnimationView(animation).apply {
+                    smoothing = false
+                    scaleAvg = 3f
+                    onPlayFinished = { this@world -= entity }
+                    centerOnStage()
+                }
             }
         }
         val onComponentRemoved: ComponentHook<Sprite> = { entity, component ->

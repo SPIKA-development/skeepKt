@@ -10,11 +10,15 @@ import korlibs.image.format.toProps
 import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.scene.*
 import korlibs.korge.view.*
+import korlibs.math.geom.Size
 import world
 
 class Game : Scene() {
 
     override suspend fun SContainer.sceneInit() {
+    }
+
+    override suspend fun SContainer.sceneMain() {
         SpriteAssets.load()
         println("A")
         println("scaleAvg2")
@@ -23,7 +27,7 @@ class Game : Scene() {
             mapSingleton {
                 world(get()) {
                     injectables {
-                        add("layer0", container().apply { scaleAvg = 10f })
+                        add("layer0", container().scale(5.0))
                     }
                     systems {
                         add(SpawningSystem)
@@ -32,9 +36,7 @@ class Game : Scene() {
             }
         }
         println("B")
-    }
 
-    override suspend fun SContainer.sceneMain() {
         println("C")
         injector.get<World>().apply {
             entity {
