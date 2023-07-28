@@ -1,5 +1,3 @@
-package components
-
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 

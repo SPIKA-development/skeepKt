@@ -1,6 +1,5 @@
 import com.github.quillraven.fleks.WorldConfiguration
 import com.github.quillraven.fleks.configureWorld
-import components.Sprite
 import korlibs.korge.scene.SceneContainer
 import korlibs.korge.view.addUpdater
 

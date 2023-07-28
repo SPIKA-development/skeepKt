@@ -1,16 +1,12 @@
-package components
-
-import SpriteAssets
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentHook
 import com.github.quillraven.fleks.ComponentType
-import korlibs.image.bitmap.Bitmaps
 import korlibs.korge.view.Container
 import korlibs.korge.view.Image
-import korlibs.korge.view.addTo
 import korlibs.korge.view.align.centerOnStage
 import korlibs.korge.view.animation.ImageAnimationView
 import korlibs.korge.view.animation.imageAnimationView
+import korlibs.korge.view.scale
 
 class Sprite(
     val image: String,
@@ -30,7 +26,7 @@ class Sprite(
                 val animation = animations[animation]?: image.defaultAnimation
                 imageAnimView = layer.imageAnimationView(animation).apply {
                     smoothing = false
-                    scaleAvg = 3f
+                    scale(15f)
                     onPlayFinished = { this@world -= entity }
                     centerOnStage()
                 }

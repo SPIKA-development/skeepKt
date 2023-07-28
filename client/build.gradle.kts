@@ -3,6 +3,7 @@ import com.android.build.gradle.internal.res.processResources
 import korlibs.korge.gradle.*
 
 apply<KorgeGradlePlugin>()
+apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 
 korge {
     id = "com.sample.clientserver"
@@ -18,6 +19,10 @@ dependencies {
 
 dependencies {
     add("commonMainApi", project(":deps"))
+}
+
+dependencies {
+//    add("commonMainApi", libs.ktor.network)
 }
 
 @Suppress("UnstableApiUsage")

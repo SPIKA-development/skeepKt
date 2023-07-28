@@ -1,17 +1,14 @@
-package scene
-
-import SpriteAssets
-import system.SpawningSystem
 import com.github.quillraven.fleks.World
-import components.Sprite
-import korlibs.image.format.ASE
-import korlibs.image.format.readImageDataContainer
-import korlibs.image.format.toProps
-import korlibs.io.file.std.resourcesVfs
-import korlibs.korge.scene.*
-import korlibs.korge.view.*
-import korlibs.math.geom.Size
-import world
+import korlibs.io.async.async
+import korlibs.io.net.ws.WebSocketClient
+import korlibs.korge.scene.Scene
+import korlibs.korge.view.SContainer
+import korlibs.korge.view.container
+import korlibs.korge.view.scale
+import korlibs.samples.clientserver.MS
+import korlibs.time.DateTime
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class Game : Scene() {
 
@@ -48,6 +45,22 @@ class Game : Scene() {
             }
         }
         println("D")
+        val socket = WebSocketClient("ws://localhost:8080/echo")
+        socket.messageChannelString().send("asdf")
+        socket.onAnyMessage.invoke {
+            runCatching {
+                println(it.toString())
+//                val ms = Json.decodeFromString<MS>(it)
+//                println(DateTime.now().unixMillisLong - ms.ms)
+            }
+        }
+        repeat((0..100).count()) {
+            async {
+                socket.send(Json.encodeToString(MS()))
+            }
+        }
+
+        println("F")
     }
 
 }
