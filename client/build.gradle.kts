@@ -20,3 +20,9 @@ dependencies {
     add("commonMainApi", project(":deps"))
 }
 
+@Suppress("UnstableApiUsage")
+tasks.withType<ProcessResources> {
+    filesMatching("client.properties") {
+        expand("version" to properties["version"])
+    }
+}
