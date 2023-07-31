@@ -2,6 +2,7 @@ package ui
 
 import korlibs.image.color.Colors
 import korlibs.korge.input.mouse
+import korlibs.korge.input.onClick
 import korlibs.korge.input.onMove
 import korlibs.korge.style.styles
 import korlibs.korge.ui.*
@@ -16,6 +17,7 @@ import scene.GameScene
 import scene.MainScene
 import scene.styler
 import sceneContainer
+import ui.custom.clicked
 import ui.custom.customUiButton
 import ui.custom.customUiScrollable
 import ui.custom.customUiTextInput
@@ -34,7 +36,7 @@ suspend fun Container.mainMenu() {
                 .position(.0, sceneContainer.heightD - sceneContainer.heightD / elementRatio*1.75)
         val top = solidRect(Size(sceneContainer.widthD, sceneContainer.heightD / elementRatio), color = ColorPalette.base)
             .zIndex(1)
-        val buttonSize = Size(sceneContainer.width * 0.7, sceneContainer.height * 0.175)
+        val buttonSize = Size(sceneContainer.width * 0.7, sceneContainer.height * 0.165)
         val buttonCursor = uiMaterialLayer(buttonSize.plus(Size(padding/2, padding/2))) {
             visible(false)
             shadowColor = Colors.TRANSPARENT
@@ -64,9 +66,23 @@ suspend fun Container.mainMenu() {
                                     val now = DateTime.now()
                                     if (buttonCursor.visible && now - clickElapsed < 250.milliseconds) {
                                         serverList.visible = false
-                                        this@mainMenu.uiText("서버에 연결 중..") {
-                                            styles(styler)
-                                        }.centerOnStage().alignY(containerRoot, 0.4, true)
+                                        lateinit var loading: View
+                                        loading = this@mainMenu.uiContainer {
+                                            uiText("서버에 연결 중...") { styles(styler) }
+                                                .centerOnStage()
+                                                .alignY(containerRoot, 0.4, true)
+
+                                            customUiButton(size = Size(sceneContainer.width*0.471f, sceneContainer.width/25)) {
+                                                styles(styler)
+                                                bottomButton("취소")
+                                            }
+                                                .centerXOnStage()
+                                                .alignY(containerRoot, 0.6, true)
+                                                .onClick {
+                                                    serverList.visible = true
+                                                    loading.removeFromParent()
+                                                }
+                                        }
                                         return@onDown
                                     } else clickElapsed = now
                                     buttonCursor.visible = true
@@ -80,16 +96,22 @@ suspend fun Container.mainMenu() {
             }.positionY(sceneContainer.height / elementRatio)
         }
 
-        uiHorizontalStack(height = top.height*0.75f) {
-            customUiButton(size = Size(top.heightD*PI, .0)) {
-                solidRect(size = size, color = ColorPalette.hover) {
-                    onMove {
-//                        color =
-                    }
-                }.centerOn(this)
-                uiText("방 생성").centerOn(this)
-            }
+        uiHorizontalStack(height = top.height*0.75f, padding = padding*2) {
+            val bottomButtonSize = Size(top.heightD * PI, .0)
+            customUiButton(size = bottomButtonSize).bottomButton("방 생성")
+            customUiButton(size = bottomButtonSize).bottomButton("새로고침")
         }.centerOn(bottom).zIndex(1)
     }
+}
+
+fun Container.bottomButton(text: String): Container {
+    val baseColor = ColorPalette.out
+    val rect = solidRect(size = size, color = baseColor).centerOn(this)
+    mouse {
+        onMove { rect.color = ColorPalette.hover }
+        onMoveOutside { rect.color = baseColor }
+    }
+    uiText(text).centerOn(this)
+    return this
 
 }
