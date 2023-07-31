@@ -25,11 +25,12 @@ inline fun Container.customUiScrollable(
     size: Size = Size(256, 256),
     config: CustomUIScrollable.() -> Unit = {},
     cache: Boolean = true,
+    barPosOffset: Point = Point(10, 0),
     block: @ViewDslMarker Container.(CustomUIScrollable) -> Unit = {},
-): CustomUIScrollable = CustomUIScrollable(size, cache)
+): CustomUIScrollable = CustomUIScrollable(size, cache, barPosOffset)
     .addTo(this).apply(config).also { block(it.container, it) }
 
-open class CustomUIScrollable(size: Size, cache: Boolean = true) : UIView(size, cache = cache) {
+open class CustomUIScrollable(size: Size, cache: Boolean = true, val barPosOffset: Point) : UIView(size, cache = cache) {
     @PublishedApi
     internal var overflowEnabled: Boolean = true
 
@@ -109,8 +110,8 @@ open class CustomUIScrollable(size: Size, cache: Boolean = true) : UIView(size, 
     }
 
     //private val background = solidRect(width, height, Colors["#161a1d"])
-    private val contentContainer = uiContainer(size) { clip = false; cull = true }
-    val container = contentContainer.container { clip = false; cull = true }
+    private val contentContainer = uiContainer(size) { cull = true }
+    val container = contentContainer.container { cull = true }
     //private val verticalScrollBar = solidRect(10.0, height / 2, Colors["#57577a"])
     //private val horizontalScrollBar = solidRect(width / 2, 10.0, Colors["#57577a"])
 
@@ -329,7 +330,7 @@ open class CustomUIScrollable(size: Size, cache: Boolean = true) : UIView(size, 
         super.onSizeChanged()
         contentContainer.size(this.widthD, this.heightD)
 //        vertical.view.position(pos.x + width, pos.y)
-        vertical.view.position(widthD - 10.0, 0.0)
+        vertical.view.position(widthD - barPosOffset.x, 0.0)
         horizontal.view.position(0.0, heightD - 10.0)
         //println(vertical.overflowPixelsEnd)
         //background.size(width, height)
