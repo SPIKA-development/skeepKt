@@ -3,8 +3,8 @@ package util
 import korlibs.image.color.Colors
 
 object ColorPalette {
-    val background = Colors["3F2E3E"]
-    val base = Colors["331D2C"]
-    val hover = Colors["A78295"]
-    val text = Colors["EFE1D1"]
+    val background = Colors["002b36"]
+    val base = Colors["#073642"]
+    val hover = Colors["#268bd2"]
+    val text = Colors["#eee8d5"]
 }

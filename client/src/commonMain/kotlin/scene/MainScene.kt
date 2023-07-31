@@ -24,11 +24,6 @@ val styler: ViewStyles.() -> Unit = {
 
 class MainScene : Scene() {
     override suspend fun SContainer.sceneMain() {
-        uiContainer {
-            styles(styler)
-            mainMenu()
-        }
-
-
+        mainMenu()
     }
 }

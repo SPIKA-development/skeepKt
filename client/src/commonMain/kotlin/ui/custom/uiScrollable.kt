@@ -19,6 +19,7 @@ import korlibs.math.geom.*
 import korlibs.math.interpolation.*
 import korlibs.memory.*
 import korlibs.time.*
+import util.ColorPalette
 import kotlin.math.*
 
 inline fun Container.customUiScrollable(
@@ -115,8 +116,8 @@ open class CustomUIScrollable(size: Size, cache: Boolean = true, val barPosOffse
     //private val verticalScrollBar = solidRect(10.0, height / 2, Colors["#57577a"])
     //private val horizontalScrollBar = solidRect(width / 2, 10.0, Colors["#57577a"])
 
-    val vertical = MyScrollbarInfo(this, UIDirection.VERTICAL, solidRect(Size(10f, size.height / 2), Colors["#57577a"]))
-    val horizontal = MyScrollbarInfo(this, UIDirection.HORIZONTAL, solidRect(Size(size.width / 2, 10f), Colors["#57577a"]))
+    val vertical = MyScrollbarInfo(this, UIDirection.VERTICAL, solidRect(Size(10f, size.height / 2), ColorPalette.text))
+    val horizontal = MyScrollbarInfo(this, UIDirection.HORIZONTAL, solidRect(Size(size.width / 2, 10f), ColorPalette.text))
     private val infos = arrayOf(horizontal, vertical)
 
     private val totalHeight: Float get() = vertical.totalSize
@@ -156,7 +157,7 @@ open class CustomUIScrollable(size: Size, cache: Boolean = true, val barPosOffse
     @ViewProperty
     var scrollBarAlpha = 0.75f
     @ViewProperty
-    var backgroundColor: RGBA = Colors["#161a1d"]
+    var backgroundColor: RGBA = ColorPalette.text
     @ViewProperty
     var mobileBehaviour = true
 
