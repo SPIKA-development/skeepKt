@@ -95,7 +95,8 @@ suspend fun Container.mainMenu() {
                 }
             }.positionY(sceneContainer.height / elementRatio)
         }
-
+        uiText("멀티플레이").centerOn(top).alignY(top, 0.75, true)
+            .zIndex(1)
         uiHorizontalStack(height = top.height*0.75f, padding = padding*2) {
             val bottomButtonSize = Size(top.heightD * PI, .0)
             customUiButton(size = bottomButtonSize).bottomButton("방 생성")
