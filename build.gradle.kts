@@ -6,4 +6,7 @@ plugins {
 
 configureAutoVersions()
 
-allprojects { repositories { mavenLocal(); mavenCentral(); google(); gradlePluginPortal() } }
+allprojects { repositories {
+    mavenLocal(); mavenCentral(); google(); gradlePluginPortal()
+    maven("https://maven.pkg.github.com/cy6ergn0m/kotlinx-uuid")
+} }

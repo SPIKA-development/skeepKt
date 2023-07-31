@@ -13,6 +13,17 @@ dependencies {
     add("implementation", libs.ktor.server.websockets)
     add("implementation", libs.logback)
 
+    implementation(libs.kotlinx.uuid.exposed)
+    implementation(libs.ktor.server.cors)
+    implementation(libs.ktor.server.auth)
+    implementation(libs.ktor.server.sessions)
+    implementation(libs.jetbrains.exposed.core)
+    implementation(libs.jetbrains.exposed.dao)
+    implementation(libs.jetbrains.exposed.jdbc)
+    implementation(libs.jdbc.h2)
+    implementation(libs.ktor.server.content.negotation)
+    implementation(libs.ktor.client.content.negotation)
+
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.ktor.server.content.negotation)
     testImplementation(libs.ktor.client.content.negotation)
@@ -24,5 +35,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass.set("application.MainKt")
 }
