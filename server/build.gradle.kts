@@ -5,6 +5,8 @@ plugins {
 apply(plugin = "kotlin")
 apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 
+version = ""
+
 dependencies {
     testImplementation("org.testng:testng:7.1.0")
     add("implementation", project(":shared"))
@@ -36,4 +38,9 @@ dependencies {
 
 application {
     mainClass.set("application.MainKt")
+}
+
+@Suppress("UnstableApiUsage")
+tasks.withType<ProcessResources> {
+    from(File(rootProject.projectDir, "./client/build/distributions").absolutePath)
 }
