@@ -5,8 +5,10 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
+import org.koin.mp.KoinPlatform.getKoin
 
-const val currentUrl = "https://kotlingames.shop:8080"
+interface URLProvider { val url: String }
+val currentUrl: String = getKoin().get<URLProvider>().url
 private fun generateUsername() = UUID.generateUUID().toString().substring(0, 4)
 
 suspend fun login() {
