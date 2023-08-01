@@ -1,14 +1,11 @@
 package application
 
-import kotlinx.uuid.UUID
-import kotlinx.uuid.generateUUID
 import kotlin.reflect.KProperty
 
-fun genKey() = UUID.generateUUID().toString().replace("-", "").substring(0, 14)
 object EnvVar {
     val serverPort by IntEnv { 8080 }
     val sslPort by IntEnv { 8443 }
-    val sslPassword by StringEnv { "cUF6ka6DhmEedX" }
+    val sslPassword by StringEnv { "" }
     val domains by ListEnv { listOf("localhost") }
 }
 
