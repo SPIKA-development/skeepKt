@@ -32,6 +32,8 @@ jobs:
           value: |
             'Build ${{github.run_number}}'
 
+      - run: git tag ${{github.run_number}}
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Buid JS bundle
