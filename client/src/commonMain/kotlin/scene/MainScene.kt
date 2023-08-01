@@ -11,7 +11,9 @@ import korlibs.korge.style.*
 import korlibs.korge.ui.uiContainer
 import korlibs.korge.view.SContainer
 import korlibs.korge.view.align.centerOnStage
+import network.login
 import org.koin.mp.KoinPlatform.getKoin
+import ui.MainMenuState
 import ui.mainMenu
 import util.ColorPalette
 
@@ -24,6 +26,7 @@ val styler: ViewStyles.() -> Unit = {
 
 class MainScene : Scene() {
     override suspend fun SContainer.sceneMain() {
-        mainMenu()
+        login()
+        MainMenuState().mainMenu()
     }
 }

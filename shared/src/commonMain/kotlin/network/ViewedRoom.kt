@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class ViewedRoom(
     val name: String,
     val maxPlayers: Int,
-    val minPlayers: Int,
+    val curPlayers: Int,
 )
 
 suspend fun createRoom() = client.get("$currentUrl/rooms/create").body<ViewedRoom>()
