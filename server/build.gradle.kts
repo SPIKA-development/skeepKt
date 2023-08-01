@@ -25,6 +25,7 @@ dependencies {
     implementation(libs.jdbc.h2)
     implementation(libs.ktor.server.content.negotation)
     implementation(libs.ktor.client.content.negotation)
+    implementation(libs.ktor.network.tls)
 
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.ktor.server.content.negotation)

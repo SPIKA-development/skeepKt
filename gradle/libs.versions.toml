@@ -32,7 +32,7 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version 
 kotlinx-uuid = { module = "app.softwork:kotlinx-uuid-core", version = "0.0.20" }
 kotlinx-uuid-exposed = { module = "app.softwork:kotlinx-uuid-exposed", version = "0.0.20" }
 koin = { module = "io.insert-koin:koin-core", version = "3.4.3" }
-
+ktor-network-tls = { module = "io.ktor:ktor-network-tls-certificates", version.ref = "ktor" }
 [plugins]
 korge = { id = "com.soywiz.korge", version = "4.0.5a" }
 #korge = { id = "com.soywiz.korge", version = "999.0.0.999" }
