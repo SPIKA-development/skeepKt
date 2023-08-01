@@ -6,7 +6,7 @@ import io.ktor.http.*
 import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
 
-const val currentUrl = "http://127.0.0.1:8080"
+const val currentUrl = "https://kotlingames.shop:8080"
 private fun generateUsername() = UUID.generateUUID().toString().substring(0, 4)
 
 suspend fun login() {
