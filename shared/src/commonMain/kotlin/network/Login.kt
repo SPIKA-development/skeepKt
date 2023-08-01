@@ -8,7 +8,7 @@ import kotlinx.uuid.generateUUID
 import org.koin.mp.KoinPlatform.getKoin
 
 interface URLProvider { val url: String }
-val currentUrl: String = getKoin().get<URLProvider>().url
+val currentUrl get() = getKoin().get<URLProvider>().url
 private fun generateUsername() = UUID.generateUUID().toString().substring(0, 4)
 
 suspend fun login() {

@@ -13,7 +13,7 @@ suspend fun main() {
             object : URLProvider {
                 override val url: String get() = "https://kotlingames.shop"
             }
-        }
+        } bind URLProvider::class
         factory {
             object : ClientEngineFactory { override fun getEngine() = Js }
         } bind ClientEngineFactory::class

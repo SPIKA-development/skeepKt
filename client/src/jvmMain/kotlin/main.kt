@@ -13,7 +13,7 @@ suspend fun main() {
             object : URLProvider {
                 override val url: String get() = "http://localhost:8080"
             }
-        }
+        } bind URLProvider::class
         factory {
             object : ClientEngineFactory { override fun getEngine() = CIO }
         } bind ClientEngineFactory::class
