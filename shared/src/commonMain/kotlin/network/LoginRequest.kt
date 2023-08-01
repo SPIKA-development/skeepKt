@@ -1,4 +1,4 @@
-package io.github.bruce0203.skeep.model
+package network
 
 import kotlinx.serialization.Serializable
 

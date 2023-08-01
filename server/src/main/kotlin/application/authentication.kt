@@ -1,6 +1,6 @@
 package application
 
-import io.github.bruce0203.skeep.model.LoginRequest
+import network.LoginRequest
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -20,50 +20,37 @@ import org.jetbrains.exposed.sql.transactions.transaction
 data class UserSession(val uuid: UUID) : Principal
 
 fun Application.configureAuthentication() {
-    install(Sessions) {
-        cookie<UserSession>("user_session") {
-            cookie.path = "/"
-            cookie.maxAgeInSeconds = 10
-            serializer = KotlinxSessionSerializer(Json)
-        }
-    }
     install(Authentication) {
-        session<UserSession> {
+        basic {
             validate { session ->
                 println("session=$session")
                 println(transaction { Session.all().map { it.id } })
                 //throw exception when not found
-                transaction { Session.find(model.Sessions.id eq session.uuid) }
-                session.copy()
-            }
-            challenge {
-                call.respondText("login failed", status = HttpStatusCode.Unauthorized)
+                val uuid = UUID(session.password)
+                transaction { Session.find(model.Sessions.id eq uuid) }
+                UserSession(uuid)
             }
         }
     }
     routing {
-        get("login") {
+        post("login") {
             val loginRequest = call.receive<LoginRequest>()
             val sessionPlayer = try {
                 newPlayer(loginRequest.username)
             } catch (e: Throwable) {
                 e.printStackTrace()
-
-                call.respondText("Username is already taken by other", status = HttpStatusCode.NotAcceptable)
-                return@get
+                call.respond(HttpStatusCode.NotAcceptable)
+                return@post
             }
-            call.sessions.set(newSession(sessionPlayer).toUserSession())
-            call.respondText("Logged in")
-        }
-        get("logout") {
-            call.sessions.clear(call.sessions.findName(UserSession::class))
+            val uuid = newSession(sessionPlayer).id.value
+            call.respond(uuid)
         }
     }
 
 }
 
 suspend fun ApplicationCall.getUserSession(): UUID {
-    val userSession = sessions.get<UserSession>()
+    val userSession = principal<UserSession>()
     if (userSession === null) {
         respondText("session is invalid", status = HttpStatusCode.Unauthorized)
         throw AssertionError("user session is null")

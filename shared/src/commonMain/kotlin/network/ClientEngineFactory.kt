@@ -15,7 +15,7 @@ val client = HttpClient(clientEngine) {
     }
     install(HttpCookies) {
         storage = AcceptAllCookiesStorage()
-    }
+    }//stopship ktor client engine Js is not support cookie;;;
 }
 interface ClientEngineFactory {
     fun getEngine(): HttpClientEngineFactory<HttpClientEngineConfig>

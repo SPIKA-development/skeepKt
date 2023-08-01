@@ -1,6 +1,6 @@
 package old
 
-import io.github.bruce0203.skeep.model.LoginRequest
+import network.LoginRequest
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*

@@ -11,7 +11,7 @@ suspend fun main() {
     KoinPlatform.getKoin().loadModules(listOf(module {
         factory {
             object : URLProvider {
-                override val url: String get() = "http://kotlingames.shop"
+                override val url: String get() = "http://localhost:8080"
             }
         } bind URLProvider::class
         factory {

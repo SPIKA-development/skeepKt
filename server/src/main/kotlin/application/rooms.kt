@@ -11,8 +11,8 @@ fun Application.configureRooms() {
     routing {
         authenticate {
             route("rooms") {
-                get { call.respond(listRoom()) }
-                get("create") {
+                post { call.respond(listRoom()) }
+                post("create") {
                     call.respond(createRoom(call.getPlayer()))
                 }
             }
