@@ -1,11 +1,10 @@
-name: Build
+name: Release Server
 on:
   push:
     branches:
       - main
-      - develop
 jobs:
-  gradle:
+  release server:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
