@@ -5,7 +5,7 @@ import kotlin.reflect.KProperty
 object EnvVar {
     val serverPort by IntEnv { 8080 }
     val sslPort by IntEnv { 8443 }
-    val sslPassword by StringEnv { "" }
+    val sslPassword by StringEnv { "angang" }
     val domains by ListEnv { listOf("localhost") }
 }
 
