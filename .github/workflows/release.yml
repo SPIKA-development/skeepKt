@@ -1,8 +1,15 @@
 name: Release Server
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   release:
     strategy:
@@ -39,5 +46,5 @@ jobs:
           title: "Build #${{github.run_number}}"
           automatic_release_tag: "${{github.run_number}}"
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          files: server/build/distributions/*.zip
+          files: server/build/distributions/server.zip
           prerelease: false
