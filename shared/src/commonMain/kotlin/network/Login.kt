@@ -1,5 +1,6 @@
 package network
 
+import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
@@ -16,11 +17,11 @@ lateinit var sessionId: String
 
 private fun generateUsername() = UUID.generateUUID().toString().substring(0, 4)
 
-suspend fun login() {
-    val response = client.post("$currentUrl/login") {
+suspend fun HttpClient.login() {
+    println("Logging in to $currentUrl")
+    val response = post("$currentUrl/login") {
         contentType(ContentType.Application.Json)
         setBody(LoginRequest(username))
     }
-    println(response.bodyAsText())
     sessionId = response.body<UUID>().toString()
 }

@@ -1,8 +1,8 @@
-package application
+package application.configuration
 
-import application.EnvVar.sslPassword
+import application.configuration.EnvVar.sslPassword
+import application.module
 import io.ktor.network.tls.certificates.*
-import io.ktor.network.tls.extensions.*
 import io.ktor.server.engine.*
 import org.slf4j.LoggerFactory
 import java.io.File

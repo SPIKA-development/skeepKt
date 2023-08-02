@@ -1,14 +1,12 @@
 package database
 
-import application.configureDatabase
+import application.configuration.configureDatabase
 import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
-import kotlinx.uuid.toJavaUUID
 import model.Session
 import model.Sessions
 import model.newPlayer
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.test.Test
 

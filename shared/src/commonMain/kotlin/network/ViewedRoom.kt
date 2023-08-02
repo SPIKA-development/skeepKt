@@ -6,23 +6,17 @@ import korlibs.time.DateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ListRoom(
-    val rooms: List<ViewedRoom>,
-    val time: Int = DateTime.now().milliseconds
-)
-
-@Serializable
 data class ViewedRoom(
     val name: String,
     val maxPlayers: Int,
     val curPlayers: Int,
 )
 
-suspend fun createRoom() = client.post("$currentUrl/rooms/create") {
+suspend fun createRoom() = client().post("$currentUrl/rooms/create") {
     basicAuth(username, sessionId)
 }.body<ViewedRoom>()
 suspend fun getViewedRooms() = runCatching {
-    client.post("$currentUrl/rooms") {
+    client().post("$currentUrl/rooms") {
         basicAuth(username, sessionId)
     }.body<List<ViewedRoom>>()
 }.getOrElse { listOf() }

@@ -1,4 +1,4 @@
-package application
+package application.configuration
 
 import kotlin.reflect.KProperty
 

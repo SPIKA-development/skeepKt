@@ -1,4 +1,4 @@
-package application
+package application.configuration
 
 import network.LoginRequest
 import io.ktor.http.*
@@ -7,10 +7,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.sessions.*
-import io.ktor.server.sessions.serialization.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import kotlinx.uuid.UUID
 import model.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

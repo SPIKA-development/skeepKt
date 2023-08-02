@@ -10,9 +10,11 @@ import org.koin.mp.KoinPlatform
 import java.io.File
 import java.util.Properties
 
+class Main
 suspend fun main() {
-    val url = resourcesVfs["client.properties"].readProperties()
-        .get("server")?: "http://localhost:8080"
+    val url = Properties().apply {
+        load(Main::class.java.getResourceAsStream("client.properties"))
+    }["server"]!!.toString()
     startKoin {}
     KoinPlatform.getKoin().loadModules(listOf(module {
         factory {
