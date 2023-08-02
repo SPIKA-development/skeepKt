@@ -26,7 +26,6 @@ val styler: ViewStyles.() -> Unit = {
 
 class MainScene : Scene() {
     override suspend fun SContainer.sceneMain() {
-        login()
         MainMenuState().mainMenu()
     }
 }

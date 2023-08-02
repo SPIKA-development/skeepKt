@@ -1,5 +1,4 @@
 import io.ktor.client.engine.js.*
-import korlibs.io.async.launchUnscopedAndWait
 import korlibs.io.file.std.resourcesVfs
 import korlibs.io.lang.readProperties
 import network.ClientEngineFactory
@@ -8,8 +7,6 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
-import util.launchNow
-import kotlin.coroutines.CoroutineContext
 
 suspend fun main() {
     val url = resourcesVfs["client.properties"].readProperties()
