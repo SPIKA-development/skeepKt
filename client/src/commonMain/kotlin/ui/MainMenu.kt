@@ -105,6 +105,9 @@ var View.isRoom
 fun MainMenuState.room(room: ViewedRoom) {
     rooms.customUiButton(size = buttonSize) {
         isRoom = true
+        uiImage {
+
+        }
         uiText("${room.name}    ${room.curPlayers}/${room.maxPlayers}") {
         }.centerOn(this)
         val thisButton = this

@@ -22,7 +22,7 @@ suspend fun start() {
         single { font } bind Font::class
     }))
 
-    Korge(scaleMode = ScaleMode.COVER, backgroundColor = ColorPalette.background) {
+    Korge(icon = "images/logo.png", scaleMode = ScaleMode.COVER, backgroundColor = ColorPalette.background) {
         sceneContainer = sceneContainer()
         sceneContainer.changeTo({ MainScene() })
     }
