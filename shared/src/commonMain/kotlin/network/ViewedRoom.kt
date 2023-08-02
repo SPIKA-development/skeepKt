@@ -22,6 +22,6 @@ suspend fun getViewedRooms() = runCatching {
     }.body<List<ViewedRoom>>()
 }.apply { this.exceptionOrNull()?.printStackTrace() }.getOrElse { listOf() }
 
-suspend fun joinRoom(uuid: UUID) = sendHttp("rooms/join/$uuid").status
+suspend fun joinRoom(uuid: UUID) = sendHttp("rooms/join", uuid).status
 
-suspend fun getRoomName(uuid: UUID) = sendHttp("rooms/$uuid/name").body<String>()
+suspend fun getRoomName(uuid: UUID) = sendHttp("rooms/name", uuid).body<String>()
