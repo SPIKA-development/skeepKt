@@ -9,9 +9,19 @@ import java.io.File
 import java.security.KeyStore
 
 val keyStoreFile = File("build/keystore.jks")
-val keyStore = KeyStore.getInstance(KeyStore.getDefaultType()).apply {
-    load(keyStoreFile.inputStream(), sslPassword.toCharArray())
-}
+val keyStore =
+    runCatching {
+        KeyStore.getInstance(KeyStore.getDefaultType()).apply {
+            load(keyStoreFile.inputStream(), sslPassword.toCharArray())
+        }
+    }.getOrElse {
+        buildKeyStore {
+            certificate("sampleAlais") {
+                password = sslPassword
+                domains = listOf("127.0.0.1", "0.0.0.0", "localhost")
+            }
+        }.apply { saveToFile(keyStoreFile, sslPassword) }
+    }
 val environment = applicationEngineEnvironment {
     log = LoggerFactory.getLogger("ktor.application")
     connector {
