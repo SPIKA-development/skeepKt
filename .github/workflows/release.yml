@@ -30,8 +30,10 @@ jobs:
           path: './gradle.properties'
           property: |
             'version'
+            'server'
           value: |
             'Build ${{github.run_number}}'
+            'https://kotlingames.shop'
 
       - run: git tag ${{github.run_number}}
 

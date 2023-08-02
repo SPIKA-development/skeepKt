@@ -17,7 +17,7 @@ lateinit var sessionId: String
 private fun generateUsername() = UUID.generateUUID().toString().substring(0, 4)
 
 suspend fun login() {
-    val response = client.get("$currentUrl/login") {
+    val response = client.post("$currentUrl/login") {
         contentType(ContentType.Application.Json)
         setBody(LoginRequest(username))
     }

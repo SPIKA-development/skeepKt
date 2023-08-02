@@ -33,14 +33,14 @@ fun Application.configureAuthentication() {
         }
     }
     routing {
-        get("login") {
+        post("login") login@{
             val loginRequest = call.receive<LoginRequest>()
             val sessionPlayer = try {
                 newPlayer(loginRequest.username)
             } catch (e: Throwable) {
                 e.printStackTrace()
                 call.respond(HttpStatusCode.NotAcceptable)
-                return@get
+                return@login
             }
             val uuid = newSession(sessionPlayer).id.value
             call.respond(uuid)
