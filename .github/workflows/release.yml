@@ -24,17 +24,13 @@ jobs:
         with:
           java-version: 11
 
-      - name: Write value to Properties-file
-        uses: christian-draeger/write-properties@1.1.0
-        with:
-          path: './gradle.properties'
-          property: |
-            'version'
-            'server'
-          value: |
-            'Build ${{github.run_number}}'
-            'https://kotlingames.shop'
-
+      - name: set properties value of server
+        run: |
+          setProperty(){
+            awk -v pat="^$1=" -v value="$1=$2" '{ if ($0 ~ pat) print value; else print $0; }' $3 > $3.tmp
+            mv $3.tmp $3
+          }
+          setProperty "server" "https://kotlingames.shop" "gradle.properties"
       - run: git tag ${{github.run_number}}
 
       - name: Grant execute permission for gradlew
