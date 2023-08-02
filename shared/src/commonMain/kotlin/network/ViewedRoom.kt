@@ -18,11 +18,11 @@ data class ViewedRoom(
     val curPlayers: Int,
 )
 
-suspend fun createRoom() = client.get("$currentUrl/rooms/create") {
+suspend fun createRoom() = client.post("$currentUrl/rooms/create") {
     basicAuth(username, sessionId)
 }.body<ViewedRoom>()
 suspend fun getViewedRooms() = runCatching {
-    client.get("$currentUrl/rooms") {
+    client.post("$currentUrl/rooms") {
         basicAuth(username, sessionId)
     }.body<List<ViewedRoom>>()
 }.getOrElse { listOf() }
