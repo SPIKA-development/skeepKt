@@ -4,20 +4,28 @@ import korlibs.datastructure.get
 import korlibs.datastructure.getExtra
 import korlibs.datastructure.set
 import korlibs.datastructure.setExtra
+import korlibs.image.bitmap.BitmapSlice
+import korlibs.image.bitmap.BmpSlice
+import korlibs.image.bitmap.NativeImage
 import korlibs.image.color.Colors
+import korlibs.image.format.ImageData
 import korlibs.korge.input.mouse
 import korlibs.korge.input.onClick
 import korlibs.korge.style.styles
 import korlibs.korge.ui.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.*
+import korlibs.korge.view.animation.imageDataView
 import korlibs.math.geom.Point
+import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
 import korlibs.time.DateTime
 import korlibs.time.milliseconds
 import network.ViewedRoom
 import network.createRoom
 import network.getViewedRooms
+import org.koin.core.qualifier.named
+import org.koin.mp.KoinPlatform.getKoin
 import scene.styler
 import sceneContainer
 import ui.custom.customUiButton
@@ -63,9 +71,6 @@ suspend fun MainMenuState.mainMenu() {
                     uiSpacing(Size(1f, padding))
                     styles(styler)
                     rooms = this
-                    getViewedRooms().forEach { room ->
-                        room(room)
-                    }
                 }
             }.positionY(sceneContainer.height / elementRatio)
         }
@@ -83,6 +88,9 @@ suspend fun MainMenuState.mainMenu() {
                 }
             }
         }.centerOn(bottom).zIndex(1)
+        getViewedRooms().forEach {
+            room(it)
+        }
     }
 }
 
@@ -105,11 +113,22 @@ var View.isRoom
 fun MainMenuState.room(room: ViewedRoom) {
     rooms.customUiButton(size = buttonSize) {
         isRoom = true
-        uiImage {
-
-        }
-        uiText("${room.name}    ${room.curPlayers}/${room.maxPlayers}") {
+        val logo = getKoin().get<BmpSlice>(named("logo"))
+        val logoSize = Size(buttonSize.height - padding, buttonSize.height - padding)
+        println(logoSize)
+        uiImage(size = logoSize, bitmap = logo, scaleMode = ScaleMode.FIT) {
+        }.centerYOn(this)
+            .alignX(this, 0.025, true)
+            .alignY(this, 0.9, true)
+        uiText(room.name) {
         }.centerOn(this)
+            .alignX(this, 0.2, true)
+            .alignY(this, 0.175, true)
+
+        uiText("${room.curPlayers}/${room.maxPlayers}")
+            .centerOn(this)
+            .alignX(this, 1.025, true)
+            .alignY(this, 0.175, true)
         val thisButton = this
         mouse {
             this.onDown {

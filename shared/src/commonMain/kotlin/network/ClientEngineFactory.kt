@@ -29,7 +29,7 @@ private suspend fun getNewClient() = run {
             storage = AcceptAllCookiesStorage()
         }//stopship ktor client engine Js is not support cookie;;;
     }.also {
-        launchNow { it.login() }
+        it.login()
     }
 }
 interface ClientEngineFactory {

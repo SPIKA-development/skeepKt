@@ -19,4 +19,4 @@ suspend fun getViewedRooms() = runCatching {
     client().post("$currentUrl/rooms") {
         basicAuth(username, sessionId)
     }.body<List<ViewedRoom>>()
-}.getOrElse { listOf() }
+}.apply { this.exceptionOrNull()?.printStackTrace() }.getOrElse { listOf() }
