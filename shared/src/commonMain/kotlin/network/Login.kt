@@ -21,5 +21,6 @@ suspend fun login() {
         contentType(ContentType.Application.Json)
         setBody(LoginRequest(username))
     }
+    println(response.bodyAsText())
     sessionId = response.body<UUID>().toString()
 }

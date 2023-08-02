@@ -1,4 +1,6 @@
 import io.ktor.client.engine.cio.*
+import korlibs.io.file.std.resourcesVfs
+import korlibs.io.lang.readProperties
 import network.ClientEngineFactory
 import network.URLProvider
 import org.koin.core.context.startKoin
@@ -9,8 +11,8 @@ import java.io.File
 import java.util.Properties
 
 suspend fun main() {
-    val url = Properties().apply { load(File("client.properties").inputStream()) }
-        .getOrDefault("server", "http://localhost:8080").toString()
+    val url = resourcesVfs["client.properties"].readProperties()
+        .get("server")?: "http://localhost:8080"
     startKoin {}
     KoinPlatform.getKoin().loadModules(listOf(module {
         factory {
