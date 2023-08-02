@@ -9,8 +9,7 @@ import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
 
 suspend fun main() {
-    val url = resourcesVfs["client.properties"].readProperties()
-        .get("server")?: "http://localhost:8080"
+    val url = resourcesVfs["client.properties"].readProperties()["server"]!!
     startKoin {}
     KoinPlatform.getKoin().loadModules(listOf(module {
         factory {

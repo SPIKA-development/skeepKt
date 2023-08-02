@@ -25,6 +25,7 @@ class Room(id: EntityID<UUID>) : KotlinxUUIDEntity(id) {
 fun listRoom() = transaction {
     Room.all().map {
         ViewedRoom(
+            it.id.value,
             it.name,
             it.maxPlayers,
             Player.count(Players.room eq it.id).toInt()
@@ -40,5 +41,9 @@ fun createRoom(creator: UUID) = transaction {
         val player = Player.find(Players.id eq creator).first()
         name = "${player.name}의 방"
         maxPlayers = 6
-    }.run { ViewedRoom(name, maxPlayers, 0) }
+    }.run { ViewedRoom(id.value, name, maxPlayers, 0) }
+}
+
+fun nameRoom(room: UUID) = transaction {
+    Room.find(Rooms.id eq room).first().name
 }

@@ -3,4 +3,6 @@ package network
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginRequest(val username: String)
+data class LoginRequest(
+    val username: String
+)

@@ -1,5 +1,6 @@
 package ui
 
+import io.ktor.http.*
 import korlibs.datastructure.get
 import korlibs.datastructure.getExtra
 import korlibs.datastructure.set
@@ -24,6 +25,7 @@ import korlibs.time.milliseconds
 import network.ViewedRoom
 import network.createRoom
 import network.getViewedRooms
+import network.joinRoom
 import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform.getKoin
 import scene.styler
@@ -41,6 +43,7 @@ class MainMenuState {
     lateinit var buttonCursor: View
     val buttonSize = Size(sceneContainer.width * 0.7, sceneContainer.height * 0.165)
     var clickElapsed = DateTime.now()
+    lateinit var loading: View
 }
 
 suspend fun MainMenuState.mainMenu() {
@@ -79,7 +82,9 @@ suspend fun MainMenuState.mainMenu() {
         uiHorizontalStack(height = top.height*0.75f, padding = padding*2) {
             val bottomButtonSize = Size(top.heightD * PI, .0)
             customUiButton(size = bottomButtonSize).bottomButton("방 생성").onClick {
-                room(createRoom())
+                val room = createRoom()
+                serverList.removeFromParent()
+                waitingRoom(room.uuid)
             }
             customUiButton(size = bottomButtonSize).bottomButton("새로고침").onClick {
                 rooms.removeChildrenIf { index, child -> child.isRoom }
@@ -135,22 +140,44 @@ fun MainMenuState.room(room: ViewedRoom) {
                 val now = DateTime.now()
                 if (buttonCursor.visible && now - clickElapsed < 250.milliseconds) {
                     serverList.visible = false
-                    lateinit var loading: View
-                    loading = sceneContainer.uiContainer {
-                        uiText("서버에 연결 중...") { styles(styler) }
-                            .centerOnStage()
-                            .alignY(containerRoot, 0.4, true)
-
-                        customUiButton(size = Size(sceneContainer.width*0.471f, sceneContainer.width/25)) {
+                    sceneContainer.uiContainer {
+                        loading = this
+                        val text = uiText("서버에 연결 중...") {
                             styles(styler)
-                            bottomButton("취소")
+                            centerOnStage()
+                            alignY(containerRoot, 0.4, true)
                         }
-                            .centerXOnStage()
-                            .alignY(containerRoot, 0.6, true)
-                            .onClick {
-                                serverList.visible = true
-                                loading.removeFromParent()
+                        lateinit var cancelText: View
+                        val button =
+                            customUiButton(size = Size(sceneContainer.width * 0.471f, sceneContainer.width / 25)) {
+                                styles(styler)
+                                cancelText = bottomButton("취소").centerOn(this)
+                                centerXOnStage()
+                                alignY(containerRoot, 0.6, true)
+                                onClick {
+                                    loading.removeFromParent()
+                                    serverList.visible = true
+                                }
                             }
+                        when (joinRoom(room.uuid)) {
+                            HttpStatusCode.OK -> {
+                                loading.removeFromParent()
+                                serverList.removeFromParent()
+                                waitingRoom(room.uuid)
+                            }
+
+                            HttpStatusCode.NotFound -> {
+                                text.text = "서버에 연결할 수 없습니다"
+                                cancelText.removeFromParent()
+                                button.uiText("서버 목록으로 돌아가기").centerOn(this)
+                            }
+
+                            else -> {
+                                text.text = "서버에 인원이 꽉 찼습니다!"
+                                cancelText.removeFromParent()
+                                button.uiText("서버 목록으로 돌아가기").centerOn(this)
+                            }
+                        }
                     }
                     return@onDown
                 } else clickElapsed = now

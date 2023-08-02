@@ -15,12 +15,9 @@ import io.ktor.server.routing.*
 
 val server = embeddedServer(Netty, environment)
 
-fun main() {
-    server.start(wait = true)
-}
+fun main() { server.start(wait = true) }
 
 fun startTestServer() = server.start()
-
 
 fun Application.module() {
     install(CORS) {
