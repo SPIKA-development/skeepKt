@@ -32,8 +32,9 @@ class MainScene : Scene() {
     override suspend fun SContainer.sceneMain() {
         sceneContainer.container {
             text(getKoin().get<String>(named("version")), textSize = 15f) {
-                positionY(sceneContainer.height - height)
-                positionX(5)
+                val padding = 5
+                positionY(padding + sceneContainer.height - height)
+                positionX(padding)
             }.zIndex(100)
             zIndex(100)
         }
