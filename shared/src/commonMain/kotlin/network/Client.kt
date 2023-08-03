@@ -8,9 +8,16 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.util.*
+import io.ktor.util.reflect.*
+import io.ktor.utils.io.charsets.*
 import io.ktor.websocket.*
+import io.ktor.websocket.serialization.*
+import korlibs.io.lang.UTF8
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.Json.Default.encodeToString
 import org.koin.mp.KoinPlatform
 
 val currentUrl get() = KoinPlatform.getKoin().get<URLProvider>().url
@@ -21,6 +28,14 @@ private var semaphore = false
 lateinit var websocket: WebSocketSession
 interface URLProvider { val url: String }
 interface ClientEngineFactory { fun getEngine(): HttpClientEngineFactory<HttpClientEngineConfig> }
+
+val converter = KotlinxWebsocketSerializationConverter(Json)
+
+@OptIn(InternalAPI::class)
+suspend inline fun <reified T> send(clientPacket: ClientPacket, t: T) {
+    val packetFrame = PacketFrame(clientPacket.ordinal, sessionUUID, Json.encodeToString<T>(t))
+    websocket.sendSerializedBase(packetFrame, typeInfo<PacketFrame>(), converter, Charsets.UTF_8)
+}
 
 suspend inline fun <reified T> sendHttp(path: String, body: T, auth: Boolean = true) =
     client().post("$currentUrl/$path") {
@@ -49,7 +64,7 @@ suspend fun client(): HttpClient = run {
 private suspend fun initializeClient() = run {
     clientInst = HttpClient(clientEngine) {
         install(io.ktor.client.plugins.websocket.WebSockets) {
-            contentConverter = KotlinxWebsocketSerializationConverter(Json)
+            contentConverter = converter
         }
         install(ContentNegotiation) {
             json()

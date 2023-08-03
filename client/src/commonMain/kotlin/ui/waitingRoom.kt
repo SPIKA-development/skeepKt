@@ -1,30 +1,26 @@
 package ui
 
+import io.ktor.websocket.serialization.*
+import korlibs.event.Key
 import korlibs.image.color.Colors
 import korlibs.image.text.HorizontalAlign
 import korlibs.image.text.TextAlignment
 import korlibs.io.lang.Cancellable
 import korlibs.korge.annotations.KorgeExperimental
-import korlibs.korge.input.onClick
-import korlibs.korge.input.onMouseDragCloseable
-import korlibs.korge.input.onUp
-import korlibs.korge.input.onUpAnywhere
+import korlibs.korge.input.*
 import korlibs.korge.style.styles
 import korlibs.korge.style.textAlignment
-import korlibs.korge.ui.uiButton
-import korlibs.korge.ui.uiContainer
-import korlibs.korge.ui.uiMaterialLayer
-import korlibs.korge.ui.uiText
+import korlibs.korge.ui.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.*
 import korlibs.math.geom.Size
 import korlibs.math.geom.bezier.Bezier
 import kotlinx.uuid.UUID
-import network.ViewedRoom
-import network.getRoomName
+import network.*
 import scene.styler
 import sceneContainer
 import ui.custom.customUiButton
+import ui.custom.customUiScrollable
 import ui.custom.customUiText
 import ui.custom.customUiTextInput
 import util.ColorPalette
@@ -57,6 +53,15 @@ suspend fun waitingRoom(room: UUID) {
             positionX(padding)
             positionY(sceneContainer.height - padding - size.height)
         }
+        lateinit var chats: View
+        customUiScrollable(size = inputBarSize) {
+            it.backgroundColor = Colors.TRANSPARENT
+            uiVerticalStack {
+                chats = this
+                uiSpacing(Size(1f, padding))
+                styles(styler)
+            }
+        }
             uiContainer {
                 val input = customUiTextInput(size = inputBarSize.minus(Size(padding/2, 0f))) {
                     text = " "
@@ -64,6 +69,12 @@ suspend fun waitingRoom(room: UUID) {
                     controller.textView.alignment = TextAlignment.MIDDLE_LEFT
                     controller.caretContainer.alignY(this, 0.75, false)
                     positionX(padding/2)
+                    keys {
+                        down(Key.ENTER) {
+                            send(ClientPacket.CHAT, text)
+                            text = " "
+                        }
+                    }
                 }.zIndex(2)
                 uiMaterialLayer(input.size) {
                     shadowColor = Colors.TRANSPARENT

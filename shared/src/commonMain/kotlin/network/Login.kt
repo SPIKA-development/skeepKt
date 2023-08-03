@@ -6,9 +6,11 @@ import kotlinx.uuid.generateUUID
 
 val username: String = generateUsername()
 lateinit var sessionId: String
+lateinit var sessionUUID: UUID
 
 private fun generateUsername() = UUID.generateUUID().toString().substring(0, 4)
 
 suspend fun login() {
-    sessionId = sendHttp("login", LoginRequest(username), auth = false).body<UUID>().toString()
+    sessionUUID = sendHttp("login", LoginRequest(username), auth = false).body<UUID>()
+    sessionId = sessionUUID.toString()
 }

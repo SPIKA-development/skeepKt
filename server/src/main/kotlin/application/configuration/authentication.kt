@@ -24,7 +24,7 @@ fun Application.configureAuthentication() {
                 println(transaction { Session.all().map { it.id } })
                 //throw exception when not found
                 val uuid = UUID(session.password)
-                transaction { Session.find(model.Sessions.id eq uuid) }
+                transaction { Session.find(model.Sessions.id eq uuid).first() }
                 UserSession(uuid)
             }
         }

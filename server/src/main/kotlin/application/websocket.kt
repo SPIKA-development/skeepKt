@@ -13,10 +13,13 @@ import kotlinx.serialization.json.Json
 import kotlinx.uuid.UUID
 import model.Room
 import model.Rooms
+import model.Session
+import model.Sessions
 import network.PacketController
 import network.PacketFrame
-import network.ServerPacket
-import network.ServerPacket.GET_ROOM_NUMBER
+import network.ClientPacket
+import network.ClientPacket.CHAT
+import network.ClientPacket.GET_ROOM_NUMBER
 import network.packet
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -38,11 +41,11 @@ fun Application.configureWebsocket() {
     }
     routing {
         webSocket {
-            for (frame in incoming) {
-                frame.readBytes()
+            while (true) {
                 val packet = receiveDeserialized<PacketFrame>()
-                val serverPacketCT = serverPacket(ServerPacket.values()[packet.type])
-                serverPacketCT.invoke(serverPacketCT.decode(packet.data)!!)
+                val clientPacketCT = serverPacket(ClientPacket.values()[packet.type])
+                transaction { Session.find(Sessions.id eq packet.session).first() }
+                clientPacketCT.invoke(clientPacketCT.decode(packet.data)!!)
             }
         }
     }
@@ -50,24 +53,25 @@ fun Application.configureWebsocket() {
 
 @OptIn(InternalSerializationApi::class, ExperimentalStdlibApi::class, ExperimentalSerializationApi::class)
 private fun PacketController<*>.decode(data: String): Any? {
-    val type = clazz.createType(clazz.allSupertypes.map { KTypeProjection(null, it) })
-    val typeInfo = typeInfoImpl(type.javaType, clazz, type)
     val serializer = serialFormat.serializersModule.serializerForTypeInfo(typeInfo)
     @Suppress("UNCHECKED_CAST")
     return serialFormat.decodeFromString(serializer as KSerializer<Any?>, data)
 }
 
 @Suppress("UNCHECKED_CAST")
-fun serverPacket(serverPacket: ServerPacket): PacketController<Any> = when(serverPacket) {
+fun serverPacket(clientPacket: ClientPacket): PacketController<Any> = when(clientPacket) {
     GET_ROOM_NUMBER -> packet<UUID> {
         transaction { Room.find(Rooms.id eq it).first().name }
     }
-    ServerPacket.LEAVE_ROOM -> packet {
+    ClientPacket.LEAVE_ROOM -> packet {
 
+    }
+    CHAT -> packet<String> {
+        println(it)
     }
 } as PacketController<Any>
 
 inline fun <reified T : Any> transactionPacket(crossinline code: (T) -> Any) = object : PacketController<T> {
     override fun invoke(t: T) = transaction { code(t) }
-    override val clazz: KClass<T> = T::class
+    override val typeInfo: TypeInfo = typeInfo<T>()
 }

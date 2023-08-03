@@ -1,17 +1,18 @@
 package network
 
+import io.ktor.util.reflect.*
 import kotlinx.serialization.Serializable
 import kotlinx.uuid.UUID
 import kotlin.reflect.KClass
 
 interface PacketController<T : Any> {
-    val clazz: KClass<T>
+    val typeInfo: TypeInfo
     fun invoke(t: T): Any
 }
 
 inline fun <reified T : Any> packet(clazz: KClass<T> = T::class, crossinline code: (T) -> Any) = object : PacketController<T> {
     override fun invoke(t: T) = code(t)
-    override val clazz: KClass<T> = clazz
+    override val typeInfo: TypeInfo = typeInfo<T>()
 }
 
 
@@ -22,7 +23,8 @@ data class PacketFrame(
     val data: String
 )
 
-enum class ServerPacket {
+enum class ClientPacket {
     GET_ROOM_NUMBER,
-    LEAVE_ROOM
+    LEAVE_ROOM,
+    CHAT
 }

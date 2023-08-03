@@ -28,7 +28,7 @@ suspend fun start() {
 
     }))
 
-    Korge(icon = "images/logo.png", scaleMode = ScaleMode.COVER, backgroundColor = ColorPalette.background) {
+    Korge(title = "Skeep", icon = "images/logo.png", scaleMode = ScaleMode.COVER, backgroundColor = ColorPalette.background) {
         sceneContainer = sceneContainer()
         sceneContainer.changeTo({ MainScene() })
     }
