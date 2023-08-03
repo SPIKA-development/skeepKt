@@ -8,6 +8,7 @@ import korlibs.korge.style.*
 import korlibs.korge.ui.UIView
 import korlibs.korge.ui.blur
 import korlibs.korge.ui.focus
+import korlibs.korge.ui.uiContainer
 import korlibs.korge.view.*
 import korlibs.math.geom.*
 
@@ -37,9 +38,9 @@ class UITextInput(initialText: String = "", size: Size = Size(128, 24)) :
     var skin by bg::viewRenderer
     private val container = clipContainer(Size.ZERO)
     //private val container = fixedSizeContainer(width - 4.0, height - 4.0).position(2.0, 3.0)
-    private val textView = customUiText(initialText)
+    private val textView = customUiText(initialText, this.size)
     //private val textView = container.text(initialText, 16.0, color = Colors.BLACK, font = DefaultTtfFont)
-    val controller = TextEditController(textView.textView, textView, this, bg)
+    val controller = TextEditController(textView.textView, uiContainer(textView.size) {  }, this, bg)
 
     //init { uiScrollable {  } }
 
