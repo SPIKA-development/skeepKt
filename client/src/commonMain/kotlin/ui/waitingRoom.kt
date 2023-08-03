@@ -1,11 +1,9 @@
 package ui
 
-import io.ktor.websocket.serialization.*
+import event.ChatEvent
 import korlibs.event.Key
 import korlibs.image.color.Colors
-import korlibs.image.text.HorizontalAlign
 import korlibs.image.text.TextAlignment
-import korlibs.io.lang.Cancellable
 import korlibs.korge.annotations.KorgeExperimental
 import korlibs.korge.input.*
 import korlibs.korge.style.styles
@@ -14,18 +12,14 @@ import korlibs.korge.ui.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.*
 import korlibs.math.geom.Size
-import korlibs.math.geom.bezier.Bezier
 import kotlinx.uuid.UUID
 import network.*
 import scene.styler
 import sceneContainer
-import ui.custom.customUiButton
-import ui.custom.customUiScrollable
-import ui.custom.customUiText
-import ui.custom.customUiTextInput
+import ui.custom.*
 import util.ColorPalette
-import util.launchNow
-import kotlin.math.abs
+import websocket.sendToServer
+import kotlin.math.max
 
 @OptIn(KorgeExperimental::class)
 suspend fun waitingRoom(room: UUID) {
@@ -35,10 +29,13 @@ suspend fun waitingRoom(room: UUID) {
         val padding = 25f
         val sidebarSize = Size(sceneContainer.width / 3.5f, sceneContainer.height)
         styles(styler)
-        uiText(getRoomName(room)).position(padding, padding)
         val belowElementHeight = sceneContainer.width / 25f
         val leaveButton = Size(belowElementHeight*1.75f, belowElementHeight)
         val inputBarSize = Size(sceneContainer.width - sidebarSize.width - padding*2 - leaveButton.width - padding*2, belowElementHeight)
+        val titleSize = Size(sceneContainer.width - sidebarSize.width, belowElementHeight * 1.5f)
+        val title = uiContainer(size = titleSize) {
+            uiText(getRoomName(room)).centerYOn(this)
+        }.position(padding, padding)
         customUiButton(size = leaveButton) {
             val back = solidRect(size, color = ColorPalette.out).centerOn(this)
             var isDone = false
@@ -54,15 +51,34 @@ suspend fun waitingRoom(room: UUID) {
             positionY(sceneContainer.height - padding - size.height)
         }
         lateinit var chats: View
-        customUiScrollable(size = inputBarSize) {
+        lateinit var scroll: CustomUIScrollable
+        val chatSize = Size(inputBarSize.width, sceneContainer.height - titleSize.height - inputBarSize.height - padding * 3)
+        customUiScrollable(cache = false, size = chatSize) {
+            scroll = it
+            it.positionX(padding + leaveButton.width + padding)
+            it.positionY(padding + titleSize.height + padding)
             it.backgroundColor = Colors.TRANSPARENT
-            uiVerticalStack {
+            lateinit var space: View
+            uiVerticalStack(width = size.width, padding = padding, adjustSize = false) {
                 chats = this
-                uiSpacing(Size(1f, padding))
+                space = uiSpacing(Size(size.width, chatSize.height))
                 styles(styler)
+                styles {
+                    textAlignment = TextAlignment.MIDDLE_LEFT
+                }
+                scroll.scrollBarAlpha = 0f
+                scroll.horizontal.view.visible = false
+                scroll.scrollTopRatio = 1f
+                onEvent(ChatEvent) { event ->
+                    println("chat")
+                    val (username, message) = event.chat
+                    val chat = uiText("<$username> $message")
+                    space.height = max(0f, space.height - chat.height)
+                    scroll.scrollTopRatio = 1f
+                }
             }
         }
-            uiContainer {
+        uiContainer {
                 val input = customUiTextInput(size = inputBarSize.minus(Size(padding/2, 0f))) {
                     text = " "
                     styles { textAlignment = TextAlignment.MIDDLE_LEFT }
@@ -71,7 +87,7 @@ suspend fun waitingRoom(room: UUID) {
                     positionX(padding/2)
                     keys {
                         down(Key.ENTER) {
-                            send(ClientPacket.CHAT, text)
+                            sendToServer(ClientPacket.CHAT, text)
                             text = " "
                         }
                     }

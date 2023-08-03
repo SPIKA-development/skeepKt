@@ -95,7 +95,6 @@ class TextEditController(
 
     private fun setTextNoSnapshot(text: String, out: TextSnapshot = TextSnapshot("", 0..0)): TextSnapshot? {
         if (!acceptTextChange(textView.text, text)) return null
-        println("'$text'")
         out.text = textView.text
         out.selectionRange = selectionRange
         textView.text = text
