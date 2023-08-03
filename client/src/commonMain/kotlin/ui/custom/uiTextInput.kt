@@ -5,11 +5,10 @@ import korlibs.image.font.*
 import korlibs.io.async.*
 import korlibs.korge.annotations.*
 import korlibs.korge.style.*
-import korlibs.korge.ui.UIView
-import korlibs.korge.ui.blur
-import korlibs.korge.ui.focus
-import korlibs.korge.ui.uiContainer
+import korlibs.korge.ui.*
 import korlibs.korge.view.*
+import korlibs.korge.view.align.alignX
+import korlibs.korge.view.align.centerYOn
 import korlibs.math.geom.*
 
 @KorgeExperimental
@@ -40,7 +39,12 @@ class UITextInput(initialText: String = "", size: Size = Size(128, 24)) :
     //private val container = fixedSizeContainer(width - 4.0, height - 4.0).position(2.0, 3.0)
     private val textView = customUiText(initialText, this.size)
     //private val textView = container.text(initialText, 16.0, color = Colors.BLACK, font = DefaultTtfFont)
-    val controller = TextEditController(textView.textView, uiContainer(textView.size) {  }, this, bg)
+    val controller = TextEditController(textView.textView, uiContainer(textView.size) {  }, this, bg = bg,
+        hint = textView.uiText(" 채팅을 입력하세요...", size = size) {
+            centerYOn(textView).alignX(textView, 0.1, true)
+            alpha = 0.5f
+        }
+    )
 
     //init { uiScrollable {  } }
 

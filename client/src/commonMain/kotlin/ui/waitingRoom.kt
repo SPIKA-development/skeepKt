@@ -3,8 +3,12 @@ package ui
 import korlibs.image.color.Colors
 import korlibs.image.text.HorizontalAlign
 import korlibs.image.text.TextAlignment
+import korlibs.io.lang.Cancellable
 import korlibs.korge.annotations.KorgeExperimental
 import korlibs.korge.input.onClick
+import korlibs.korge.input.onMouseDragCloseable
+import korlibs.korge.input.onUp
+import korlibs.korge.input.onUpAnywhere
 import korlibs.korge.style.styles
 import korlibs.korge.style.textAlignment
 import korlibs.korge.ui.uiButton
@@ -24,12 +28,14 @@ import ui.custom.customUiButton
 import ui.custom.customUiText
 import ui.custom.customUiTextInput
 import util.ColorPalette
+import util.launchNow
 import kotlin.math.abs
 
 @OptIn(KorgeExperimental::class)
 suspend fun waitingRoom(room: UUID) {
     lateinit var waitingRoom: View
-    waitingRoom = sceneContainer.uiContainer {
+    sceneContainer.uiContainer {
+        waitingRoom = this
         val padding = 25f
         val sidebarSize = Size(sceneContainer.width / 3.5f, sceneContainer.height)
         styles(styler)
@@ -39,9 +45,14 @@ suspend fun waitingRoom(room: UUID) {
         val inputBarSize = Size(sceneContainer.width - sidebarSize.width - padding*2 - leaveButton.width - padding*2, belowElementHeight)
         customUiButton(size = leaveButton) {
             val back = solidRect(size, color = ColorPalette.out).centerOn(this)
-            customUiText("나가기").centerOn(this).onClick {
-                waitingRoom.removeFromParent()
-                MainMenuState().mainMenu()
+            var isDone = false
+            customUiText("나가기").centerOn(this).onMouseDragCloseable {
+                onUpAnywhere {
+                    if (isDone) return@onUpAnywhere
+                    isDone = true
+                    waitingRoom.removeFromParent()
+                    MainMenuState().mainMenu()
+                }
             }
             positionX(padding)
             positionY(sceneContainer.height - padding - size.height)

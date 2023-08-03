@@ -12,7 +12,12 @@ import korlibs.korge.component.*
 import korlibs.korge.input.*
 import korlibs.korge.time.*
 import korlibs.korge.ui.*
+import korlibs.korge.ui.UIText
 import korlibs.korge.view.*
+import korlibs.korge.view.align.alignX
+import korlibs.korge.view.align.centerOn
+import korlibs.korge.view.align.centerXOn
+import korlibs.korge.view.align.centerYOn
 import korlibs.korge.view.debug.*
 import korlibs.math.geom.*
 import korlibs.math.geom.bezier.*
@@ -27,6 +32,7 @@ class TextEditController(
     val textView: Text,
     val caretContainer: Container = textView,
     val eventHandler: View = textView,
+    val hint: View? = null,
     val bg: RenderableView? = null,
 ) : Closeable, UIFocusable, ISoftKeyboardConfig by SoftKeyboardConfig() {
     init {
@@ -101,6 +107,7 @@ class TextEditController(
     var text: String
         get() = textView.text
         set(value) {
+            hint?.visible = value == " "
             val snapshot = setTextNoSnapshot(value)
             if (snapshot != null) {
                 textSnapshots.push(snapshot)
