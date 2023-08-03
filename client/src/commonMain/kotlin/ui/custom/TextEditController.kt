@@ -89,6 +89,7 @@ class TextEditController(
 
     private fun setTextNoSnapshot(text: String, out: TextSnapshot = TextSnapshot("", 0..0)): TextSnapshot? {
         if (!acceptTextChange(textView.text, text)) return null
+        println("'$text'")
         out.text = textView.text
         out.selectionRange = selectionRange
         textView.text = text
@@ -121,14 +122,19 @@ class TextEditController(
             val lastStr = text[max(0, index - 1)]
             val insertion = khangul.HangulProcessor.composeHangul(lastStr + substr)
             if (insertion !== null) {
-                text = rangedText
+                val tempText = rangedText
                     .withoutIndex(max(0, index - 1))
                     .withInsertion(index, insertion)
-                cursorIndex += insertion.length - 1
+                text = tempText.makeStartWithSpace()
+                if (tempText.startsWith(" ")) {
+                    cursorIndex += insertion.length - 1
+                } else {
+                    cursorIndex += insertion.length
+                }
                 return
             }
         }
-        text = rangedText.withInsertion(index, substr)
+        text = rangedText.withInsertion(index, substr).makeStartWithSpace()
         cursorIndex += substr.length
     }
 
@@ -406,7 +412,7 @@ class TextEditController(
                                     }
                                     if (it.key == Key.X) {
                                         val selection = selectionRange
-                                        text = text.withoutRange(selectionRange)
+                                        text = text.withoutRange(selectionRange).makeStartWithSpace()
                                         moveToIndex(false, selection.first)
                                     }
                                 }
@@ -424,18 +430,23 @@ class TextEditController(
                     Key.BACKSPACE, Key.DELETE -> {
                         val range = selectionRange
                         if (range.length > 0) {
-                            text = text.withoutRange(range)
+                            text = text.withoutRange(range).makeStartWithSpace()
                             cursorIndex = range.first
                         } else {
                             if (it.key == Key.BACKSPACE) {
                                 if (cursorIndex > 0) {
                                     val oldCursorIndex = cursorIndex
-                                    text = text.withoutIndex(cursorIndex - 1)
-                                    cursorIndex = oldCursorIndex - 1 // This [oldCursorIndex] is required since changing text might change the cursorIndex already in some circumstances
+                                    var tempText = text.withoutIndex(cursorIndex - 1)
+                                    if (tempText.startsWith(" ")) {
+                                        text = tempText.makeStartWithSpace()
+                                        cursorIndex = oldCursorIndex - 1 // This [oldCursorIndex] is required since changing text might change the cursorIndex already in some circumstances
+                                    } else {
+
+                                    }
                                 }
                             } else {
                                 if (cursorIndex < text.length) {
-                                    text = text.withoutIndex(cursorIndex)
+                                    text = text.withoutIndex(cursorIndex).makeStartWithSpace()
                                 }
                             }
                         }
@@ -529,3 +540,5 @@ class TextEditController(
 
 fun Text.editText(caretContainer: Container = this): TextEditController =
     TextEditController(this, caretContainer)
+
+fun String.makeStartWithSpace() = if (startsWith(" ")) this else " $this"

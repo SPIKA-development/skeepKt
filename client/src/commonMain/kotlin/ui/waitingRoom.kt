@@ -4,6 +4,7 @@ import korlibs.image.color.Colors
 import korlibs.image.text.HorizontalAlign
 import korlibs.image.text.TextAlignment
 import korlibs.korge.annotations.KorgeExperimental
+import korlibs.korge.input.onClick
 import korlibs.korge.style.styles
 import korlibs.korge.style.textAlignment
 import korlibs.korge.ui.uiButton
@@ -27,23 +28,27 @@ import kotlin.math.abs
 
 @OptIn(KorgeExperimental::class)
 suspend fun waitingRoom(room: UUID) {
-    sceneContainer.uiContainer {
+    lateinit var waitingRoom: View
+    waitingRoom = sceneContainer.uiContainer {
         val padding = 25f
-        val sidebarSize = Size(sceneContainer.width / 5f, sceneContainer.height)
+        val sidebarSize = Size(sceneContainer.width / 3.5f, sceneContainer.height)
         styles(styler)
-        uiText(getRoomName(room))
-            .alignY(root, 0.075, true)
+        uiText(getRoomName(room)).position(padding, padding)
         val belowElementHeight = sceneContainer.width / 25f
         val leaveButton = Size(belowElementHeight*1.75f, belowElementHeight)
         val inputBarSize = Size(sceneContainer.width - sidebarSize.width - padding*2 - leaveButton.width - padding*2, belowElementHeight)
         customUiButton(size = leaveButton) {
             val back = solidRect(size, color = ColorPalette.out).centerOn(this)
-            customUiText("나가기").centerOn(this)
+            customUiText("나가기").centerOn(this).onClick {
+                waitingRoom.removeFromParent()
+                MainMenuState().mainMenu()
+            }
             positionX(padding)
             positionY(sceneContainer.height - padding - size.height)
         }
             uiContainer {
                 val input = customUiTextInput(size = inputBarSize.minus(Size(padding/2, 0f))) {
+                    text = " "
                     styles { textAlignment = TextAlignment.MIDDLE_LEFT }
                     controller.textView.alignment = TextAlignment.MIDDLE_LEFT
                     controller.caretContainer.alignY(this, 0.75, false)

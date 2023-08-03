@@ -14,7 +14,7 @@ import korlibs.math.geom.*
 
 @KorgeExperimental
 inline fun Container.customUiTextInput(
-    initialText: String = "",
+    initialText: String = " ",
     size: Size = Size(128, 24),
     block: @ViewDslMarker UITextInput.() -> Unit = {}
 ): UITextInput = UITextInput(initialText, size)
