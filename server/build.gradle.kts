@@ -15,6 +15,7 @@ dependencies {
     add("implementation", libs.ktor.server.websockets)
     add("implementation", libs.logback)
 
+    implementation(libs.ktor.server.caching.headers)
     implementation(libs.kotlinx.uuid.exposed)
     implementation(libs.ktor.server.cors)
     implementation(libs.ktor.server.auth)
