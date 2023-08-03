@@ -6,6 +6,7 @@ import application.configuration.environment
 import io.ktor.client.engine.*
 import io.ktor.client.engine.cio.*
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -29,7 +30,9 @@ fun main() { server.start(wait = true) }
 fun startTestServer() = server.start()
 
 fun Application.module() {
-//    install(CachingHeaders)
+    install(CachingHeaders) {
+        options { call, content -> CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 0)) }
+    }
     install(CORS) {
         anyHost()
         HttpMethod.DefaultMethods.forEach(::allowMethod)
