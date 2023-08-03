@@ -9,9 +9,13 @@ import korlibs.korge.scene.SceneContainer
 import korlibs.korge.scene.sceneContainer
 import korlibs.korge.style.*
 import korlibs.korge.ui.uiContainer
-import korlibs.korge.view.SContainer
+import korlibs.korge.ui.uiText
+import korlibs.korge.view.*
 import korlibs.korge.view.align.centerOnStage
+import korlibs.korge.view.align.centerXOn
+import korlibs.korge.view.align.centerXOnStage
 import network.login
+import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform.getKoin
 import ui.MainMenuState
 import ui.mainMenu
@@ -26,6 +30,13 @@ val styler: ViewStyles.() -> Unit = {
 
 class MainScene : Scene() {
     override suspend fun SContainer.sceneMain() {
+        sceneContainer.container {
+            text(getKoin().get<String>(named("version")), textSize = 15f) {
+                positionY(sceneContainer.height - height)
+                positionX(5)
+            }.zIndex(100)
+            zIndex(100)
+        }
         MainMenuState().mainMenu()
     }
 }

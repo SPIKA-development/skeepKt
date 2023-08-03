@@ -4,14 +4,18 @@ import korlibs.io.lang.readProperties
 import network.ClientEngineFactory
 import network.URLProvider
 import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
 
 suspend fun main() {
-    val url = resourcesVfs["client.properties"].readProperties()["server"]!!
+    val clientProps = resourcesVfs["client.properties"].readProperties()
+    val url = clientProps["server"]!!
+    val version = clientProps["version"]!!
     startKoin {}
     KoinPlatform.getKoin().loadModules(listOf(module {
+        single(named("version")) { version }
         factory {
             object : URLProvider {
                 override val url: String get() = url
