@@ -71,7 +71,6 @@ suspend fun waitingRoom(room: UUID) {
                 scroll.horizontal.view.visible = false
                 scroll.scrollTopRatio = 1f
                 onEvent(PacketEvent) { event ->
-                    println("chat")
                     val packet = event.packet
                     if (packet !is ChatPacket) return@onEvent
                     val (username, message) = packet

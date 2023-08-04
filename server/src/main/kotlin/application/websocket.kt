@@ -21,7 +21,7 @@ import java.util.*
 import kotlin.collections.LinkedHashSet
 
 val serverUUID = UUID.generateUUID()
-val connections: MutableSet<Connection> = Collections.synchronizedSet<Connection?>(LinkedHashSet())
+val connections: MutableSet<Connection> = Collections.synchronizedSet(LinkedHashSet())
 fun getPlayersByRoom(room: UUID) =
     connections.filter { runCatching { getPlayerBySession(it.session).room?.equals(room) }.getOrNull()?: false }
 
@@ -60,9 +60,6 @@ fun Application.configureWebsocket() {
 suspend fun serverPacket(websocket: DefaultWebSocketSession, session: UUID, clientPacket: ClientPacket): PacketController<Any> = when(clientPacket) {
     ClientPacket.GET_ROOM_NUMBER -> packet<UUID> {
         transaction { Room.find(Rooms.id eq it).first().name }
-    }
-    ClientPacket.LEAVE_ROOM -> packet {
-
     }
     ClientPacket.CHAT -> packet<String> { received ->
         val player = getPlayerBySession(session)

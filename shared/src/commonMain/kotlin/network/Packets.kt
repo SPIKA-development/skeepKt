@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 enum class ClientPacket {
     GET_ROOM_NUMBER,
-    LEAVE_ROOM,
     CHAT
 }
 
