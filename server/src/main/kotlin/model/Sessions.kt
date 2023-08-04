@@ -25,6 +25,7 @@ fun newSession(sessionPlayer: Player) = transaction {
     }
 }
 
-fun getPlayerBySession(session: UUID) = transaction {
+fun getPlayerUUIDBySession(session: UUID) = transaction {
     Session.find(Sessions.id eq session).first().player.value
 }
+

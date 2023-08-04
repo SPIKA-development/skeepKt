@@ -30,8 +30,9 @@ suspend inline fun <reified T> sendToServer(packet: Enum<*>, t: T) {
 
 suspend fun startWebSocket(): Job {
     return launchNow {
-        websocketClient().onStringMessage {
-            println("Aasdfasdfasdfasdf")
+        val websocketClient = websocketClient()
+        websocketClient.send(Json.encodeToString(sessionUUID))
+        websocketClient.onStringMessage {
             val packetFrame = Json.decodeFromString<PacketFrame>(it)
             val serverPacket = ServerPacket.values()[packetFrame.type]
             val packetController = serverPacket(serverPacket)

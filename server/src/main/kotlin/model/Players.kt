@@ -11,6 +11,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object Players : KotlinxUUIDTable() {
@@ -22,10 +23,15 @@ object Players : KotlinxUUIDTable() {
 class Player(id: EntityID<UUID>) : KotlinxUUIDEntity(id) {
     companion object : KotlinxUUIDEntityClass<Player>(Players)
     var name by Players.name
+    var room by Players.room
 }
 
 fun newPlayer(newPlayerName: String) = transaction {
     Player.new {
         name = newPlayerName
     }
+}
+
+fun getPlayerBySession(session: UUID) = transaction {
+    Player.find(Players.id eq getPlayerUUIDBySession(session)).first()
 }

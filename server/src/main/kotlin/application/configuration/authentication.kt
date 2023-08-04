@@ -56,4 +56,4 @@ suspend fun ApplicationCall.getUserSession(): UUID {
     }
 }
 
-suspend fun ApplicationCall.getPlayer() = getPlayerBySession(getUserSession())
+suspend fun ApplicationCall.getPlayer() = getPlayerUUIDBySession(getUserSession())

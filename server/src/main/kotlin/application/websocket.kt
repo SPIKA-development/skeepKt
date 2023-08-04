@@ -14,29 +14,40 @@ import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
 import model.*
 import network.*
-import network.ClientPacket.CHAT
-import network.ClientPacket.GET_ROOM_NUMBER
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Duration
+import java.util.*
+import kotlin.collections.LinkedHashSet
 
 val serverUUID = UUID.generateUUID()
+val connections = Collections.synchronizedSet<Connection?>(LinkedHashSet())
 
+class Connection(val websocket: DefaultWebSocketSession, val session: UUID)
 fun Application.configureWebsocket() {
     install(WebSockets) {
-        val _15sec = Duration.ofSeconds(15)
-        pingPeriod = _15sec
-        timeout = _15sec
+        val fifteenSeconds = Duration.ofSeconds(15)
+        pingPeriod = fifteenSeconds
+        timeout = fifteenSeconds
         contentConverter = KotlinxWebsocketSerializationConverter(serialFormat)
     }
     routing {
         webSocket {
-            while (true) {
-                val packet = receiveDeserialized<PacketFrame>()
-                val clientPacket = ClientPacket.values()[packet.type]
-                val packetController = serverPacket(this, packet.session, clientPacket)
-                transaction { Session.find(Sessions.id eq packet.session).first() }
-                packetController.invoke(decode(packet.data, packetController.typeInfo)!!)
+            val thisConnection = Connection(this, receiveDeserialized<UUID>())
+            println("Aasdf")
+            connections += thisConnection
+            try {
+                while (true) {
+                    val packet = receiveDeserialized<PacketFrame>()
+                    val clientPacket = ClientPacket.values()[packet.type]
+                    val packetController = serverPacket(this, packet.session, clientPacket)
+                    transaction { Session.find(Sessions.id eq packet.session).first() }
+                    packetController.invoke(decode(packet.data, packetController.typeInfo)!!)
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            } finally {
+                connections -= thisConnection
             }
         }
     }
@@ -44,16 +55,17 @@ fun Application.configureWebsocket() {
 
 
 @Suppress("UNCHECKED_CAST")
-suspend fun serverPacket(websocket: DefaultWebSocketSession, uuid: UUID, clientPacket: ClientPacket): PacketController<Any> = when(clientPacket) {
-    GET_ROOM_NUMBER -> packet<UUID> {
+suspend fun serverPacket(websocket: DefaultWebSocketSession, session: UUID, clientPacket: ClientPacket): PacketController<Any> = when(clientPacket) {
+    ClientPacket.GET_ROOM_NUMBER -> packet<UUID> {
         transaction { Room.find(Rooms.id eq it).first().name }
     }
     ClientPacket.LEAVE_ROOM -> packet {
 
     }
-    CHAT -> packet<String> {
-        val player = transaction { Player.find(Players.id eq getPlayerBySession(uuid)).first().name }
-        websocket.sendToClient(ServerPacket.CHAT, Chat(player, it))
+    ClientPacket.CHAT -> packet<String> {
+        val player = getPlayerBySession(session)
+        connections.mapNotNull { runCatching { getPlayerBySession(it.session).room == player.room }.getOrNull() }
+        websocket.sendToClient(ServerPacket.CHAT, Chat(player.name, it))
     }
 } as PacketController<Any>
 
