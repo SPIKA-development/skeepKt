@@ -25,7 +25,6 @@ fun Application.configureRooms() {
                 post("join") {
                     val room = call.receive<UUID>()
                     val maxPlayers = transaction { Room.find(Rooms.id eq room).first().maxPlayers }
-                    println("maxPlayers=$maxPlayers")
                     if (getJoinedPlayersAmount(room) >= maxPlayers) {
                         call.respond(HttpStatusCode.ServiceUnavailable)
                         return@post
