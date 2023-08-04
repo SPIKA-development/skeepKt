@@ -25,6 +25,7 @@ fun Application.configureRooms() {
                 post("join") {
                     val room = call.receive<UUID>()
                     val maxPlayers = transaction { Room.find(Rooms.id eq room).first().maxPlayers }
+                    println("maxPlayers=$maxPlayers")
                     if (getJoinedPlayersAmount(room) >= maxPlayers) {
                         call.respond(HttpStatusCode.ServiceUnavailable)
                         return@post
@@ -42,8 +43,8 @@ fun Application.configureRooms() {
                     call.respond(getPlayersByRoom(getPlayerBySession(call.getUserSession()).room!!.value))
                 }
                 post("leave") {
-                    leaveRoom(call.getUserSession())
                     val player = getPlayerBySession(call.getUserSession())
+                    leaveRoom(call.getUserSession())
                     getRoomConnections(player.room!!.value).forEach {
                         it.websocket.sendToClient(ServerPacket.PLAYER_LEAVE, PlayerLeavePacket(player.name))
                     }

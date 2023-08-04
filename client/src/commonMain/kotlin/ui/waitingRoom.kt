@@ -67,7 +67,10 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
         customUiButton(size = leaveButton) {
             val back = solidRect(size, color = ColorPalette.out).centerOn(this)
             var isDone = false
-            customUiText("나가기").centerOn(this).onMouseDragCloseable {
+            customUiText("나가기").centerOn(this)
+            positionX(padding)
+            positionY(sceneContainer.height - padding - size.height)
+            onMouseDragCloseable {
                 onUp up@{
                     if (isDone) return@up
                     isDone = true
@@ -76,8 +79,6 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                     MainMenuState().mainMenu()
                 }
             }
-            positionX(padding)
-            positionY(sceneContainer.height - padding - size.height)
         }
         lateinit var chats: View
         lateinit var scroll: CustomUIScrollable
@@ -90,6 +91,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
             lateinit var space: View
             uiVerticalStack(width = size.width, padding = padding, adjustSize = false) {
                 chats = this
+                it.horizontal.view.visible = false
                 space = uiSpacing(Size(size.width, chatSize.height))
                 styles(styler)
                 styles {
