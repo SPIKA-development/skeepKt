@@ -386,6 +386,7 @@ class TextEditController(
                 if (!focused) return@typed
                 if (it.meta) return@typed
                 val code = it.character.code
+                println(code)
                 when (code) {
                     8, 127 -> Unit // backspace, backspace (handled by down event)
                     9, 10, 13 -> { // tab & return: Do nothing in single line text inputs
