@@ -56,4 +56,4 @@ jobs:
         run: |
           curl -d "key=${{ secrets.ADMIN_KEY }}" \
           -H "Content-Type: application/x-www-form-urlencoded" \
-          -X POST ${{ env.url }}
+          -X POST ${{ env.url }}/shutdown
