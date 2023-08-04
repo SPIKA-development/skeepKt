@@ -31,7 +31,7 @@ jobs:
             mv $3.tmp $3
           }
           setProperty "server" "https://kotlingames.shop" "gradle.properties"
-          setProperty "version" "Build-${{github.run_number}}" "gradle.properties"
+          setProperty "version" "0.0.${{github.run_number}}" "gradle.properties"
       - run: git tag ${{github.run_number}}
 
       - name: Grant execute permission for gradlew
