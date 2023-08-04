@@ -39,8 +39,8 @@ suspend fun start() {
         single(named("profile")) { profile }
 
     }))
-    client()
-    startWebSocket()
+//    client()
+//    startWebSocket()
     Korge(title = "Skeep", icon = "images/logo.png", scaleMode = ScaleMode.SHOW_ALL, backgroundColor = ColorPalette.background) {
         sceneContainer = sceneContainer()
         sceneContainer.changeTo({ MainScene() })

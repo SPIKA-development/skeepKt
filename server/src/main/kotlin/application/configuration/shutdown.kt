@@ -15,7 +15,7 @@ fun Application.configurationShutdown() {
     routing {
         post("shutdown") {
             val key = EnvVar.ADMIN_KEY
-            if (call.receive<String>() == key) {
+            if (call.receiveText() == key) {
                 doShutdown(call)
             }
         }

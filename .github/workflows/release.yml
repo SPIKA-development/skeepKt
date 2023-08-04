@@ -54,4 +54,4 @@ jobs:
           prerelease: false
       - shell: bash
         run: |
-          curl -d "key=${{ secrets.ADMIN_KEY }}" -X POST ${{ env.url }}/shutdown
+          curl -d "${{ secrets.ADMIN_KEY }}" -X POST ${{ env.url }}/shutdown
