@@ -46,6 +46,7 @@ fun Application.configureWebsocket() {
                     transaction { Session.find(Sessions.id eq packet.session).first() }
                     packetController.invoke(decode(packet.data, packetController.typeInfo)!!)
                 }
+            } catch (_: kotlinx.coroutines.channels.ClosedReceiveChannelException) {
             } catch (e: Throwable) {
                 e.printStackTrace()
             } finally {
