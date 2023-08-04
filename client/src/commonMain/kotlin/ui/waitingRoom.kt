@@ -114,7 +114,8 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                     val packet = it.packet
                     if (packet !is PlayerLeavePacket) return@onEvent
                     val username = packet.username
-                    uiText("${username}이(가) 서버를 떠났습니다")
+                    chat("${username}이(가) 서버를 떠났습니다")
+                    
                     profiles.removeChildrenIf { index, child -> child.getExtra("profile") == username }
                 }
                 onEvent(PacketEvent) { event ->
