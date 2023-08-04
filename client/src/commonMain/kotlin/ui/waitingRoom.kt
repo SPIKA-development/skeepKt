@@ -43,6 +43,7 @@ suspend fun waitingRoom(room: UUID) {
                 onUpAnywhere {
                     if (isDone) return@onUpAnywhere
                     isDone = true
+                    leaveRoom(sessionUUID)
                     waitingRoom.removeFromParent()
                     MainMenuState().mainMenu()
                 }

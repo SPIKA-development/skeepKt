@@ -24,4 +24,6 @@ suspend fun getViewedRooms() = runCatching {
 
 suspend fun joinRoom(uuid: UUID) = sendHttp("rooms/join", uuid).status
 
+suspend fun leaveRoom(uuid: UUID) = sendHttp("rooms/leave", uuid).status
+
 suspend fun getRoomName(uuid: UUID) = sendHttp("rooms/name", uuid).body<String>()
