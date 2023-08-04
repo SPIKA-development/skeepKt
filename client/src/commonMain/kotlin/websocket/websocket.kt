@@ -2,8 +2,6 @@ package websocket
 
 import event.ChatEvent
 import io.ktor.util.*
-import io.ktor.util.reflect.*
-import io.ktor.utils.io.charsets.*
 import korlibs.io.net.ws.WebSocketClient
 import kotlinx.coroutines.Job
 import kotlinx.serialization.encodeToString
@@ -46,7 +44,7 @@ suspend fun startWebSocket(): Job {
 
 @Suppress("UNCHECKED_CAST")
 fun serverPacket(serverPacket: ServerPacket): PacketController<Any> = when(serverPacket) {
-    ServerPacket.CHAT -> packet<Chat> {
+    ServerPacket.CHAT -> packet<ChatPacket> {
         sceneContainer.dispatch(ChatEvent(it))
     }
 } as PacketController<Any>

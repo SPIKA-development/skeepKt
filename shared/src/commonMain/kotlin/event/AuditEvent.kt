@@ -1,12 +1,10 @@
 package event
 
 import korlibs.event.*
-import korlibs.math.geom.*
-import korlibs.time.*
-import network.Chat
+import network.ChatPacket
 
 class ChatEvent(
-    val chat: Chat,
+    val chatPacket: ChatPacket,
 ) : Event(), TEvent<ChatEvent> {
     companion object : EventType<ChatEvent>
     override val type: EventType<ChatEvent> get() = ChatEvent

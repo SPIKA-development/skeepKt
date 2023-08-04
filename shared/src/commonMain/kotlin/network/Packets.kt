@@ -1,0 +1,23 @@
+package network
+
+import kotlinx.serialization.Serializable
+
+enum class ClientPacket {
+    GET_ROOM_NUMBER,
+    LEAVE_ROOM,
+    CHAT
+}
+
+enum class ServerPacket {
+    CHAT,
+    PLAYER_JOIN, PLAYER_LEAVE
+}
+
+@Serializable
+data class ChatPacket(val username: String, val message: String)
+
+@Serializable
+data class PlayerJoinPacket(val username: String)
+
+@Serializable
+data class PlayerLeavePacket(val username: String)

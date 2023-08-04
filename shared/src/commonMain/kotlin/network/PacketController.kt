@@ -2,14 +2,12 @@ package network
 
 import io.ktor.serialization.kotlinx.*
 import io.ktor.util.reflect.*
-import io.ktor.websocket.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.uuid.UUID
-import kotlin.reflect.KClass
 
 val serialFormat = Json
 
@@ -37,12 +35,3 @@ data class PacketFrame(
     val data: String
 )
 
-enum class ClientPacket {
-    GET_ROOM_NUMBER,
-    LEAVE_ROOM,
-    CHAT
-}
-
-enum class ServerPacket {
-    CHAT
-}

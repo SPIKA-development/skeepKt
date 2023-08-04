@@ -72,7 +72,7 @@ suspend fun waitingRoom(room: UUID) {
                 scroll.scrollTopRatio = 1f
                 onEvent(ChatEvent) { event ->
                     println("chat")
-                    val (username, message) = event.chat
+                    val (username, message) = event.chatPacket
                     val chat = uiText("<$username> $message")
                     space.height = max(0f, space.height - chat.height)
                     scroll.scrollTopRatio = 1f
