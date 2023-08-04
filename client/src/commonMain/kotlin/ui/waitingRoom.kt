@@ -70,6 +70,12 @@ suspend fun waitingRoom(room: UUID) {
                 scroll.scrollBarAlpha = 0f
                 scroll.horizontal.view.visible = false
                 scroll.scrollTopRatio = 1f
+                onEvent(PacketEvent) {
+                    val packet = it.packet
+                    if (packet !is PlayerJoinPacket) return@onEvent
+                    val username = packet.username
+                    uiText("${username}이(가) 서버에 참여했습니다")
+                }
                 onEvent(PacketEvent) { event ->
                     val packet = event.packet
                     if (packet !is ChatPacket) return@onEvent
