@@ -14,10 +14,11 @@ object EnvVar {
 
 abstract class Env<T>(private val default: (() -> T)?) {
     abstract fun convert(string: String): T
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): Any? {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T & Any {
         val key = property.name
         return runCatching { System.getenv(key).run(::convert) }
-            .getOrNull()?: dotenv.get(key) ?: default?.invoke()?: throw AssertionError("$key is not exists")
+            .getOrNull()?: dotenv.get(key)?.run(::convert)
+        ?: default?.invoke()?: throw AssertionError("$key is not exists")
     }
 }
 
