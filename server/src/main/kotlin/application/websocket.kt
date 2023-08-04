@@ -50,7 +50,7 @@ fun Application.configureWebsocket() {
             } catch (e: Throwable) {
                 e.printStackTrace()
             } finally {
-                launchNow { leaveRoom(thisConnection.session) }
+                leaveRoom(thisConnection.session)
                 connections -= thisConnection
             }
         }

@@ -38,6 +38,9 @@ class WaitingRoomState {
     val padding = 25f
     lateinit var profileSize: Size
     lateinit var profiles: Container
+    lateinit var chats: Container
+    lateinit var space: Container
+    lateinit var scroll: CustomUIScrollable
 }
 
 @OptIn(KorgeExperimental::class)
@@ -80,24 +83,23 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                 }
             }
         }
-        lateinit var chats: View
-        lateinit var scroll: CustomUIScrollable
+
         val chatSize = Size(inputBarSize.width, sceneContainer.height - titleSize.height - inputBarSize.height - padding * 3)
         customUiScrollable(cache = false, size = chatSize) {
             scroll = it
             it.positionX(padding + leaveButton.width + padding)
             it.positionY(padding + titleSize.height + padding)
             it.backgroundColor = Colors.TRANSPARENT
-            lateinit var space: View
+            it.horizontal.view.visible = false
+            it.vertical.view.visible = false
+            it.scrollBarAlpha = 0f
             uiVerticalStack(width = size.width, padding = padding, adjustSize = false) {
                 chats = this
-                it.horizontal.view.visible = false
                 space = uiSpacing(Size(size.width, chatSize.height))
                 styles(styler)
                 styles {
                     textAlignment = TextAlignment.MIDDLE_LEFT
                 }
-                scroll.scrollBarAlpha = 0f
                 scroll.horizontal.view.visible = false
                 scroll.scrollTopRatio = 1f
                 onEvent(PacketEvent) {
@@ -111,9 +113,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                     val packet = event.packet
                     if (packet !is ChatPacket) return@onEvent
                     val (username, message) = packet
-                    val chat = uiText("<$username> $message")
-                    space.height = max(0f, space.height - chat.height)
-                    scroll.scrollTopRatio = 1f
+                    chat("<${username}> $message")
                 }
             }
         }
@@ -170,4 +170,10 @@ fun WaitingRoomState.profile(name: String, container: Container, profileSize: Si
             .alignY(this, 0.15, true)
 
     }
+}
+
+fun WaitingRoomState.chat(chat: String) {
+    val chat = chats.uiText(chat)
+    space.height = max(0f, space.height - chat.height)
+    scroll.scrollTopRatio = 1f
 }
