@@ -44,10 +44,8 @@ suspend inline fun sendHttp(path: String, auth: Boolean = true) =
         if (auth) basicAuth(username, sessionId)
     }
 
-@OptIn(InternalCoroutinesApi::class)
 suspend fun client(): HttpClient = run {
     if (clientInst == null) {
-        println(clientInst == null)
         initializeClient()
     }
     clientInst!!

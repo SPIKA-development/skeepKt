@@ -50,4 +50,4 @@ fun serverPacket(serverPacket: ServerPacket): PacketController<Any> = when(serve
     PLAYER_LEAVE -> packet<PlayerLeavePacket>()
 } as PacketController<Any>
 
-private inline fun <reified T : Any> packet() = packet<T> { println("Aasdf"); sceneContainer.dispatch(PacketEvent(it)) }
+private inline fun <reified T : Any> packet() = packet<T> { sceneContainer.dispatch(PacketEvent(it)) }

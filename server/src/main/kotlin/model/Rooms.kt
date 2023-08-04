@@ -40,8 +40,6 @@ fun getJoinedPlayersAmount(room: UUID) = transaction {
 const val defaultRoomMaxPlayers = 6
 fun createRoom(creator: UUID) = transaction {
     Room.new {
-        println(Session.all().map { it.id })
-        println(creator)
         val onlinePlayer = OnlinePlayer.find(OnlinePlayers.id eq creator).first()
         name = "${onlinePlayer.name}의 방"
         maxPlayers = 6

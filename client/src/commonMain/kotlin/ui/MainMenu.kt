@@ -121,7 +121,6 @@ fun MainMenuState.room(room: ViewedRoom) {
         isRoom = true
         val logo = getKoin().get<BmpSlice>(named("logo"))
         val logoSize = Size(buttonSize.height - padding, buttonSize.height - padding)
-        println(logoSize)
         uiImage(size = logoSize, bitmap = logo, scaleMode = ScaleMode.FIT) {
         }.centerYOn(this)
             .alignX(this, 0.025, true)

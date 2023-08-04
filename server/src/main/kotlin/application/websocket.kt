@@ -37,7 +37,6 @@ fun Application.configureWebsocket() {
     routing {
         webSocket {
             val thisConnection = Connection(this, receiveDeserialized<UUID>())
-            println("Aasdf")
             connections += thisConnection
             try {
                 while (true) {
