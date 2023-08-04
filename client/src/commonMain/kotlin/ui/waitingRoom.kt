@@ -87,8 +87,10 @@ suspend fun waitingRoom(room: UUID) {
                     positionX(padding/2)
                     keys {
                         down(Key.ENTER) {
-                            sendToServer(ClientPacket.CHAT, text)
-                            text = " "
+                            if (text.trim().isNotEmpty()) {
+                                sendToServer(ClientPacket.CHAT, text)
+                                text = " "
+                            }
                         }
                     }
                 }.zIndex(2)
