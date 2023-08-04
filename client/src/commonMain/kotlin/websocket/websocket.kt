@@ -1,12 +1,13 @@
 package websocket
 
-import event.ChatEvent
+import event.PacketEvent
 import io.ktor.util.*
 import korlibs.io.net.ws.WebSocketClient
 import kotlinx.coroutines.Job
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import network.*
+import network.ServerPacket.*
 import sceneContainer
 import util.launchNow
 
@@ -44,7 +45,9 @@ suspend fun startWebSocket(): Job {
 
 @Suppress("UNCHECKED_CAST")
 fun serverPacket(serverPacket: ServerPacket): PacketController<Any> = when(serverPacket) {
-    ServerPacket.CHAT -> packet<ChatPacket> {
-        sceneContainer.dispatch(ChatEvent(it))
-    }
+    CHAT -> packet<ChatPacket>()
+    PLAYER_JOIN -> packet<PlayerJoinPacket>()
+    PLAYER_LEAVE -> packet<PlayerLeavePacket>()
 } as PacketController<Any>
+
+private inline fun <reified T : Any> packet() = packet<T> { { sceneContainer.dispatch(PacketEvent(it)) } }

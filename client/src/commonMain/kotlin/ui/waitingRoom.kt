@@ -1,6 +1,6 @@
 package ui
 
-import event.ChatEvent
+import event.PacketEvent
 import korlibs.event.Key
 import korlibs.image.color.Colors
 import korlibs.image.text.TextAlignment
@@ -70,9 +70,11 @@ suspend fun waitingRoom(room: UUID) {
                 scroll.scrollBarAlpha = 0f
                 scroll.horizontal.view.visible = false
                 scroll.scrollTopRatio = 1f
-                onEvent(ChatEvent) { event ->
+                onEvent(PacketEvent) { event ->
                     println("chat")
-                    val (username, message) = event.chatPacket
+                    val packet = event.packet
+                    if (packet !is ChatPacket) return@onEvent
+                    val (username, message) = packet
                     val chat = uiText("<$username> $message")
                     space.height = max(0f, space.height - chat.height)
                     scroll.scrollTopRatio = 1f
