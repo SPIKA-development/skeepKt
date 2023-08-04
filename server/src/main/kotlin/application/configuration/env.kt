@@ -3,7 +3,9 @@ package application.configuration
 import io.github.cdimascio.dotenv.dotenv
 import kotlin.reflect.KProperty
 
-private val dotenv = dotenv()
+private val dotenv = dotenv {
+    ignoreIfMissing = true
+}
 
 object EnvVar {
     val serverPort by IntEnv { 8080 }
@@ -18,7 +20,7 @@ abstract class Env<T>(private val default: (() -> T)?) {
         val key = property.name
         return runCatching { System.getenv(key).run(::convert) }
             .getOrNull()?: dotenv.get(key)?.run(::convert)
-        ?: default?.invoke()?: throw AssertionError("$key is not exists")
+        ?: default!!.invoke()!!
     }
 }
 
