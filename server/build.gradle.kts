@@ -8,13 +8,13 @@ apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 version = ""
 
 dependencies {
-    testImplementation("org.testng:testng:7.1.0")
     add("implementation", project(":shared"))
     add("implementation", libs.ktor.server.netty)
     add("implementation", libs.ktor.server.core)
     add("implementation", libs.ktor.server.websockets)
     add("implementation", libs.logback)
 
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation(libs.ktor.server.caching.headers)
     implementation(libs.kotlinx.uuid.exposed)
     implementation(libs.ktor.server.cors)

@@ -9,8 +9,7 @@ fun Application.configurationShutdown() {
     val shutdown = ShutDownUrl("") { 0 }
     routing {
         post("shutdown") {
-            val key = System.getenv("ADMIN_KEY")
-            if (key.isEmpty()) return@post
+            val key = EnvVar.ADMIN_KEY
             if (call.parameters["key"] == key) {
                 shutdown.doShutdown(call)
             }
