@@ -15,6 +15,7 @@ import korlibs.korge.Korge
 import korlibs.korge.scene.SceneContainer
 import korlibs.korge.scene.sceneContainer
 import korlibs.math.geom.ScaleMode
+import korlibs.math.geom.Size
 import network.client
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
@@ -41,7 +42,13 @@ suspend fun start() {
     }))
     client()
     startWebSocket()
-    Korge(title = "Skeep", icon = "images/logo.png", scaleMode = ScaleMode.SHOW_ALL, backgroundColor = ColorPalette.background) {
+    Korge(
+        windowSize = Size(960, 540),
+        title = "Skeep",
+        icon = "images/logo.png",
+        scaleMode = ScaleMode.SHOW_ALL,
+        backgroundColor = ColorPalette.background
+    ) {
         sceneContainer = sceneContainer()
         sceneContainer.changeTo({ MainScene() })
     }
