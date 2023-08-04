@@ -51,3 +51,7 @@ fun nameRoom(room: UUID) = transaction {
 fun joinRoom(player: UUID, room: UUID) = transaction {
     Player.find(Players.id eq player).first().room = EntityID(room, Rooms)
 }
+
+fun leaveRoom(session: UUID) = transaction {
+    getPlayerBySession(session).room = null
+}

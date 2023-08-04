@@ -24,6 +24,10 @@ fun Application.configureRooms() {
                     call.respond(HttpStatusCode.OK)
                 }
                 post("name") { call.respond(nameRoom(call.receive<UUID>())) }
+                post("leave") {
+
+                    call.respond(HttpStatusCode.OK)
+                }
             }
         }
     }

@@ -84,6 +84,7 @@ suspend fun MainMenuState.mainMenu() {
             customUiButton(size = bottomButtonSize).bottomButton("방 생성").onClick {
                 val room = createRoom()
                 serverList.removeFromParent()
+                joinRoom(room.uuid)
                 waitingRoom(room.uuid)
             }
             customUiButton(size = bottomButtonSize).bottomButton("새로고침").onClick {
