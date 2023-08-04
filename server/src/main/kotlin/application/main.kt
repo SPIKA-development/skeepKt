@@ -43,10 +43,6 @@ fun Application.module() {
     install(ContentNegotiation) {
         json()
     }
-    install(ShutDownUrl.ApplicationCallPlugin) {
-        shutDownUrl = "/shutdown"
-        exitCodeSupplier = { 0 }
-    }
     routing {
         staticResources("/", "/")
     }
