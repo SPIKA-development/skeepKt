@@ -1,5 +1,6 @@
 package application
 
+import application.configuration.configurationShutdown
 import application.configuration.configureAuthentication
 import application.configuration.configureDatabase
 import application.configuration.environment
@@ -42,9 +43,14 @@ fun Application.module() {
     install(ContentNegotiation) {
         json()
     }
+    install(ShutDownUrl.ApplicationCallPlugin) {
+        shutDownUrl = "/shutdown"
+        exitCodeSupplier = { 0 }
+    }
     routing {
         staticResources("/", "/")
     }
+    configurationShutdown()
     configureDatabase()
     configureAuthentication()
     configureRooms()
