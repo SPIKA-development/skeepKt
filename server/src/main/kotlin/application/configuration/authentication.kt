@@ -20,12 +20,11 @@ fun Application.configureAuthentication() {
     install(Authentication) {
         basic {
             validate { session ->
-                println("session=$session")
-                println(transaction { Session.all().map { it.id } })
                 //throw exception when not found
                 val uuid = UUID(session.password)
-                transaction { Session.find(model.Sessions.id eq uuid).first() }
-                UserSession(uuid)
+                runCatching { transaction {
+                    Session.find(model.Sessions.id eq uuid).first().id.value.run(::UserSession)
+                } }.getOrNull()
             }
         }
     }
