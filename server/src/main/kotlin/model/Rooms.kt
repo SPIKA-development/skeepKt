@@ -47,3 +47,7 @@ fun createRoom(creator: UUID) = transaction {
 fun nameRoom(room: UUID) = transaction {
     Room.find(Rooms.id eq room).first().name
 }
+
+fun joinRoom(player: UUID, room: UUID) = transaction {
+    Player.find(Players.id eq player).first().room = EntityID(room, Rooms)
+}

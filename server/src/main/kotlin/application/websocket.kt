@@ -64,7 +64,7 @@ suspend fun serverPacket(websocket: DefaultWebSocketSession, session: UUID, clie
     }
     ClientPacket.CHAT -> packet<String> {
         val player = getPlayerBySession(session)
-        connections.mapNotNull { runCatching { getPlayerBySession(it.session).room == player.room }.getOrNull() }
+        connections.mapNotNull { runCatching { getPlayerBySession(it.session).room?.equals(player.room) }.getOrNull() }
         websocket.sendToClient(ServerPacket.CHAT, Chat(player.name, it))
     }
 } as PacketController<Any>
