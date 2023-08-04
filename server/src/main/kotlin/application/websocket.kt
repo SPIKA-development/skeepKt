@@ -23,7 +23,7 @@ import kotlin.collections.LinkedHashSet
 val serverUUID = UUID.generateUUID()
 val connections: MutableSet<Connection> = Collections.synchronizedSet(LinkedHashSet())
 fun getPlayersByRoom(room: UUID) =
-    connections.filter { runCatching { getPlayerBySession(it.session).room?.equals(room) }.getOrNull()?: false }
+    connections.filter { runCatching { getPlayerBySession(it.session).room?.value?.equals(room) }.getOrNull()?: false }
 
 class Connection(val websocket: DefaultWebSocketSession, val session: UUID)
 fun Application.configureWebsocket() {
