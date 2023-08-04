@@ -6,12 +6,11 @@ import kotlinx.uuid.exposed.KotlinxUUIDEntityClass
 import kotlinx.uuid.exposed.KotlinxUUIDTable
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object JoinSessions : KotlinxUUIDTable() {
     val room = reference("room", Rooms)
-    val player = reference("player", Players)
+    val player = reference("player", OnlinePlayers)
     init { let { transaction { SchemaUtils.create(it) } } }
 }
 

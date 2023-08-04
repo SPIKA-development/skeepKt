@@ -1,6 +1,15 @@
+import korlibs.image.bitmap.slice
+import korlibs.image.color.Colors
 import korlibs.image.font.Font
 import korlibs.image.font.readWoffFont
 import korlibs.image.format.*
+import korlibs.image.vector.format.readSVG
+import korlibs.image.vector.render
+import korlibs.image.vector.renderNoNative
+import korlibs.image.vector.renderToImage
+import korlibs.image.vector.scaled
+import korlibs.io.file.std.cacheVfs
+import korlibs.io.file.std.cachedToMemory
 import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.Korge
 import korlibs.korge.scene.SceneContainer
@@ -22,10 +31,12 @@ suspend fun start() {
     val coroutineContext = coroutineContext
     val logo = resourcesVfs["images/logo.png"].readBitmapSlice()
     val font = resourcesVfs["fonts/NanumSquareNeoTTF-dEb.woff"].readWoffFont()
+    val profile = resourcesVfs["images/profile.png"].readBitmap()
     getKoin().loadModules(listOf(module {
         single { coroutineContext }
         single { font } bind Font::class
         single(named("logo")) { logo }
+        single(named("profile")) { profile }
 
     }))
     client()

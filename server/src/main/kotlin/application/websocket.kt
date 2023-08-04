@@ -16,13 +16,14 @@ import model.*
 import network.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
+import util.launchNow
 import java.time.Duration
 import java.util.*
 import kotlin.collections.LinkedHashSet
 
 val serverUUID = UUID.generateUUID()
 val connections: MutableSet<Connection> = Collections.synchronizedSet(LinkedHashSet())
-fun getPlayersByRoom(room: UUID) =
+fun getRoomConnections(room: UUID) =
     connections.filter { runCatching { getPlayerBySession(it.session).room?.value?.equals(room) }.getOrNull()?: false }
 
 class Connection(val websocket: DefaultWebSocketSession, val session: UUID)
@@ -49,6 +50,7 @@ fun Application.configureWebsocket() {
             } catch (e: Throwable) {
                 e.printStackTrace()
             } finally {
+                launchNow { leaveRoom(thisConnection.session) }
                 connections -= thisConnection
             }
         }
@@ -63,7 +65,7 @@ suspend fun serverPacket(websocket: DefaultWebSocketSession, session: UUID, clie
     }
     ClientPacket.CHAT -> packet<String> { received ->
         val player = getPlayerBySession(session)
-        getPlayersByRoom(player.room!!.value).forEach {
+        getRoomConnections(player.room!!.value).forEach {
             it.websocket.sendToClient(ServerPacket.CHAT, ChatPacket(player.name, received))
         }
     }

@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object Sessions : KotlinxUUIDTable() {
-    val player = reference("player", Players)
+    val player = reference("player", OnlinePlayers)
     init { let { transaction { SchemaUtils.create(it) } } }
 }
 
@@ -19,7 +19,7 @@ class Session(id: EntityID<UUID>) : KotlinxUUIDEntity(id) {
     var player by Sessions.player
 }
 
-fun newSession(sessionPlayer: Player) = transaction {
+fun newSession(sessionPlayer: OnlinePlayer) = transaction {
     Session.new {
         player = sessionPlayer.id
     }

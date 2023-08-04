@@ -23,9 +23,6 @@ import korlibs.math.geom.Size
 import korlibs.time.DateTime
 import korlibs.time.milliseconds
 import network.ViewedRoom
-import network.createRoom
-import network.getViewedRooms
-import network.joinRoom
 import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform.getKoin
 import scene.styler
@@ -33,6 +30,9 @@ import sceneContainer
 import ui.custom.customUiButton
 import ui.custom.customUiScrollable
 import util.ColorPalette
+import websocket.createRoom
+import websocket.getViewedRooms
+import websocket.joinRoom
 import kotlin.math.PI
 
 class MainMenuState {
@@ -85,7 +85,7 @@ suspend fun MainMenuState.mainMenu() {
                 val room = createRoom()
                 serverList.removeFromParent()
                 joinRoom(room.uuid)
-                waitingRoom(room.uuid)
+                WaitingRoomState().waitingRoom(room.uuid)
             }
             customUiButton(size = bottomButtonSize).bottomButton("새로고침").onClick {
                 rooms.removeChildrenIf { index, child -> child.isRoom }
@@ -164,7 +164,7 @@ fun MainMenuState.room(room: ViewedRoom) {
                             HttpStatusCode.OK -> {
                                 loading.removeFromParent()
                                 serverList.removeFromParent()
-                                waitingRoom(room.uuid)
+                                WaitingRoomState().waitingRoom(room.uuid)
                             }
 
                             HttpStatusCode.NotFound -> {

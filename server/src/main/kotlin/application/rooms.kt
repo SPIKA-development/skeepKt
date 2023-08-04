@@ -13,6 +13,8 @@ import model.*
 import network.PlayerJoinPacket
 import network.PlayerLeavePacket
 import network.ServerPacket
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureRooms() {
     routing {
@@ -21,18 +23,28 @@ fun Application.configureRooms() {
                 post { call.respond(listRoom()) }
                 post("create") { call.respond(createRoom(call.getPlayer())) }
                 post("join") {
-                    joinRoom(call.getPlayer(), call.receive<UUID>())
+                    val room = call.receive<UUID>()
+                    val maxPlayers = transaction { Room.find(Rooms.id eq room).first().maxPlayers }
+                    if (getJoinedPlayersAmount(room) >= maxPlayers) {
+                        call.respond(HttpStatusCode.ServiceUnavailable)
+                        return@post
+                    }
+                    listRoom()
+                    joinRoom(call.getPlayer(), room)
                     val player = getPlayerBySession(call.getUserSession())
-                    getPlayersByRoom(player.room!!.value).forEach {
+                    getRoomConnections(room).forEach {
                         it.websocket.sendToClient(ServerPacket.PLAYER_JOIN, PlayerJoinPacket(player.name))
                     }
                     call.respond(HttpStatusCode.OK)
                 }
                 post("name") { call.respond(nameRoom(call.receive<UUID>())) }
+                post("players") {
+                    call.respond(getPlayersByRoom(getPlayerBySession(call.getUserSession()).room!!.value))
+                }
                 post("leave") {
                     leaveRoom(call.getUserSession())
                     val player = getPlayerBySession(call.getUserSession())
-                    getPlayersByRoom(player.room!!.value).forEach {
+                    getRoomConnections(player.room!!.value).forEach {
                         it.websocket.sendToClient(ServerPacket.PLAYER_LEAVE, PlayerLeavePacket(player.name))
                     }
                     call.respond(HttpStatusCode.OK)

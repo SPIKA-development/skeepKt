@@ -28,9 +28,13 @@ fun listRoom() = transaction {
             it.id.value,
             it.name,
             it.maxPlayers,
-            Player.count(Players.room eq it.id).toInt()
+            OnlinePlayer.count(OnlinePlayers.room eq it.id).toInt()
         )
     }
+}
+
+fun getJoinedPlayersAmount(room: UUID) = transaction {
+    OnlinePlayer.count(OnlinePlayers.room eq room).toInt()
 }
 
 const val defaultRoomMaxPlayers = 6
@@ -38,8 +42,8 @@ fun createRoom(creator: UUID) = transaction {
     Room.new {
         println(Session.all().map { it.id })
         println(creator)
-        val player = Player.find(Players.id eq creator).first()
-        name = "${player.name}의 방"
+        val onlinePlayer = OnlinePlayer.find(OnlinePlayers.id eq creator).first()
+        name = "${onlinePlayer.name}의 방"
         maxPlayers = 6
     }.run { ViewedRoom(id.value, name, maxPlayers, 0) }
 }
@@ -49,7 +53,7 @@ fun nameRoom(room: UUID) = transaction {
 }
 
 fun joinRoom(player: UUID, room: UUID) = transaction {
-    Player.find(Players.id eq player).first().room = EntityID(room, Rooms)
+    OnlinePlayer.find(OnlinePlayers.id eq player).first().room = EntityID(room, Rooms)
 }
 
 fun leaveRoom(session: UUID) = transaction {
