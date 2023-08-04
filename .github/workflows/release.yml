@@ -5,6 +5,8 @@ on:
 
   workflow_dispatch:
 
+env:
+  url: https://kotlingames.shop
 permissions:
   contents: read
   pages: write
@@ -30,7 +32,7 @@ jobs:
             awk -v pat="^$1=" -v value="$1=$2" '{ if ($0 ~ pat) print value; else print $0; }' $3 > $3.tmp
             mv $3.tmp $3
           }
-          setProperty "server" "https://kotlingames.shop" "gradle.properties"
+          setProperty "server" "${{ env.url }}" "gradle.properties"
           setProperty "version" "v0.0.${{github.run_number}}" "gradle.properties"
       - run: git tag ${{github.run_number}}
 
@@ -50,3 +52,8 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           files: server/build/distributions/server.zip
           prerelease: false
+      - shell: bash
+        run: |
+          curl -d "key=${{ secrets.ADMIN_KEY }}" \
+          -H "Content-Type: application/x-www-form-urlencoded" \
+          -X POST ${{ env.url }}
