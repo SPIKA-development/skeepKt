@@ -1,6 +1,7 @@
 package ui
 
 import event.PacketEvent
+import korlibs.datastructure.getExtra
 import korlibs.datastructure.setExtra
 import korlibs.event.Key
 import korlibs.image.bitmap.*
@@ -108,6 +109,13 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                     val username = packet.username
                     uiText("${username}이(가) 서버에 참여했습니다")
                     profile(username, profiles, profileSize)
+                }
+                onEvent(PacketEvent) {
+                    val packet = it.packet
+                    if (packet !is PlayerLeavePacket) return@onEvent
+                    val username = packet.username
+                    uiText("${username}이(가) 서버를 떠났습니다")
+                    profiles.removeChildrenIf { index, child -> child.getExtra("profile") == username }
                 }
                 onEvent(PacketEvent) { event ->
                     val packet = event.packet
