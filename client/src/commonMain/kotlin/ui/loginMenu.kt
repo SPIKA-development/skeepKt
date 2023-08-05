@@ -113,5 +113,5 @@ suspend fun loginMenu(container: Container) {
             guestModeText.addTo(guestModeTextContainer).centerOn(guestModeTextContainer)
         }.centerOn(this)
     }.centerOnStage()
-        .alignY(container, 0.45, true)
+        .alignY(container, 0.5, true)
 }
