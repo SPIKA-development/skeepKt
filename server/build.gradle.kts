@@ -13,7 +13,10 @@ dependencies {
     add("implementation", libs.ktor.server.core)
     add("implementation", libs.ktor.server.websockets)
     add("implementation", libs.logback)
+    implementation(rootProject.fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
+    implementation("com.oracle.database.jdbc:ojdbc11:23.2.0.0")
+    implementation("com.oracle.database.security:oraclepki:21.1.0.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation(libs.ktor.server.caching.headers)
     implementation(libs.kotlinx.uuid.exposed)

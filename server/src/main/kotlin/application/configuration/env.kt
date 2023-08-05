@@ -12,6 +12,9 @@ object EnvVar {
     val sslPort by IntEnv { 8443 }
     val sslPassword by StringEnv { "angang" }
     val ADMIN_KEY by StringEnv()
+    val DB_URL by StringEnv()
+    val DB_USERNAME by StringEnv()
+    val DB_PASSWORD by StringEnv()
 }
 
 abstract class Env<T>(private val default: (() -> T)?) {

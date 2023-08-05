@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import java.security.KeyStore
 
-val keyStoreFile = File("build/keystore.jks")
+val keyStoreFile = File("keystore.jks")
 val keyStore =
     runCatching {
         KeyStore.getInstance(KeyStore.getDefaultType()).apply {
