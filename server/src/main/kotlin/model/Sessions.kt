@@ -4,9 +4,14 @@ import kotlinx.uuid.UUID
 import kotlinx.uuid.exposed.KotlinxUUIDEntity
 import kotlinx.uuid.exposed.KotlinxUUIDEntityClass
 import kotlinx.uuid.exposed.KotlinxUUIDTable
+import org.jetbrains.exposed.dao.Entity
+import org.jetbrains.exposed.dao.entityCache
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.load
+import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object Sessions : KotlinxUUIDTable() {
@@ -29,3 +34,7 @@ fun getPlayerUUIDBySession(session: UUID) = transaction {
     Session.find(Sessions.id eq session).first().player.value
 }
 
+fun logout(sessionUUID: UUID) = transaction {
+    val session = Session.find { Sessions.id eq sessionUUID }.first()
+    OnlinePlayers.deleteWhere { OnlinePlayers.id eq session.player }
+}

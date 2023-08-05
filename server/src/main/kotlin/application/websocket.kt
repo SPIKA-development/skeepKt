@@ -43,14 +43,21 @@ fun Application.configureWebsocket() {
                     val packet = receiveDeserialized<PacketFrame>()
                     val clientPacket = ClientPacket.values()[packet.type]
                     val packetController = serverPacket(this, packet.session, clientPacket)
-                    transaction { Session.find(Sessions.id eq packet.session).first() }
+                    println(connections.none { it.session == packet.session })
+                    if (connections.none { it.session == packet.session }
+                        && runCatching { transaction { Session.find(Sessions.id eq packet.session).first() } }.isFailure)
+                        return@webSocket
+                    val before = System.currentTimeMillis()
                     packetController.invoke(decode(packet.data, packetController.typeInfo)!!)
+                    val after = System.currentTimeMillis()
+                    println(after - before)
                 }
             } catch (_: kotlinx.coroutines.channels.ClosedReceiveChannelException) {
             } catch (e: Throwable) {
                 e.printStackTrace()
             } finally {
                 leaveRoom(thisConnection.session)
+                logout(thisConnection.session)
                 connections -= thisConnection
             }
         }

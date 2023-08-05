@@ -8,6 +8,7 @@ import network.ViewedRoom
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object Rooms : KotlinxUUIDTable() {
@@ -55,5 +56,10 @@ fun joinRoom(player: UUID, room: UUID) = transaction {
 }
 
 fun leaveRoom(session: UUID) = transaction {
-    getPlayerBySession(session).room = null
+    val player = getPlayerBySession(session)
+    val room = player.room!!
+    player.room = null
+    if (getJoinedPlayersAmount(room.value) == 0) {
+        Rooms.deleteWhere { Rooms.id eq room }
+    }
 }

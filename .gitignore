@@ -14,3 +14,4 @@
 kproject.lock
 
 **/kestore.jks
+/server/keystore.jks
