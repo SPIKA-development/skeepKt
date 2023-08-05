@@ -33,8 +33,6 @@ suspend fun start() {
         single(named("profile")) { profile }
 
     }))
-    client()
-    startWebSocket()
     Korge(
         windowSize = Size(960, 540),
         title = "Skeep",

@@ -4,7 +4,7 @@ import io.ktor.client.call.*
 import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
 
-val username: String = generateUsername()
+var username: String = generateUsername()
 lateinit var sessionId: String
 lateinit var sessionUUID: UUID
 

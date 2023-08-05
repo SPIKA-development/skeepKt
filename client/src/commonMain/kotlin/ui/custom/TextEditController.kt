@@ -32,7 +32,7 @@ class TextEditController(
     val textView: Text,
     val caretContainer: Container = textView,
     val eventHandler: View = textView,
-    val hint: View? = null,
+    val hint: UIText? = null,
     val bg: RenderableView? = null,
 ) : Closeable, UIFocusable, ISoftKeyboardConfig by SoftKeyboardConfig() {
     init {
@@ -438,6 +438,7 @@ class TextEditController(
                         if (range.length > 0) {
                             text = text.withoutRange(range).makeStartWithSpace()
                             cursorIndex = range.first
+                            if (range.first == 0) cursorIndex += 1
                         } else {
                             if (it.key == Key.BACKSPACE) {
                                 if (cursorIndex > 0) {
@@ -447,7 +448,6 @@ class TextEditController(
                                         text = tempText.makeStartWithSpace()
                                         cursorIndex = oldCursorIndex - 1 // This [oldCursorIndex] is required since changing text might change the cursorIndex already in some circumstances
                                     } else {
-
                                     }
                                 }
                             } else {

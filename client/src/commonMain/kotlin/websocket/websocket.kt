@@ -18,7 +18,9 @@ suspend fun websocketClient(): WebSocketClient {
     }
     return _websocketClient!!
 }
-suspend fun newWebsocketClient() = WebSocketClient(currentUrl.httpToWs())
+suspend fun newWebsocketClient() =
+    WebSocketClient(currentUrl.httpToWs())
+    .also { it.startWebSocket() }
 
 @OptIn(InternalAPI::class)
 suspend inline fun <reified T> sendToServer(packet: Enum<*>, t: T) {
@@ -27,18 +29,15 @@ suspend inline fun <reified T> sendToServer(packet: Enum<*>, t: T) {
 }
 
 
-suspend fun startWebSocket(): Job {
-    return launchNow {
-        val websocketClient = websocketClient()
-        websocketClient.send(Json.encodeToString(sessionUUID))
-        websocketClient.onStringMessage {
-            val packetFrame = Json.decodeFromString<PacketFrame>(it)
-            val serverPacket = ServerPacket.values()[packetFrame.type]
-            val packetController = serverPacket(serverPacket)
-            launchNow {
-                val data = decode(packetFrame.data, packetController.typeInfo)!!
-                packetController.invoke(data)
-            }
+suspend fun WebSocketClient.startWebSocket() {
+    send(Json.encodeToString(sessionUUID))
+    onStringMessage {
+        val packetFrame = Json.decodeFromString<PacketFrame>(it)
+        val serverPacket = ServerPacket.values()[packetFrame.type]
+        val packetController = serverPacket(serverPacket)
+        launchNow {
+            val data = decode(packetFrame.data, packetController.typeInfo)!!
+            packetController.invoke(data)
         }
     }
 }

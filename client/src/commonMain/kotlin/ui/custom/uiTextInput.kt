@@ -2,6 +2,8 @@ package ui.custom
 
 import korlibs.event.*
 import korlibs.image.font.*
+import korlibs.image.text.HorizontalAlign
+import korlibs.image.text.TextAlignment
 import korlibs.io.async.*
 import korlibs.korge.annotations.*
 import korlibs.korge.style.*
@@ -40,7 +42,7 @@ class UITextInput(hint: String, initialText: String = "", size: Size = Size(128,
     //private val container = fixedSizeContainer(width - 4.0, height - 4.0).position(2.0, 3.0)
     private val textView = customUiText(initialText, this.size)
     //private val textView = container.text(initialText, 16.0, color = Colors.BLACK, font = DefaultTtfFont)
-    val controller = TextEditController(textView.textView, uiContainer(textView.size) {  }, this, bg = bg,
+    val controller = TextEditController(textView.textView, uiContainer(textView.size), this, bg = bg,
         hint = textView.uiText(" $hint", size = size) {
             centerYOn(textView).alignX(textView, 0.1, true)
             alpha = 0.5f

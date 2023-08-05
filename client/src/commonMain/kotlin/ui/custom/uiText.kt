@@ -27,7 +27,7 @@ class UIText(
     protected var bpressing by uiObservable(false) { updateState() }
 
     private val background = solidRect(size, Colors.TRANSPARENT)
-    val textView = text(text)
+    val textView = text(text, alignment = styles.textAlignment)
     var bgcolor: RGBA = Colors.TRANSPARENT
 
     var text: String by textView::text
