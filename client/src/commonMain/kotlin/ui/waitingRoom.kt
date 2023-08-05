@@ -50,7 +50,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
     lateinit var waitingRoom: View
     sceneContainer.uiContainer {
         waitingRoom = this
-        val sidebarSize = Size(sceneContainer.width / 3.5f, sceneContainer.height)
+        val sidebarSize = Size(sceneContainer.width / 4.5f, sceneContainer.height)
         styles(styler)
         val belowElementHeight = sceneContainer.width / 25f
         val leaveButton = Size(belowElementHeight*1.75f, belowElementHeight)
@@ -95,6 +95,9 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
             it.horizontal.view.visible = false
             it.vertical.view.visible = false
             it.scrollBarAlpha = 0f
+            scroll.timeScrollBar = 0.seconds
+            scroll.horizontal.view.visible = false
+            scroll.scrollTopRatio = 1f
             uiVerticalStack(width = size.width, padding = padding, adjustSize = false) {
                 chats = this
                 space = uiSpacing(Size(size.width, chatSize.height))
@@ -102,9 +105,6 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                 styles {
                     textAlignment = TextAlignment.MIDDLE_LEFT
                 }
-                scroll.timeScrollBar = 0.seconds
-                scroll.horizontal.view.visible = false
-                scroll.scrollTopRatio = 1f
                 onEvent(PacketEvent) {
                     val packet = it.packet
                     if (packet !is PlayerJoinPacket) return@onEvent
