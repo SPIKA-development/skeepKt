@@ -12,3 +12,5 @@
 /modules
 
 kproject.lock
+
+**/kestore.jks
