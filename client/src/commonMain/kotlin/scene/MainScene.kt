@@ -18,6 +18,7 @@ import network.login
 import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform.getKoin
 import ui.MainMenuState
+import ui.loginMenu
 import ui.mainMenu
 import util.ColorPalette
 
@@ -38,6 +39,7 @@ class MainScene : Scene() {
             }.zIndex(100)
             zIndex(100)
         }
-        MainMenuState().mainMenu()
+        loginMenu(sceneContainer)
+//        MainMenuState().mainMenu()
     }
 }

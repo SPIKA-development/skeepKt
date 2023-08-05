@@ -56,8 +56,8 @@ fun Application.configureWebsocket() {
             } catch (e: Throwable) {
                 e.printStackTrace()
             } finally {
-                leaveRoom(thisConnection.session)
-                logout(thisConnection.session)
+                runCatching { leaveRoom(thisConnection.session) }
+                runCatching { logout(thisConnection.session) }
                 connections -= thisConnection
             }
         }

@@ -13,17 +13,18 @@ import korlibs.math.geom.*
 
 @KorgeExperimental
 inline fun Container.customUiTextInput(
+    hint: String,
     initialText: String = " ",
     size: Size = Size(128, 24),
     block: @ViewDslMarker UITextInput.() -> Unit = {}
-): UITextInput = UITextInput(initialText, size)
+): UITextInput = UITextInput(hint, initialText, size)
     .addTo(this).also { block(it) }
 
 /**
  * Simple Single Line Text Input
  */
 @KorgeExperimental
-class UITextInput(initialText: String = "", size: Size = Size(128, 24)) :
+class UITextInput(hint: String, initialText: String = "", size: Size = Size(128, 24)) :
     UIView(size),
     //UIFocusable,
     ISoftKeyboardConfig by SoftKeyboardConfig() {
@@ -40,7 +41,7 @@ class UITextInput(initialText: String = "", size: Size = Size(128, 24)) :
     private val textView = customUiText(initialText, this.size)
     //private val textView = container.text(initialText, 16.0, color = Colors.BLACK, font = DefaultTtfFont)
     val controller = TextEditController(textView.textView, uiContainer(textView.size) {  }, this, bg = bg,
-        hint = textView.uiText(" 채팅을 입력하세요...", size = size) {
+        hint = textView.uiText(" $hint", size = size) {
             centerYOn(textView).alignX(textView, 0.1, true)
             alpha = 0.5f
         }

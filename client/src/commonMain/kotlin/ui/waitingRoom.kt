@@ -1,3 +1,4 @@
+@file:OptIn(KorgeExperimental::class)
 package ui
 
 import event.PacketEvent
@@ -12,13 +13,11 @@ import korlibs.korge.annotations.KorgeExperimental
 import korlibs.korge.input.keys
 import korlibs.korge.input.onMouseDragCloseable
 import korlibs.korge.input.onUp
-import korlibs.korge.input.onUpAnywhere
 import korlibs.korge.style.styles
 import korlibs.korge.style.textAlignment
 import korlibs.korge.ui.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.*
-import korlibs.korge.view.align.alignXY
 import korlibs.math.geom.Size
 import korlibs.time.seconds
 import kotlinx.uuid.UUID
@@ -28,8 +27,8 @@ import org.koin.mp.KoinPlatform.getKoin
 import scene.styler
 import sceneContainer
 import ui.custom.*
+import ui.custom.UITextInput
 import util.ColorPalette
-import util.launchNow
 import websocket.getRoomName
 import websocket.leaveRoom
 import websocket.listPlayer
@@ -43,19 +42,36 @@ class WaitingRoomState {
     lateinit var chats: Container
     lateinit var space: Container
     lateinit var scroll: CustomUIScrollable
+    val sidebarSize = Size(sceneContainer.width / 4.5f, sceneContainer.height)
+    val belowElementHeight = sceneContainer.width / 25f
+    val leaveButton = Size(belowElementHeight*1.75f, belowElementHeight)
+    val inputBarSize = Size(sceneContainer.width - sidebarSize.width - padding*2 - leaveButton.width - padding*2, belowElementHeight)
+    val titleSize = Size(sceneContainer.width - sidebarSize.width, belowElementHeight * 1.5f)
 }
 
-@OptIn(KorgeExperimental::class)
 suspend fun WaitingRoomState.waitingRoom(room: UUID) {
     lateinit var waitingRoom: View
     sceneContainer.uiContainer {
         waitingRoom = this
-        val sidebarSize = Size(sceneContainer.width / 4.5f, sceneContainer.height)
         styles(styler)
-        val belowElementHeight = sceneContainer.width / 25f
-        val leaveButton = Size(belowElementHeight*1.75f, belowElementHeight)
-        val inputBarSize = Size(sceneContainer.width - sidebarSize.width - padding*2 - leaveButton.width - padding*2, belowElementHeight)
-        val titleSize = Size(sceneContainer.width - sidebarSize.width, belowElementHeight * 1.5f)
+        val textInputSize = inputBarSize.minus(Size(padding / 2, 0f))
+        uiContainer(textInputSize) {
+            val input = materialInput("채팅을 입력하세요...", padding, this).input
+            input.apply {
+                keys {
+                    down(Key.ENTER) {
+                        if (text.trim().isNotEmpty()) {
+                            sendToServer(ClientPacket.CHAT, text)
+                            text = " "
+                        }
+                    }
+                }
+            }
+            solidRect(input.size, color = ColorPalette.base).zIndex(0)
+            positionX(leaveButton.width + padding * 2)
+            positionY(sceneContainer.height - padding - input.size.height)
+        }
+
         val title = uiContainer(size = titleSize) {
             uiText(getRoomName(room)).centerYOn(this)
         }.position(padding, padding)
@@ -128,32 +144,6 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                 }
             }
         }
-        uiContainer {
-                val input = customUiTextInput(size = inputBarSize.minus(Size(padding/2, 0f))) {
-                    text = " "
-                    styles { textAlignment = TextAlignment.MIDDLE_LEFT }
-                    controller.textView.alignment = TextAlignment.MIDDLE_LEFT
-                    controller.caretContainer.alignY(this, 0.75, false)
-                    positionX(this@waitingRoom.padding/2)
-                    keys {
-                        down(Key.ENTER) {
-                            if (text.trim().isNotEmpty()) {
-                                sendToServer(ClientPacket.CHAT, text)
-                                text = " "
-                            }
-                        }
-                    }
-                }.zIndex(2)
-                uiMaterialLayer(input.size) {
-                    shadowColor = Colors.TRANSPARENT
-                    bgColor = Colors.TRANSPARENT
-                    borderColor = ColorPalette.out
-                    borderSize = padding / 4
-                }.zIndex(1)
-                solidRect(input.size, color = ColorPalette.base).zIndex(0)
-                positionX(leaveButton.width + padding * 2)
-                positionY(sceneContainer.height - padding - input.size.height)
-            }
     }
     listPlayer().forEach {
         profile(it.username, profiles, profileSize)
@@ -187,4 +177,28 @@ fun WaitingRoomState.chat(chat: String) {
     val chat = chats.uiText(chat)
     space.height = max(0f, space.height - chat.height)
     scroll.scrollTopRatio = 1f
+}
+
+data class MaterialInput(
+    val input: UITextInput,
+    val materialLayer: UIMaterialLayer
+)
+fun materialInput(hint: String, padding: Float, container: Container,
+                  border: RGBA = ColorPalette.out,
+                  bg: RGBA = Colors.TRANSPARENT
+): MaterialInput {
+    val input = container.customUiTextInput(hint, size = container.size) {
+        text = " "
+        styles { textAlignment = TextAlignment.MIDDLE_LEFT }
+        controller.textView.alignment = TextAlignment.MIDDLE_LEFT
+        controller.caretContainer.alignY(this, 0.75, false)
+        positionX(padding / 2)
+    }.zIndex(2)
+    val material = container.uiMaterialLayer(input.size) {
+        shadowColor = Colors.TRANSPARENT
+        bgColor = bg
+        borderColor = border
+        borderSize = padding / 4
+    }.zIndex(1)
+    return MaterialInput(input, material)
 }
