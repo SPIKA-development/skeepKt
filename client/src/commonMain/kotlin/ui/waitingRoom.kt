@@ -20,6 +20,7 @@ import korlibs.korge.view.*
 import korlibs.korge.view.align.*
 import korlibs.korge.view.align.alignXY
 import korlibs.math.geom.Size
+import korlibs.time.seconds
 import kotlinx.uuid.UUID
 import network.*
 import org.koin.core.qualifier.named
@@ -101,6 +102,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                 styles {
                     textAlignment = TextAlignment.MIDDLE_LEFT
                 }
+                scroll.timeScrollBar = 0.seconds
                 scroll.horizontal.view.visible = false
                 scroll.scrollTopRatio = 1f
                 onEvent(PacketEvent) {
