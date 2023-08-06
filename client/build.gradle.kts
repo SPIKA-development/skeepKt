@@ -26,17 +26,3 @@ tasks.withType<ProcessResources> {
         expand(properties)
     }
 }
-
-kotlin {
-    sourceSets {
-        val hostOs = System.getProperty("os.name")
-        if (hostOs.startsWith("Windows")) {
-            val mingwX64Main by getting {
-                dependencies {
-                    api(libs.ktor.client.winhttp)
-                    api(libs.logback)
-                }
-            }
-        }
-    }
-}

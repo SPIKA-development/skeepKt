@@ -26,5 +26,5 @@ suspend fun main() {
             object : ClientEngineFactory { override fun getEngine() = WinHttp }
         } bind ClientEngineFactory::class
     }))
-    start()
+    println("asdf")
 }

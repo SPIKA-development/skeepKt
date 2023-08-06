@@ -84,6 +84,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: client/build
+          file: client/build/**
           tag: ${{ github.ref }}
           overwrite: true
