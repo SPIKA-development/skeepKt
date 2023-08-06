@@ -34,11 +34,5 @@ kotlin {
                 api(libs.logback)
             }
         }
-        val mingwX64Main by getting {
-            dependencies {
-                api(libs.ktor.client.winhttp)
-                api(libs.logback)
-            }
-        }
     }
 }

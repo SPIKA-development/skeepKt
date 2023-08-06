@@ -26,3 +26,14 @@ tasks.withType<ProcessResources> {
         expand(properties)
     }
 }
+
+kotlin {
+    sourceSets {
+        val mingwX64Main by getting {
+            dependencies {
+                api(libs.ktor.client.winhttp)
+                api(libs.logback)
+            }
+        }
+    }
+}
