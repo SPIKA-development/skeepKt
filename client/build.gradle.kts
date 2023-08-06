@@ -11,14 +11,33 @@ korge {
     targetDesktopCross()
 }
 
-dependencies {
-    add("commonMainApi", project(":shared"))
-    add("commonMainApi", "de.cketti.unicode:kotlin-codepoints-deluxe:0.6.1")
+kotlin {
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                api(project(":shared"))
+                api("de.cketti.unicode:kotlin-codepoints-deluxe:0.6.1")
+                api(project(":deps"))
+            }
+        }
+        val jsMain by getting {
+            dependencies {
+                api(project(":shared"))
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                api(project(":shared"))
+            }
+        }
+        val mingwX64Main by getting {
+            dependencies {
+                api(project(":shared"))
+            }
+        }
+    }
 }
 
-dependencies {
-    add("commonMainApi", project(":deps"))
-}
 
 @Suppress("UnstableApiUsage")
 tasks.withType<ProcessResources> {
