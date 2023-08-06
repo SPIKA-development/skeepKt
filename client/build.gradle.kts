@@ -29,6 +29,7 @@ tasks.withType<ProcessResources> {
 
 kotlin {
     sourceSets {
+        val hostOs = System.getProperty("os.name")
         if (hostOs.startsWith("Windows")) {
             val mingwX64Main by getting {
                 dependencies {
