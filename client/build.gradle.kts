@@ -12,8 +12,8 @@ korge {
 }
 
 dependencies {
-    add("commonMainImplementation", project(":shared"))
-    add("commonMainImplementation", "de.cketti.unicode:kotlin-codepoints-deluxe:0.6.1")
+    add("commonMainApi", project(":shared"))
+    add("commonMainApi", "de.cketti.unicode:kotlin-codepoints-deluxe:0.6.1")
 }
 
 dependencies {
