@@ -41,6 +41,7 @@ jobs:
       - name: Buid JS bundle
         run: |
           ./gradlew :client:jsBrowserProductionWebpack
+          ./gradlew :client:linkReleaseExecutableMingwX64
       - name: server.zip
         run: ./gradlew :server:distZip
 
@@ -50,7 +51,7 @@ jobs:
           title: "Build #${{github.run_number}}"
           automatic_release_tag: "${{github.run_number}}"
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          files: server/build/distributions/server.zip
+          files: server/build/distributions/server.zip client/build/**
           prerelease: false
       - shell: bash
         run: |

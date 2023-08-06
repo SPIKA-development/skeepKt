@@ -9,6 +9,7 @@ korge {
     targetJvm()
     targetJs()
     targetDesktop()
+    targetDesktopCross()
 }
 
 dependencies {
