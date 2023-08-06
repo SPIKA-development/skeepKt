@@ -40,5 +40,11 @@ kotlin {
                 api(libs.logback)
             }
         }
+        val linuxX64Main by getting {
+            dependencies {
+                api(libs.ktor.client.cio)
+                api(libs.logback)
+            }
+        }
     }
 }

@@ -41,8 +41,8 @@ jobs:
       - name: Buid
         run: |
           ./gradlew :client:jsBrowserProductionWebpack
-          brew install wine-stable
-          ./gradlew :client:linkReleaseExecutableMingwX64
+#          brew install wine-stable
+#          ./gradlew :client:linkReleaseExecutableMingwX64
       - name: server.zip
         run: ./gradlew :server:distZip
 
