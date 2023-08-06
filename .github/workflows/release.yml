@@ -41,7 +41,6 @@ jobs:
       - name: Buid JS bundle
         run: |
           ./gradlew :client:jsBrowserProductionWebpack
-          ./gradlew :client:linkReleaseExecutableMingwX64
       - name: server.zip
         run: ./gradlew :server:distZip
 
