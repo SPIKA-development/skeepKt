@@ -8,7 +8,7 @@ plugins { kotlin("multiplatform") }
 korge {
     targetJvm()
     targetJs()
-    targetDesktop()
+    targetDesktopCross()
 }
 
 kotlin {
@@ -31,6 +31,12 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 api(libs.ktor.client.cio)
+                api(libs.logback)
+            }
+        }
+        val mingwX64Main by getting {
+            dependencies {
+                api(libs.ktor.client.winhttp)
                 api(libs.logback)
             }
         }

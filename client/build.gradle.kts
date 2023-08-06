@@ -8,7 +8,6 @@ korge {
     id = "com.sample.clientserver"
     targetJvm()
     targetJs()
-    targetDesktop()
     targetDesktopCross()
 }
 
