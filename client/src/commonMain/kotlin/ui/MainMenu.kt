@@ -142,23 +142,10 @@ fun MainMenuState.room(room: ViewedRoom) {
                     serverList.visible = false
                     sceneContainer.uiContainer {
                         loading = this
-                        val text = uiText("서버에 연결 중...") {
-                            styles(styler)
-                            centerOnStage()
-                            alignY(containerRoot, 0.4, true)
+                        val text = loadingMenu("서버에 연결 중...", "취소") {
+                            loading.removeFromParent()
+                            serverList.visible = true
                         }
-                        lateinit var cancelText: View
-                        val button =
-                            customUiButton(size = Size(sceneContainer.width * 0.471f, sceneContainer.width / 25)) {
-                                styles(styler)
-                                cancelText = bottomButton("취소").centerOn(this)
-                                centerXOnStage()
-                                alignY(containerRoot, 0.6, true)
-                                onClick {
-                                    loading.removeFromParent()
-                                    serverList.visible = true
-                                }
-                            }
                         when (joinRoom(room.uuid)) {
                             HttpStatusCode.OK -> {
                                 loading.removeFromParent()
@@ -167,15 +154,17 @@ fun MainMenuState.room(room: ViewedRoom) {
                             }
 
                             HttpStatusCode.NotFound -> {
-                                text.text = "서버에 연결할 수 없습니다"
-                                cancelText.removeFromParent()
-                                button.uiText("서버 목록으로 돌아가기").centerOn(this)
+                                loading.removeFromParent()
+                                loadingMenu("서버에 연결할 수 없습니다", "서버 목록으로 돌아가기") {
+
+                                }
                             }
 
                             else -> {
-                                text.text = "서버에 인원이 꽉 찼습니다!"
-                                cancelText.removeFromParent()
-                                button.uiText("서버 목록으로 돌아가기").centerOn(this)
+                                loading.removeFromParent()
+                                loadingMenu("서버 인원이 꽉 찼습니다!", "서버 목록으로 돌아가기") {
+
+                                }
                             }
                         }
                     }
@@ -187,4 +176,24 @@ fun MainMenuState.room(room: ViewedRoom) {
             }
         }
     }.centerXOn(sceneContainer)
+}
+
+fun Container.loadingMenu(text: String, buttonText: String, onClick: () -> Unit): UIText {
+    val text = uiText(text) {
+        styles(styler)
+        centerOnStage()
+        alignY(containerRoot, 0.4, true)
+    }
+    lateinit var cancelText: View
+    val button =
+        customUiButton(size = Size(sceneContainer.width * 0.471f, sceneContainer.width / 25)) {
+            styles(styler)
+            cancelText = bottomButton(buttonText).centerOn(this)
+            centerXOnStage()
+            alignY(containerRoot, 0.6, true)
+            onClick {
+                onClick.invoke()
+            }
+        }
+    return text
 }

@@ -23,6 +23,7 @@ import korlibs.korge.view.solidRect
 import korlibs.math.geom.Size
 import korlibs.math.log
 import network.client
+import network.sessionUUID
 import network.username
 import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform
@@ -90,9 +91,12 @@ suspend fun loginMenu(container: Container) {
                         warningText.text = "로그인 중..."
                         warningText.styles.textColor = ColorPalette.out
                         username = inputText.text.trim()
-                        client()
-                        loginMenu.removeFromParent()
-                        launchNow { MainMenuState().mainMenu() }
+                        if (runCatching { client(); sessionUUID }.isFailure) {
+                            warningText.text = "죄송합니다, 지금은 인증 서버를 사용할 수 없습니다. 나중에 다시 시도해 주세요."
+                        } else {
+                            loginMenu.removeFromParent()
+                            launchNow { MainMenuState().mainMenu() }
+                        }
                     }
                     onClick { join() }
                     onMouseDragCloseable { launchNow { join() } }

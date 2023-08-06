@@ -25,7 +25,12 @@ suspend fun newWebsocketClient() =
 @OptIn(InternalAPI::class)
 suspend inline fun <reified T> sendToServer(packet: Enum<*>, t: T) {
     val packetFrame = PacketFrame(packet.ordinal, sessionUUID, Json.encodeToString<T>(t))
-    websocketClient().send(Json.encodeToString(packetFrame))
+    runCatching { websocketClient().send(Json.encodeToString(packetFrame)) }.also {
+        if (it.isFailure) {
+
+        }
+        it.getOrThrow()
+    }
 }
 
 
