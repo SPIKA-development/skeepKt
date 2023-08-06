@@ -59,22 +59,13 @@ jobs:
   buildExe:
     name: Release .exe
     runs-on: windows-latest
-
+    needs: release
     steps:
-      - uses: actions/checkout@v3
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
-      - name: set properties value of server
-        run: |
-          setProperty(){
-            awk -v pat="^$1=" -v value="$1=$2" '{ if ($0 ~ pat) print value; else print $0; }' $3 > $3.tmp
-            mv $3.tmp $3
-          }
-          setProperty "server" "${{ env.url }}" "gradle.properties"
-          setProperty "version" "v0.0.${{github.run_number}}" "gradle.properties"
       - run: git tag ${{github.run_number}}
 
       - name: Grant execute permission for gradlew
