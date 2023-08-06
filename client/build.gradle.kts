@@ -20,21 +20,9 @@ kotlin {
                 api(project(":deps"))
             }
         }
-        val jsMain by getting {
-            dependencies {
-                api(project(":shared"))
-            }
-        }
-        val jvmMain by getting {
-            dependencies {
-                api(project(":shared"))
-            }
-        }
-        val mingwX64Main by getting {
-            dependencies {
-                api(project(":shared"))
-            }
-        }
+        val jsMain by getting
+        val jvmMain by getting
+        val mingwX64Main by getting
     }
 }
 
