@@ -44,8 +44,7 @@ suspend fun loginMenu(container: Container) {
         styles(styler)
         val padding = 15.75f
         uiVerticalStack(adjustSize = false, padding = padding) {
-            val title = customUiText("Skeep") {
-                styles.textFont = KoinPlatform.getKoin().get<Font>(named("bold"))
+            val title = customUiText("스키프") {
                 styles.textSize = styles.textSize * 1.25f
             }.centerXOn(this)
             val space = uiSpacing(size = Size(0f, title.size.height * 0.25f))

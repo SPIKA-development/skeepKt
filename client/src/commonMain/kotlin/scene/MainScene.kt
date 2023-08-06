@@ -1,25 +1,13 @@
 package scene
 
 import korlibs.image.font.Font
-import korlibs.image.font.readWoffFont
 import korlibs.image.text.TextAlignment
-import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.scene.Scene
-import korlibs.korge.scene.SceneContainer
-import korlibs.korge.scene.sceneContainer
 import korlibs.korge.style.*
-import korlibs.korge.ui.uiContainer
-import korlibs.korge.ui.uiText
 import korlibs.korge.view.*
-import korlibs.korge.view.align.centerOnStage
-import korlibs.korge.view.align.centerXOn
-import korlibs.korge.view.align.centerXOnStage
-import network.login
 import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform.getKoin
-import ui.MainMenuState
 import ui.loginMenu
-import ui.mainMenu
 import util.ColorPalette
 
 val styler: ViewStyles.() -> Unit = {
