@@ -30,9 +30,7 @@ import sceneContainer
 import ui.custom.customUiButton
 import ui.custom.customUiScrollable
 import util.ColorPalette
-import websocket.createRoom
-import websocket.getViewedRooms
-import websocket.joinRoom
+import websocket.*
 import kotlin.math.PI
 
 class MainMenuState {
@@ -82,9 +80,19 @@ suspend fun MainMenuState.mainMenu() {
         uiHorizontalStack(height = top.height*0.75f, padding = padding*2) {
             val bottomButtonSize = Size(top.heightD * PI, .0)
             customUiButton(size = bottomButtonSize).bottomButton("방 생성").onClick {
+                lateinit var loading: Container
+                loading = sceneContainer.uiContainer {
+                    serverList.visible = false
+                    loadingMenu("방 생성 중...") {
+                        serverList.visible = true
+                        loading.removeFromParent()
+                    }
+                }
                 val room = createRoom()
-                serverList.removeFromParent()
                 joinRoom(room.uuid)
+                websocketClient()
+                serverList.removeFromParent()
+                loading.removeFromParent()
                 WaitingRoomState().waitingRoom(room.uuid)
             }
             customUiButton(size = bottomButtonSize).bottomButton("새로고침").onClick {
@@ -178,17 +186,16 @@ fun MainMenuState.room(room: ViewedRoom) {
     }.centerXOn(sceneContainer)
 }
 
-fun Container.loadingMenu(text: String, buttonText: String, onClick: () -> Unit): UIText {
+fun Container.loadingMenu(text: String, buttonText: String? = null, onClick: () -> Unit): UIText {
     val text = uiText(text) {
         styles(styler)
         centerOnStage()
         alignY(containerRoot, 0.4, true)
     }
-    lateinit var cancelText: View
     val button =
         customUiButton(size = Size(sceneContainer.width * 0.471f, sceneContainer.width / 25)) {
             styles(styler)
-            cancelText = bottomButton(buttonText).centerOn(this)
+            if (buttonText !== null) bottomButton(buttonText).centerOn(this)
             centerXOnStage()
             alignY(containerRoot, 0.6, true)
             onClick {

@@ -12,9 +12,13 @@ import sceneContainer
 import util.launchNow
 
 var _websocketClient: WebSocketClient? = null
+private var websocketSemaphore = false
 suspend fun websocketClient(): WebSocketClient {
     if (_websocketClient === null) {
-        _websocketClient = newWebsocketClient()
+        if (websocketSemaphore) throw AssertionError("blocked by semaphore")
+        websocketSemaphore = true
+        try { _websocketClient = newWebsocketClient() }
+        finally { websocketSemaphore = false }
     }
     return _websocketClient!!
 }
