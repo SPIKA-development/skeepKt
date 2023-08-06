@@ -29,10 +29,12 @@ tasks.withType<ProcessResources> {
 
 kotlin {
     sourceSets {
-        val mingwX64Main by getting {
-            dependencies {
-                api(libs.ktor.client.winhttp)
-                api(libs.logback)
+        if (hostOs.startsWith("Windows")) {
+            val mingwX64Main by getting {
+                dependencies {
+                    api(libs.ktor.client.winhttp)
+                    api(libs.logback)
+                }
             }
         }
     }
