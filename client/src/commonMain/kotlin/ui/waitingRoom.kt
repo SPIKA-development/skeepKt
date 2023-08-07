@@ -10,6 +10,7 @@ import korlibs.image.color.Colors
 import korlibs.image.color.RGBA
 import korlibs.image.text.TextAlignment
 import korlibs.korge.annotations.KorgeExperimental
+import korlibs.korge.input.cursor
 import korlibs.korge.input.keys
 import korlibs.korge.input.onMouseDragCloseable
 import korlibs.korge.input.onUp
@@ -18,6 +19,7 @@ import korlibs.korge.style.textAlignment
 import korlibs.korge.ui.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.*
+import korlibs.math.geom.Point
 import korlibs.math.geom.Size
 import korlibs.time.seconds
 import kotlinx.uuid.UUID
@@ -187,9 +189,9 @@ fun materialInput(hint: String, padding: Float, container: Container,
                   border: RGBA = ColorPalette.out,
                   bg: RGBA = Colors.TRANSPARENT,
 ): MaterialInput {
+    container.styles.textAlignment = TextAlignment.MIDDLE_LEFT
     val input = container.customUiTextInput(hint, size = container.size) {
-        text = ""
-        container.styles.textAlignment = TextAlignment.MIDDLE_LEFT
+        text = " "
         controller.caretContainer.alignY(this, 0.75, false)
         positionX(padding / 2)
     }.zIndex(2)
@@ -197,7 +199,7 @@ fun materialInput(hint: String, padding: Float, container: Container,
         shadowColor = Colors.TRANSPARENT
         bgColor = bg
         borderColor = border
-        borderSize = padding / 5
+        borderSize = padding / 6
     }.zIndex(1)
     return MaterialInput(input, material)
 }
