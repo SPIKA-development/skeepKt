@@ -39,7 +39,6 @@ jobs:
           # brew install wine-stable
           irm get.scoop.sh -outfile 'install.ps1'
           .\install.ps1 -RunAsAdmin 
-          iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
           scoop install gh
           echo "${{ secrets.GITHUB_TOKEN }}" > token
           gh auth login --with-token token
