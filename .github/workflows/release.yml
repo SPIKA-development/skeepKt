@@ -87,5 +87,6 @@ jobs:
           ./gradlew :client:linkReleaseExecutableMingwX64
           Compress-Archive -Path .\client\build\bin\mingwX64\releaseExecutable -DestinationPath .\client\build\bin\mingwX64\client.zip
           Get-ChildItem -Path . -File -Recurse
-          gh release upload ${{ github.ref }} .\client\build\bin\mingwX64\client.zip --repo ${{ github.repository }}
+          echo ${{ github.ref }}
+          gh release upload ${{github.run_number}} .\client\build\bin\mingwX64\client.zip --repo ${{ github.repository }}
 
