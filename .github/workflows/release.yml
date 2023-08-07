@@ -78,14 +78,19 @@ jobs:
         run: |
           # brew install wine-stable
           ./gradlew :client:linkReleaseExecutableMingwX64
+          scoop bucket add github-gh https://github.com/cli/scoop-gh.git
+          scoop install gh
+          echo "${{ secrets.GITHUB_TOKEN }}" > token
+          gh auth login --with-token < token
+          gh release upload ${{ github.ref }} build/**.exe
 
-      - name: Build
-        run: cargo build --release
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: client/build/**
-          tag: ${{ github.ref }}
-          overwrite: true
-
+#      - name: Build
+#        run: cargo build --release
+#      - name: Upload binaries to release
+#        uses: svenstaro/upload-release-action@v2
+#        with:
+#          repo_token: ${{ secrets.GITHUB_TOKEN }}
+#          file: client/build/**
+#          tag: ${{ github.ref }}
+#          overwrite: true
+#
