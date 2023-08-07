@@ -51,25 +51,26 @@ kotlin {
                 api(libs.logback)
             }
         }
-        val mingwX64Main by getting {
-            dependencies {
-                api(libs.ktor.client.winhttp)
-                api(libs.logback)
+        runCatching {
+            val mingwX64Main by getting {
+                dependencies {
+                    api(libs.ktor.client.winhttp)
+                    api(libs.logback)
+                }
             }
-        }
-        val macosArm64Main by getting {
-            dependencies {
-                api(libs.ktor.client.cio)
-                api(libs.logback)
+            val macosArm64Main by getting {
+                dependencies {
+                    api(libs.ktor.client.cio)
+                    api(libs.logback)
+                }
             }
-        }
-        val macosX64Main by getting {
-            dependencies {
-                api(libs.ktor.client.cio)
-                api(libs.logback)
+            val macosX64Main by getting {
+                dependencies {
+                    api(libs.ktor.client.cio)
+                    api(libs.logback)
+                }
             }
-        }
-    }
+        }    }
 }
 
 fun Configuration.exclude(provider: Provider<MinimalExternalModuleDependency>) {

@@ -14,6 +14,9 @@ korge {
     targetDesktopCross()
     targetDesktop()
     entryPoint = "runMain"
+    orientation = Orientation.DEFAULT
+    icon = File(projectDir, "src/commonMain/resources/images/logo.png"
+            .replace("/", File.separator))
 }
 
 kotlin {
