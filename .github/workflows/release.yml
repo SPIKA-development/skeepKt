@@ -76,7 +76,7 @@ jobs:
         run: chmod +x gradlew
       - name: Buid
         run: |
-#          brew install wine-stable
+          # brew install wine-stable
           ./gradlew :client:linkReleaseExecutableMingwX64
 
       - name: Build
