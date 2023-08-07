@@ -37,7 +37,7 @@ jobs:
       - name: Buid
         run: |
           # brew install wine-stable
-          irm get.scoop.sh -RunAsAdmin | iex
+          irm get.scoop.sh | iex -RunAsAdmin
           scoop bucket add main
           scoop install main/gh
           wt -w 0 nt
