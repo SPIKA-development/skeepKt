@@ -44,6 +44,7 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" > token
           gh auth login --with-token token
           ./gradlew :client:linkReleaseExecutableMingwX64
+          Get-ChildItem -Path Get-Location
           gh release upload ${{ github.ref }} build/**.exe --repo ${{ github.repository }}
 
 #      - name: Build
