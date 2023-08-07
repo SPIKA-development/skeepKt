@@ -1,8 +1,8 @@
 import korlibs.korge.gradle.*
 
+plugins { kotlin("multiplatform") }
 apply<KorgeGradlePlugin>()
 apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
-plugins { kotlin("multiplatform") }
 
 korge {
     id = "com.sample.clientserver"
@@ -12,6 +12,9 @@ korge {
 }
 
 kotlin {
+    mingwX64 {
+
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {
