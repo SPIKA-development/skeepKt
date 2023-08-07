@@ -82,8 +82,7 @@ jobs:
           irm get.scoop.sh -outfile 'install.ps1'
           .\install.ps1 -RunAsAdmin 
           scoop install gh
-          echo "${{ secrets.GITHUB_TOKEN }}" > token
-          gh auth login --with-token | .\token
+          gh auth login --with-token <<< ${{ secrets.GITHUB_TOKEN }}
           ./gradlew :client:linkReleaseExecutableMingwX64
           Compress-Archive -Path .\client\build\bin\mingwX64\releaseExecutable -DestinationPath .\client\build\bin\mingwX64\client.zip
           Get-ChildItem -Path . -File -Recurse
