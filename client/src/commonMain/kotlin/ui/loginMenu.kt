@@ -2,6 +2,8 @@ package ui
 
 import korlibs.event.Key
 import korlibs.image.color.Colors
+import korlibs.io.async.asyncImmediately
+import korlibs.io.async.runBlockingNoSuspensions
 import korlibs.korge.annotations.KorgeExperimental
 import korlibs.korge.input.*
 import korlibs.korge.style.styles
@@ -67,7 +69,7 @@ suspend fun loginMenu(container: Container) {
                     }
                     uiText("입장 >").centerOn(this)
                     var joinOnce = false
-                    fun join() {
+                    suspend fun join() {
                         if (joinOnce) return
                         val txt = inputText.text.trim()
                         if (txt.isEmpty()) {
@@ -87,22 +89,22 @@ suspend fun loginMenu(container: Container) {
                         warningText.styles.textColor = ColorPalette.out
                         username = inputText.text.trim()
                         joinOnce = true
-                        launchNow {
                             val login = login()
                             if (login == LoginResultType.ALREADY_JOINED) {
                                 warningText.text = "입력하신 닉네임은 이미 사용중입니다"
                                 joinOnce = false
-                                return@launchNow
-                            } else if (login == LoginResultType.SERVER_IS_NOT_AVAILABLE || runCatching { websocketClient() }
+                                return
+                            } else if (login == LoginResultType.SERVER_IS_NOT_AVAILABLE
+                                || runCatching { websocketClient() }
                                     .also { it.exceptionOrNull()?.printStackTrace() }.isFailure) {
                                 warningText.text = "죄송합니다, 지금은 인증 서버를 사용할 수 없습니다. 나중에 다시 시도해 주세요."
                                 joinOnce = false
-                                return@launchNow
+                                return
                             } else {
                                 loginMenu.removeFromParent()
-                                launchNow { MainMenuState().mainMenu() }
+                                sceneContainer.removeChildren()
+                                MainMenuState().mainMenu()
                             }
-                        }
                     }
                     onClick { join() }
                     onMouseDragCloseable { launchNow { join() } }

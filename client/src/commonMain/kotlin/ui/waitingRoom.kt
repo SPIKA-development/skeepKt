@@ -103,7 +103,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
         }
 
         val chatSize = Size(inputBarSize.width, sceneContainer.height - titleSize.height - inputBarSize.height - padding * 3)
-        customUiScrollable(cache = false, disableMouseDrag = true, size = chatSize) {
+        customUiScrollable(cache = true, disableMouseDrag = true, size = chatSize) {
             scroll = it
             it.positionX(padding + leaveButton.width + padding)
             it.positionY(padding + titleSize.height + padding)
@@ -167,7 +167,7 @@ fun WaitingRoomState.profile(name: String, container: Container, profileSize: Si
             scaleXY = profileImageSize.width / size.width
         }//}.centerYOn(this)
         uiText(name) { styles.textAlignment = TextAlignment.MIDDLE_LEFT }
-            .alignX(this, 1.0, true)
+            .alignX(this, -1.0, true)
             .alignY(this, 0.15, true)
 
     }
