@@ -1,9 +1,8 @@
 import io.ktor.client.engine.cio.*
-import korlibs.io.async.runBlockingNoSuspensions
+import korlibs.io.async.launchImmediately
 import korlibs.io.file.std.resourcesVfs
 import korlibs.io.lang.readProperties
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
 import network.ClientEngineFactory
 import network.URLProvider
 import org.koin.core.context.startKoin
@@ -11,7 +10,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
-import util.launchNow
 import kotlin.coroutines.CoroutineContext
 
 class Main
@@ -19,7 +17,7 @@ class Main
 fun runMain() = main()
 
 fun main() {
-    launchNow {
+    runBlocking {
         val clientProps = resourcesVfs["client.properties"].readProperties()
         val url = clientProps["server"]!!
         val version = clientProps["version"]!!
@@ -35,6 +33,6 @@ fun main() {
                 object : ClientEngineFactory { override fun getEngine() = CIO }
             } bind ClientEngineFactory::class
         }))
-        start()
+        startMain()
     }
 }

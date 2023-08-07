@@ -1,6 +1,4 @@
 import io.ktor.client.engine.cio.*
-import korlibs.io.file.std.resourcesVfs
-import korlibs.io.lang.readProperties
 import network.ClientEngineFactory
 import network.URLProvider
 import org.koin.core.context.startKoin
@@ -8,8 +6,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
-import java.io.File
-import java.util.Properties
+import java.util.*
 
 class Main
 suspend fun main() {
@@ -30,5 +27,5 @@ suspend fun main() {
             object : ClientEngineFactory { override fun getEngine() = CIO }
         } bind ClientEngineFactory::class
     }))
-    start()
+    startMain()
 }

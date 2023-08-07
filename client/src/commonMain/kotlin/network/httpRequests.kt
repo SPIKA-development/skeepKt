@@ -1,9 +1,8 @@
-package websocket
+package network
 
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.uuid.UUID
-import network.*
 
 suspend fun createRoom() = client().post("$currentUrl/rooms/create") {
     basicAuth(username, sessionId)

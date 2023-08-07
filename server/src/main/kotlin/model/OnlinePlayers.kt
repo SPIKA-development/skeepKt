@@ -22,7 +22,9 @@ class OnlinePlayer(id: EntityID<UUID>) : KotlinxUUIDEntity(id) {
     var room by OnlinePlayers.room
 }
 
+object PlayerAlreadyExistsException : Exception() {init { stackTrace = arrayOf() } }
 fun newPlayer(newPlayerName: String) = transaction {
+    if (OnlinePlayer.find(OnlinePlayers.name eq newPlayerName).any()) throw PlayerAlreadyExistsException
     OnlinePlayer.new {
         name = newPlayerName
     }

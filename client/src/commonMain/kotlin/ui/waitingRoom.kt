@@ -29,10 +29,10 @@ import sceneContainer
 import ui.custom.*
 import ui.custom.UITextInput
 import util.ColorPalette
-import websocket.getRoomName
-import websocket.leaveRoom
-import websocket.listPlayer
-import websocket.sendToServer
+import network.getRoomName
+import network.leaveRoom
+import network.listPlayer
+import network.sendToServer
 import kotlin.math.max
 
 class WaitingRoomState {

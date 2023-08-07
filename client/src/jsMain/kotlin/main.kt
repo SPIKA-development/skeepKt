@@ -25,5 +25,5 @@ suspend fun main() {
             object : ClientEngineFactory { override fun getEngine() = Js }
         } bind ClientEngineFactory::class
     }))
-    start()
+    startMain()
 }

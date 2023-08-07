@@ -1,9 +1,6 @@
 import io.ktor.client.engine.winhttp.*
-import korlibs.io.async.runBlockingNoSuspensions
 import korlibs.io.file.std.resourcesVfs
 import korlibs.io.lang.readProperties
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import network.ClientEngineFactory
 import network.URLProvider
 import org.koin.core.context.startKoin
@@ -34,6 +31,6 @@ fun main() {
                 object : ClientEngineFactory { override fun getEngine() = WinHttp }
             } bind ClientEngineFactory::class
         }))
-        start()
+        startMain()
     }
 }

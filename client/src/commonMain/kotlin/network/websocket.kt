@@ -1,15 +1,11 @@
-package websocket
+package network
 
 import event.PacketEvent
 import io.ktor.util.*
-import korlibs.io.async.launchImmediately
 import korlibs.io.net.ws.WebSocketClient
 import korlibs.korge.ui.uiContainer
-import korlibs.time.measureTime
-import kotlinx.coroutines.Job
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import network.*
 import network.ServerPacket.*
 import sceneContainer
 import ui.MainMenuState

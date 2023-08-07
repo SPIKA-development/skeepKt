@@ -1,15 +1,11 @@
 package ui
 
-import khangul.HangulProcessor
 import korlibs.event.Key
 import korlibs.image.color.Colors
-import korlibs.image.font.Font
-import korlibs.image.text.TextAlignment
 import korlibs.korge.annotations.KorgeExperimental
 import korlibs.korge.input.*
 import korlibs.korge.style.styles
 import korlibs.korge.style.textColor
-import korlibs.korge.style.textFont
 import korlibs.korge.style.textSize
 import korlibs.korge.ui.*
 import korlibs.korge.view.Container
@@ -18,13 +14,8 @@ import korlibs.korge.view.align.alignY
 import korlibs.korge.view.align.centerOn
 import korlibs.korge.view.align.centerOnStage
 import korlibs.korge.view.align.centerXOn
-import korlibs.korge.view.position
-import korlibs.korge.view.solidRect
 import korlibs.math.geom.Size
-import korlibs.math.log
 import network.*
-import org.koin.core.qualifier.named
-import org.koin.mp.KoinPlatform
 import scene.styler
 import sceneContainer
 import ui.custom.UITextInput
@@ -32,8 +23,7 @@ import ui.custom.customUiButton
 import ui.custom.customUiText
 import util.ColorPalette
 import util.launchNow
-import websocket.startWebSocket
-import websocket.websocketClient
+import network.websocketClient
 
 @KorgeExperimental
 suspend fun loginMenu(container: Container) {

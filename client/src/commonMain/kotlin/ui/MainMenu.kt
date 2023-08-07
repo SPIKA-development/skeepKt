@@ -1,22 +1,16 @@
 package ui
 
 import io.ktor.http.*
-import korlibs.datastructure.get
 import korlibs.datastructure.getExtra
-import korlibs.datastructure.set
 import korlibs.datastructure.setExtra
-import korlibs.image.bitmap.BitmapSlice
 import korlibs.image.bitmap.BmpSlice
-import korlibs.image.bitmap.NativeImage
 import korlibs.image.color.Colors
-import korlibs.image.format.ImageData
 import korlibs.korge.input.mouse
 import korlibs.korge.input.onClick
 import korlibs.korge.style.styles
 import korlibs.korge.ui.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.*
-import korlibs.korge.view.animation.imageDataView
 import korlibs.math.geom.Point
 import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
@@ -30,7 +24,7 @@ import sceneContainer
 import ui.custom.customUiButton
 import ui.custom.customUiScrollable
 import util.ColorPalette
-import websocket.*
+import network.*
 import kotlin.math.PI
 
 class MainMenuState {

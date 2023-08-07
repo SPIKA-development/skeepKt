@@ -33,9 +33,12 @@ fun Application.configureAuthentication() {
             val loginRequest = call.receive<LoginRequest>()
             val sessionPlayer = try {
                 newPlayer(loginRequest.username)
+            } catch (_: PlayerAlreadyExistsException) {
+                call.respond(HttpStatusCode.NotAcceptable)
+                return@login
             } catch (e: Throwable) {
                 e.printStackTrace()
-                call.respond(HttpStatusCode.NotAcceptable)
+                call.respond(HttpStatusCode.InternalServerError)
                 return@login
             }
             val uuid = newSession(sessionPlayer).id.value

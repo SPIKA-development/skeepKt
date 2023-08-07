@@ -38,6 +38,7 @@ kotlin {
 @Suppress("UnstableApiUsage")
 tasks.withType<ProcessResources> {
     filesMatching("client.properties") {
-        expand(properties)
+        expand(rootProject.properties)
     }
 }
+
