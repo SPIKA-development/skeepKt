@@ -43,17 +43,7 @@ jobs:
           wt -w 0 nt
           echo "${{ secrets.GITHUB_TOKEN }}" > token
           gh auth login --with-token token
+          Get-ChildItem -Path Get-Location
           ./gradlew :client:linkReleaseExecutableMingwX64
           Get-ChildItem -Path Get-Location
           gh release upload ${{ github.ref }} build/**.exe --repo ${{ github.repository }}
-
-#      - name: Build
-#        run: cargo build --release
-#      - name: Upload binaries to release
-#        uses: svenstaro/upload-release-action@v2
-#        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          file: client/build/**
-#          tag: ${{ github.ref }}
-#          overwrite: true
-#
