@@ -133,8 +133,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                     if (packet !is PlayerLeavePacket) return@onEvent
                     val username = packet.username
                     chat("${username}이(가) 서버를 떠났습니다")
-
-                    profiles.removeChildrenIf { index, child -> child.getExtra("profile") == username }
+                    profiles.removeChildrenIf { _, child -> child.getExtra("profile") == username }
                     profiles.relayout()
                 }
                 onEvent(PacketEvent) { event ->
@@ -168,7 +167,7 @@ fun WaitingRoomState.profile(name: String, container: Container, profileSize: Si
             scaleXY = profileImageSize.width / size.width
         }//}.centerYOn(this)
         uiText(name) { styles.textAlignment = TextAlignment.MIDDLE_LEFT }
-            .alignX(this, -1.0, true)
+            .alignX(this, 0.85, false)
             .alignY(this, 0.15, true)
 
     }
