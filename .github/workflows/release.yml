@@ -85,6 +85,7 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" > token
           gh auth login --with-token token
           ./gradlew :client:linkReleaseExecutableMingwX64
+          Compress-Archive -Path .\client\build\bin\mingwX64\releaseExecutable -DestinationPath .\client\build\bin\mingwX64\client.zip
           Get-ChildItem -Path . -File -Recurse
-          gh release upload ${{ github.ref }} .\client\build\bin\mingwX64\releaseExecutable\*.exe --repo ${{ github.repository }}
+          gh release upload ${{ github.ref }} .\client\build\bin\mingwX64\client.zip --repo ${{ github.repository }}
 
