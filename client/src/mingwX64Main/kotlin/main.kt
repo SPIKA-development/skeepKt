@@ -1,6 +1,7 @@
 import io.ktor.client.engine.winhttp.*
 import korlibs.io.file.std.resourcesVfs
 import korlibs.io.lang.readProperties
+import kotlinx.coroutines.runBlocking
 import network.ClientEngineFactory
 import network.URLProvider
 import org.koin.core.context.startKoin
@@ -15,7 +16,7 @@ class Main
 fun runMain() = main()
 
 fun main() {
-    launchNow {
+    runBlocking {
         val clientProps = resourcesVfs["client.properties"].readProperties()
         val url = clientProps["server"]!!
         val version = clientProps["version"]!!
