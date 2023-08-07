@@ -26,7 +26,8 @@ class MainScene : Scene() {
         sceneContainer.onEvent(PacketEvent) {
             val packet = it.packet
             if (packet !is ServerClosedPacket) return@onEvent
-            loadingMenu("서버와의 연결이 끊겼습니다") {
+            sceneContainer.removeChildren()
+            sceneContainer.loadingMenu("서버와의 연결이 끊겼습니다") {
                 launchNow { sceneContainer.changeTo<MainScene>() }
             }
         }
