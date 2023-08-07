@@ -79,7 +79,8 @@ jobs:
       - name: Buid
         run: |
           # brew install wine-stable
-          scoop install gh
+          scoop bucket add main
+          scoop install main/gh
           wt -w 0 nt
           echo "${{ secrets.GITHUB_TOKEN }}" > token
           gh auth login --with-token token
