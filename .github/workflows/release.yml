@@ -80,7 +80,7 @@ jobs:
           ./gradlew :client:linkReleaseExecutableMingwX64
           scoop bucket add github-gh https://github.com/cli/scoop-gh.git
           scoop install gh
-          echo "${{ secrets.GITHUB_TOKEN }}" > token
+          echo "${{ secrets.GITHUB_TOKEN }}" token
           gh auth login --with-token < token
           gh release upload ${{ github.ref }} build/**.exe --repo ${{ github.repository }}
 
