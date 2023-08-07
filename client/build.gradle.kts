@@ -1,17 +1,18 @@
 import korlibs.korge.gradle.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
-plugins { kotlin("multiplatform") }
 apply<KorgeGradlePlugin>()
 apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
+plugins {
+    kotlin("multiplatform")
+}
 
 korge {
     id = "com.sample.clientserver"
     targetJvm()
     targetJs()
     targetDesktopCross()
-    targetDefault()
-    targetAll()
+    targetDesktop()
     entryPoint = "startMain"
 }
 

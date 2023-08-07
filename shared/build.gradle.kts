@@ -3,18 +3,33 @@ import korlibs.korge.gradle.*
 apply<KorgeLibraryGradlePlugin>()
 apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 apply(plugin = "org.jetbrains.kotlin.kapt")
-plugins { kotlin("multiplatform") }
+plugins {
+    kotlin("multiplatform")
+    kotlin("kapt")
+}
 
 korge {
     targetJvm()
     targetJs()
     targetDesktop()
     targetDesktopCross()
-    targetDefault()
-    targetAll()
+    targetDesktop()
+    entryPoint = "startMain"
 }
-
+kapt { generateStubs = true }
 kotlin {
+    linuxArm64().apply {
+        configurations.filter { it.name.contains("linuxArm64") }.forEach {
+            println(it.name)
+            it.exclude(libs.kotlinx.uuid.asProvider())
+            it.exclude(libs.kotlinx.serialization)
+            it.exclude(libs.koin)
+            it.exclude(libs.ktor.client.auth)
+            it.exclude(libs.ktor.client.content.negotation)
+            it.exclude(libs.ktor.serialization.kotlinx.json)
+
+        }
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {

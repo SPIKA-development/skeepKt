@@ -1,0 +1,3 @@
+fun startMain() {
+    println("A")
+}
