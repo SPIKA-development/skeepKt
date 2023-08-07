@@ -103,7 +103,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
         }
 
         val chatSize = Size(inputBarSize.width, sceneContainer.height - titleSize.height - inputBarSize.height - padding * 3)
-        customUiScrollable(cache = false, size = chatSize) {
+        customUiScrollable(cache = false, disableMouseDrag = true, size = chatSize) {
             scroll = it
             it.positionX(padding + leaveButton.width + padding)
             it.positionY(padding + titleSize.height + padding)

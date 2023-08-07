@@ -52,7 +52,7 @@ suspend fun client(): HttpClient = run {
 }
 
 
-private suspend fun initializeClient() = run {
+suspend fun initializeClient() = run {
     clientInst = HttpClient(clientEngine) {
         install(io.ktor.client.plugins.websocket.WebSockets) {
             contentConverter = converter

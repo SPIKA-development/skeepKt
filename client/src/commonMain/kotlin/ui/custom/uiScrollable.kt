@@ -27,11 +27,15 @@ inline fun Container.customUiScrollable(
     config: CustomUIScrollable.() -> Unit = {},
     cache: Boolean = true,
     barPosOffset: Point = Point(10, 0),
+    disableMouseDrag: Boolean = false,
     block: @ViewDslMarker Container.(CustomUIScrollable) -> Unit = {},
-): CustomUIScrollable = CustomUIScrollable(size, cache, barPosOffset)
+): CustomUIScrollable = CustomUIScrollable(size, cache, barPosOffset, disableMouseDrag)
     .addTo(this).apply(config).also { block(it.container, it) }
 
-open class CustomUIScrollable(size: Size, cache: Boolean = true, val barPosOffset: Point) : UIView(size, cache = cache) {
+open class CustomUIScrollable(
+    size: Size, cache: Boolean = true,
+    val barPosOffset: Point, val disableMouseDrag: Boolean
+) : UIView(size, cache = cache) {
     @PublishedApi
     internal var overflowEnabled: Boolean = true
 
@@ -196,7 +200,7 @@ open class CustomUIScrollable(size: Size, cache: Boolean = true, val barPosOffse
         showScrollBar()
         //onScrollTopChange.add { println(it.scrollRatio) }
         onSizeChanged()
-        mouse {
+        if (disableMouseDrag.not()) mouse {
             scroll {
                 overflowEnabled = false
                 showScrollBar()
@@ -235,7 +239,7 @@ open class CustomUIScrollable(size: Size, cache: Boolean = true, val barPosOffse
 
         for (info in infos) {
             var startScrollBarPos = 0f
-            info.view.onMouseDrag {
+            if (disableMouseDrag.not()) info.view.onMouseDrag {
                 if (!info.shouldBeVisible) return@onMouseDrag
                 val dxy = if (info.isHorizontal) it.localDX else it.localDY
                 if (it.start) {
@@ -246,7 +250,7 @@ open class CustomUIScrollable(size: Size, cache: Boolean = true, val barPosOffse
             }
         }
 
-        contentContainer.onMouseDrag {
+        if (disableMouseDrag.not()) contentContainer.onMouseDrag {
             overflowEnabled = true
             //println("DRAG: $it")
             if (it.start) {

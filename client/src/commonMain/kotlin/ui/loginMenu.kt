@@ -22,9 +22,7 @@ import korlibs.korge.view.position
 import korlibs.korge.view.solidRect
 import korlibs.math.geom.Size
 import korlibs.math.log
-import network.client
-import network.sessionUUID
-import network.username
+import network.*
 import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform
 import scene.styler
@@ -35,6 +33,7 @@ import ui.custom.customUiText
 import util.ColorPalette
 import util.launchNow
 import websocket.startWebSocket
+import websocket.websocketClient
 
 @KorgeExperimental
 suspend fun loginMenu(container: Container) {
@@ -77,7 +76,9 @@ suspend fun loginMenu(container: Container) {
                         }
                     }
                     uiText("입장 >").centerOn(this)
-                    suspend fun join() {
+                    var joinOnce = false
+                    fun join() {
+                        if (joinOnce) return
                         val txt = inputText.text.trim()
                         if (txt.isEmpty()) {
                             warningText.text = "닉네임을 입력해주세요"
@@ -87,15 +88,25 @@ suspend fun loginMenu(container: Container) {
                             warningText.text = "닉네임은 3글자 이상 16글자 이하여야 합니다"
                             warningText.styles.textColor = Colors.PALEVIOLETRED
                             return
+                        } else if (!usernameRegex.containsMatchIn(txt)) {
+                            warningText.text = "닉네임은 한글, 영문, 숫자만 가능합니다"
+                            warningText.styles.textColor = Colors.PALEVIOLETRED
+                            return
                         }
                         warningText.text = "로그인 중..."
                         warningText.styles.textColor = ColorPalette.out
                         username = inputText.text.trim()
-                        if (runCatching { client(); sessionUUID }.isFailure) {
-                            warningText.text = "죄송합니다, 지금은 인증 서버를 사용할 수 없습니다. 나중에 다시 시도해 주세요."
-                        } else {
-                            loginMenu.removeFromParent()
-                            launchNow { MainMenuState().mainMenu() }
+                        joinOnce = true
+                        launchNow {
+                            if (runCatching { initializeClient(); sessionUUID }
+                                    .also { it.exceptionOrNull()?.printStackTrace() }.isFailure) {
+                                warningText.text = "죄송합니다, 지금은 인증 서버를 사용할 수 없습니다. 나중에 다시 시도해 주세요."
+                                joinOnce = false
+                                return@launchNow
+                            } else {
+                                loginMenu.removeFromParent()
+                                launchNow { MainMenuState().mainMenu() }
+                            }
                         }
                     }
                     onClick { join() }

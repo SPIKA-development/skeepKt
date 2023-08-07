@@ -3,7 +3,7 @@ package application.configuration
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 
-fun Application.configureDatabase() {
+fun configureDatabase() {
 //    if (developmentMode) {
         Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
 //    } else {

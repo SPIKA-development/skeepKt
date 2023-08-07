@@ -88,12 +88,16 @@ suspend fun MainMenuState.mainMenu() {
                         loading.removeFromParent()
                     }
                 }
-                val room = createRoom()
-                joinRoom(room.uuid)
-                websocketClient()
-                serverList.removeFromParent()
-                loading.removeFromParent()
-                WaitingRoomState().waitingRoom(room.uuid)
+                try {
+                    val room = createRoom()
+                    joinRoom(room.uuid)
+                    websocketClient()
+                    serverList.removeFromParent()
+                    loading.removeFromParent()
+                    WaitingRoomState().waitingRoom(room.uuid)
+                } catch (_: Throwable) {
+                    connectionBroked()
+                }
             }
             customUiButton(size = bottomButtonSize).bottomButton("새로고침").onClick {
                 rooms.removeChildrenIf { index, child -> child.isRoom }
@@ -193,7 +197,7 @@ fun Container.loadingMenu(text: String, buttonText: String? = null, onClick: () 
         alignY(containerRoot, 0.4, true)
     }
     val button =
-        customUiButton(size = Size(sceneContainer.width * 0.471f, sceneContainer.width / 25)) {
+        customUiButton(size = Size(sceneContainer.width * 0.471f, sceneContainer.width / 23)) {
             styles(styler)
             if (buttonText !== null) bottomButton(buttonText).centerOn(this)
             centerXOnStage()
