@@ -15,48 +15,6 @@ permissions:
   id-token: write
 
 jobs:
-#  release:
-#    permissions: write-all
-#    strategy:
-#      matrix:
-#        os: [ ubuntu-latest ]
-#    runs-on: ${{ matrix.os }}
-#    steps:
-#      - uses: actions/checkout@v3
-#      - name: Set up JDK 11
-#        uses: actions/setup-java@v1
-#        with:
-#          java-version: 11
-#
-#      - name: set properties value of server
-#        run: |
-#          setProperty(){
-#            awk -v pat="^$1=" -v value="$1=$2" '{ if ($0 ~ pat) print value; else print $0; }' $3 > $3.tmp
-#            mv $3.tmp $3
-#          }
-#          setProperty "server" "${{ env.url }}" "gradle.properties"
-#          setProperty "version" "v0.0.${{github.run_number}}" "gradle.properties"
-#      - run: git tag ${{github.run_number}}
-#
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
-#      - name: Buid
-#        run: |
-#          ./gradlew :client:jsBrowserProductionWebpack
-#      - name: server.zip
-#        run: ./gradlew :server:distZip
-#
-#      - name: release
-#        uses: marvinpinto/action-automatic-releases@latest
-#        with:
-#          title: "Build #${{github.run_number}}"
-#          automatic_release_tag: "${{github.run_number}}"
-#          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-#          files: server/build/distributions/server.zip
-#          prerelease: false
-#      - shell: bash
-#        run: |
-#          curl -d "${{ secrets.ADMIN_KEY }}" -X POST ${{ env.url }}/shutdown
   buildExe:
     name: Release .exe
     runs-on: windows-latest
