@@ -93,8 +93,7 @@ suspend fun loginMenu(container: Container) {
                                 warningText.text = "입력하신 닉네임은 이미 사용중입니다"
                                 joinOnce = false
                                 return@launchNow
-                            }
-                            else if (login == LoginResultType.SERVER_IS_NOT_AVAILABLE || runCatching { websocketClient() }
+                            } else if (login == LoginResultType.SERVER_IS_NOT_AVAILABLE || runCatching { websocketClient() }
                                     .also { it.exceptionOrNull()?.printStackTrace() }.isFailure) {
                                 warningText.text = "죄송합니다, 지금은 인증 서버를 사용할 수 없습니다. 나중에 다시 시도해 주세요."
                                 joinOnce = false
