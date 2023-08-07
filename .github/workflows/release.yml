@@ -7,6 +7,8 @@ on:
 
 env:
   url: https://kotlingames.shop
+  GH_TOKEN: ${{ github.token }}
+
 permissions:
   contents: read
   pages: write
