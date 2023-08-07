@@ -40,8 +40,7 @@ jobs:
           irm get.scoop.sh -outfile 'install.ps1'
           .\install.ps1 -RunAsAdmin 
           iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
-          scoop bucket add main
-          scoop install main/gh
+          scoop install gh
           echo "${{ secrets.GITHUB_TOKEN }}" > token
           gh auth login --with-token token
           Get-ChildItem -Path Get-Location
