@@ -38,7 +38,7 @@ import kotlin.math.max
 class WaitingRoomState {
     val padding = 25f
     lateinit var profileSize: Size
-    lateinit var profiles: Container
+    lateinit var profiles: UIVerticalStack
     lateinit var chats: Container
     lateinit var space: Container
     lateinit var scroll: CustomUIScrollable
@@ -135,6 +135,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                     chat("${username}이(가) 서버를 떠났습니다")
 
                     profiles.removeChildrenIf { index, child -> child.getExtra("profile") == username }
+                    profiles.relayout()
                 }
                 onEvent(PacketEvent) { event ->
                     val packet = event.packet
