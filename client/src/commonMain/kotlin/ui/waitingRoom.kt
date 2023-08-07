@@ -80,7 +80,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
             profileSize = Size(size.width, size.height/6f - padding)
 
             val stackPadding = padding / 2
-            profiles = uiVerticalStack(adjustSize = false, padding = stackPadding)
+            profiles = uiVerticalStack(adjustSize = true, padding = stackPadding)
             solidRect(size = Size(size.width, (profileSize.height+padding/2f)*6f- stackPadding), color = ColorPalette.base).zIndex(-1)
             positionX(sceneContainer.width - sidebarSize.width)
             positionY(padding)
@@ -166,8 +166,8 @@ fun WaitingRoomState.profile(name: String, container: Container, profileSize: Si
         uiImage(size = Size(imageBitmap.width, imageBitmap.height), bitmap = imageBitmap) {
             scaleXY = profileImageSize.width / size.width
         }//}.centerYOn(this)
-        uiText(name) { styles.textAlignment = TextAlignment.TOP_LEFT }
-            .alignX(this, 0.5, true)
+        uiText(name) { styles.textAlignment = TextAlignment.MIDDLE_LEFT }
+            .alignX(this, 1.0, true)
             .alignY(this, 0.15, true)
 
     }

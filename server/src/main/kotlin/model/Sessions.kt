@@ -35,6 +35,7 @@ fun getPlayerUUIDBySession(session: UUID) = transaction {
 }
 
 fun logout(sessionUUID: UUID) = transaction {
-    val session = Session.find { Sessions.id eq sessionUUID }.first()
-    OnlinePlayers.deleteWhere { OnlinePlayers.id eq session.player }
+    val player = getPlayerBySession(sessionUUID)
+    Session.find(Sessions.id eq sessionUUID).first().delete()
+    player.delete()
 }
