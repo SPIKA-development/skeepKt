@@ -10,6 +10,9 @@ korge {
     targetJvm()
     targetJs()
     targetDesktopCross()
+    targetDefault()
+    targetAll()
+    entryPoint = "startMain"
 }
 
 kotlin {
@@ -25,6 +28,7 @@ kotlin {
         val jsMain by getting
         val jvmMain by getting
         val mingwX64Main by getting
+        val macosArm64Main by getting
     }
 }
 

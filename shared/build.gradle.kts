@@ -8,13 +8,13 @@ plugins { kotlin("multiplatform") }
 korge {
     targetJvm()
     targetJs()
+    targetDesktop()
     targetDesktopCross()
+    targetDefault()
+    targetAll()
 }
 
 kotlin {
-    targets {
-        this
-    }
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -43,15 +43,16 @@ kotlin {
                 api(libs.logback)
             }
         }
-        val linuxArm64Main by getting {
-            configurations.all {
-                println(this.name)
-                exclude(libs.kotlinx.uuid.asProvider())
-                exclude(libs.kotlinx.serialization)
-                exclude(libs.koin)
-                exclude(libs.ktor.client.auth)
-                exclude(libs.ktor.client.content.negotation)
-                exclude(libs.ktor.serialization.kotlinx.json)
+        val macosArm64Main by getting {
+            dependencies {
+                api(libs.ktor.client.cio)
+                api(libs.logback)
+            }
+        }
+        val macosX64Main by getting {
+            dependencies {
+                api(libs.ktor.client.cio)
+                api(libs.logback)
             }
         }
     }
