@@ -19,7 +19,6 @@ korge {
 kotlin {
     linuxArm64().apply {
         configurations.filter { it.name.contains("linuxArm64") }.forEach {
-            println(it.name)
             it.exclude(libs.kotlinx.uuid.asProvider())
             it.exclude(libs.kotlinx.serialization)
             it.exclude(libs.koin)
