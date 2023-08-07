@@ -8,6 +8,7 @@ import korlibs.korge.scene.SceneContainer
 import korlibs.korge.scene.sceneContainer
 import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
 import network.client
