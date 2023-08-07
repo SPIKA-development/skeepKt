@@ -13,11 +13,10 @@ korge {
     targetJs()
     targetDesktopCross()
     targetDesktop()
-    entryPoint = "startMain"
+    entryPoint = "runMain"
 }
 
 kotlin {
-    mingwX64()
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -26,10 +25,9 @@ kotlin {
                 api(project(":deps"))
             }
         }
-        val jsMain by getting
-        val jvmMain by getting
-        val mingwX64Main by getting
-        val macosArm64Main by getting
+        runCatching { val jvmMain by getting }
+        runCatching { val mingwX64Main by getting }
+        runCatching { val macosArm64Main by getting }
     }
 }
 

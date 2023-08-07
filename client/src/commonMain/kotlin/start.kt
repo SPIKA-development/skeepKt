@@ -1,12 +1,15 @@
 import korlibs.image.font.Font
 import korlibs.image.font.readWoffFont
 import korlibs.image.format.*
+import korlibs.io.async.runBlockingNoSuspensions
 import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.Korge
 import korlibs.korge.scene.SceneContainer
 import korlibs.korge.scene.sceneContainer
 import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.withContext
 import network.client
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
@@ -14,6 +17,7 @@ import org.koin.dsl.module
 import org.koin.mp.KoinPlatform.getKoin
 import scene.MainScene
 import util.ColorPalette
+import util.launchNow
 import websocket.startWebSocket
 import kotlin.coroutines.coroutineContext
 import kotlin.random.Random

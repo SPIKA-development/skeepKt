@@ -1,3 +1,3 @@
-fun startMain() {
+fun runMain() {
     println("A")
 }

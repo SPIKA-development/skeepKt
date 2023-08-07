@@ -11,12 +11,11 @@ plugins {
 korge {
     targetJvm()
     targetJs()
-    targetDesktop()
     targetDesktopCross()
     targetDesktop()
-    entryPoint = "startMain"
+    entryPoint = "runMain"
 }
-kapt { generateStubs = true }
+
 kotlin {
     linuxArm64().apply {
         configurations.filter { it.name.contains("linuxArm64") }.forEach {
