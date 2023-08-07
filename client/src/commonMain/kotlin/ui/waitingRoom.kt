@@ -188,7 +188,7 @@ fun materialInput(hint: String, padding: Float, container: Container,
                   bg: RGBA = Colors.TRANSPARENT,
 ): MaterialInput {
     val input = container.customUiTextInput(hint, size = container.size) {
-        text = " "
+        text = ""
         container.styles.textAlignment = TextAlignment.MIDDLE_LEFT
         controller.caretContainer.alignY(this, 0.75, false)
         positionX(padding / 2)
@@ -197,7 +197,7 @@ fun materialInput(hint: String, padding: Float, container: Container,
         shadowColor = Colors.TRANSPARENT
         bgColor = bg
         borderColor = border
-        borderSize = padding / 4
+        borderSize = padding / 5
     }.zIndex(1)
     return MaterialInput(input, material)
 }

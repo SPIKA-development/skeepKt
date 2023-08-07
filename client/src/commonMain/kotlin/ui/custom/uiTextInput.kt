@@ -16,7 +16,7 @@ import korlibs.math.geom.*
 @KorgeExperimental
 inline fun Container.customUiTextInput(
     hint: String,
-    initialText: String = " ",
+    initialText: String = "",
     size: Size = Size(128, 24),
     block: @ViewDslMarker UITextInput.() -> Unit = {}
 ): UITextInput = UITextInput(hint, initialText, size)
@@ -43,7 +43,7 @@ class UITextInput(hint: String, initialText: String = "", size: Size = Size(128,
     private val textView = customUiText(initialText, this.size)
     //private val textView = container.text(initialText, 16.0, color = Colors.BLACK, font = DefaultTtfFont)
     val controller = TextEditController(textView.textView, uiContainer(textView.size), this, bg = bg,
-        hint = textView.uiText(" $hint", size = size) {
+        hint = textView.uiText(hint, size = size) {
             centerYOn(textView).alignX(textView, 0.1, true)
             alpha = 0.5f
         }

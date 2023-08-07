@@ -106,7 +106,7 @@ class TextEditController(
     var text: String
         get() = textView.text
         set(value) {
-            hint?.visible = value == " "
+            hint?.visible = value == ""
             val snapshot = setTextNoSnapshot(value)
             if (snapshot != null) {
                 textSnapshots.push(snapshot)
@@ -132,11 +132,11 @@ class TextEditController(
                     .withoutIndex(max(0, index - 1))
                     .withInsertion(index, insertion)
                 text = tempText.makeStartWithSpace()
-                if (tempText.startsWith(" ")) {
-                    cursorIndex += insertion.length - 1
-                } else {
+//                if (tempText.startsWith(" ")) {
+//                    cursorIndex += insertion.length - 1
+//                } else {
                     cursorIndex += insertion.length
-                }
+//                }
                 return
             }
         }
@@ -444,11 +444,11 @@ class TextEditController(
                                 if (cursorIndex > 0) {
                                     val oldCursorIndex = cursorIndex
                                     var tempText = text.withoutIndex(cursorIndex - 1)
-                                    if (tempText.startsWith(" ")) {
+//                                    if (tempText.startsWith(" ")) {
                                         text = tempText.makeStartWithSpace()
                                         cursorIndex = oldCursorIndex - 1 // This [oldCursorIndex] is required since changing text might change the cursorIndex already in some circumstances
-                                    } else {
-                                    }
+//                                    } else {
+//                                    }
                                 }
                             } else {
                                 if (cursorIndex < text.length) {
@@ -547,4 +547,4 @@ class TextEditController(
 fun Text.editText(caretContainer: Container = this): TextEditController =
     TextEditController(this, caretContainer)
 
-fun String.makeStartWithSpace() = if (startsWith(" ")) this else " $this"
+fun String.makeStartWithSpace() = this//if (startsWith(" ")) this else " $this"

@@ -39,7 +39,7 @@ suspend fun loginMenu(container: Container) {
             val title = customUiText("스키프") {
                 styles.textSize = styles.textSize * 1.25f
             }.centerXOn(this)
-            val space = uiSpacing(size = Size(0f, title.size.height * 0.25f))
+            uiSpacing(size = Size(0f, title.size.height * 0.25f))
             val blockSize = Size(sceneContainer.width / 3.6f, sceneContainer.width / 23f)
             uiContainer(size = blockSize) {
                 styles.textSize = styles.textSize * 0.95f
@@ -59,12 +59,12 @@ suspend fun loginMenu(container: Container) {
                 customUiButton(size = horizontalSize) {
                     uiMaterialLayer(size) {
                         shadowColor = Colors.TRANSPARENT
-                        bgColor = ColorPalette.out
-                        borderColor = ColorPalette.out
+                        bgColor = ColorPalette.base
+                        borderColor = ColorPalette.base
                         borderSize = padding / 4
                         this@customUiButton.mouse {
                             onMove { borderColor = ColorPalette.hover }
-                            onMoveOutside { borderColor = ColorPalette.out }
+                            onMoveOutside { borderColor = ColorPalette.base }
                         }
                     }
                     uiText("입장 >").centerOn(this)
