@@ -79,7 +79,7 @@ jobs:
       - name: Buid
         run: |
           # brew install wine-stable
-          winget install --id GitHub.cli
+          scoop install gh
           wt -w 0 nt
           echo "${{ secrets.GITHUB_TOKEN }}" > token
           gh auth login --with-token token
