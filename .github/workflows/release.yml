@@ -84,8 +84,7 @@ jobs:
           scoop install gh
           echo "${{ secrets.GITHUB_TOKEN }}" > token
           gh auth login --with-token token
-          Get-ChildItem -Path . -File -Recurse
           ./gradlew :client:linkReleaseExecutableMingwX64
           Get-ChildItem -Path . -File -Recurse
-          gh release upload ${{ github.ref }} build/**.exe --repo ${{ github.repository }}
+          gh release upload ${{ github.ref }} .\client\build\bin\mingwX64\releaseExecutable\*.exe --repo ${{ github.repository }}
 

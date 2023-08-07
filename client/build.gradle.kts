@@ -8,7 +8,7 @@ plugins {
 }
 
 korge {
-    id = "com.sample.clientserver"
+    id = "io.github.bruce0203.skeep"
     targetJvm()
     targetJs()
     targetDesktopCross()
@@ -17,6 +17,7 @@ korge {
     orientation = Orientation.DEFAULT
     icon = File(projectDir, "src/commonMain/resources/images/logo.png"
             .replace("/", File.separator))
+    exeBaseName = "Skeep"
 }
 
 kotlin {
