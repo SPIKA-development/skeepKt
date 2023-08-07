@@ -12,6 +12,9 @@ korge {
 }
 
 kotlin {
+    targets {
+        this
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -40,11 +43,21 @@ kotlin {
                 api(libs.logback)
             }
         }
-        val linuxX64Main by getting {
-            dependencies {
-                api(libs.ktor.client.cio)
-                api(libs.logback)
+        val linuxArm64Main by getting {
+            configurations.all {
+                println(this.name)
+                exclude(libs.kotlinx.uuid.asProvider())
+                exclude(libs.kotlinx.serialization)
+                exclude(libs.koin)
+                exclude(libs.ktor.client.auth)
+                exclude(libs.ktor.client.content.negotation)
+                exclude(libs.ktor.serialization.kotlinx.json)
             }
         }
     }
+}
+
+fun Configuration.exclude(provider: Provider<MinimalExternalModuleDependency>) {
+    val module = provider.get().module
+    exclude(group = module.group, module = module.name)
 }
