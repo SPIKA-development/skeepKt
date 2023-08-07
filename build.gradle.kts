@@ -3,6 +3,7 @@ import korlibs.korge.gradle.configureAutoVersions
 plugins {
     @Suppress("DSL_SCOPE_VIOLATION")
     alias(libs.plugins.korge) apply false
+    kotlin("multiplatform")
 }
 
 configureAutoVersions()
