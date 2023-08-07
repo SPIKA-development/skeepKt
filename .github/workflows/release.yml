@@ -60,7 +60,7 @@ jobs:
   buildExe:
     name: Release .exe
     runs-on: windows-latest
-    #    needs: release
+    needs: release
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
