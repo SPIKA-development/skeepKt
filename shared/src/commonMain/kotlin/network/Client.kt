@@ -61,7 +61,6 @@ suspend fun initializeClient() = run {
             json()
         }
     }
-    login()
 }
 
 fun String.httpToWs(): String {

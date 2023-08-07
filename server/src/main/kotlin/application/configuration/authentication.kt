@@ -10,6 +10,8 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import kotlinx.uuid.UUID
 import model.*
+import network.LoginResult
+import network.LoginResultType
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -34,15 +36,15 @@ fun Application.configureAuthentication() {
             val sessionPlayer = try {
                 newPlayer(loginRequest.username)
             } catch (_: PlayerAlreadyExistsException) {
-                call.respond(HttpStatusCode.NotAcceptable)
+                call.respond(LoginResult(LoginResultType.ALREADY_JOINED))
                 return@login
             } catch (e: Throwable) {
                 e.printStackTrace()
-                call.respond(HttpStatusCode.InternalServerError)
+                call.respond(LoginResult(LoginResultType.SERVER_IS_NOT_AVAILABLE))
                 return@login
             }
             val uuid = newSession(sessionPlayer).id.value
-            call.respond(uuid)
+            call.respond(LoginResult(LoginResultType.SUCCESS, uuid))
         }
     }
 
