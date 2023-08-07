@@ -9,7 +9,8 @@ enum class ClientPacket {
 
 enum class ServerPacket {
     CHAT,
-    PLAYER_JOIN, PLAYER_LEAVE
+    PLAYER_JOIN, PLAYER_LEAVE,
+    SERVER_CLOSED
 }
 
 @Serializable
@@ -20,3 +21,6 @@ data class PlayerJoinPacket(val username: String)
 
 @Serializable
 data class PlayerLeavePacket(val username: String)
+
+@Serializable
+class ServerClosedPacket

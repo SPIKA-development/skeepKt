@@ -496,7 +496,6 @@ class TextEditController(
             }
             down {
                 //println("UiTextInput.down")
-                println(it.currentPosLocal)
                 cursorIndex = getIndexAtPos(it.currentPosLocal)
                 dragging = false
             }

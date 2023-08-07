@@ -89,7 +89,7 @@ suspend fun MainMenuState.mainMenu() {
                     loading.removeFromParent()
                     WaitingRoomState().waitingRoom(room.uuid)
                 } catch (_: Throwable) {
-                    connectionBroked()
+                    connectionBroke()
                 }
             }
             customUiButton(size = bottomButtonSize).bottomButton("새로고침").onClick {

@@ -102,7 +102,6 @@ suspend fun loginMenu(container: Container) {
                                 return
                             } else {
                                 loginMenu.removeFromParent()
-                                sceneContainer.removeChildren()
                                 MainMenuState().mainMenu()
                             }
                     }
