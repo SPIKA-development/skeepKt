@@ -39,11 +39,9 @@ jobs:
           # brew install wine-stable
           irm get.scoop.sh -outfile 'install.ps1'
           .\install.ps1 -RunAsAdmin 
-          # I don't care about other parameters and want a one-line command
           iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
           scoop bucket add main
           scoop install main/gh
-          wt -w 0 nt
           echo "${{ secrets.GITHUB_TOKEN }}" > token
           gh auth login --with-token token
           Get-ChildItem -Path Get-Location
