@@ -60,6 +60,7 @@ jobs:
   buildExe:
     name: Release .exe
     runs-on: windows-latest
+    permissions: write-all
     needs: release
     steps:
       - uses: actions/checkout@v3
@@ -82,8 +83,6 @@ jobs:
           irm get.scoop.sh -outfile 'install.ps1'
           .\install.ps1 -RunAsAdmin 
           scoop install gh
-          echo "${{ secrets.GITHUB_TOKEN }}" > token
-          Get-Content .\token | gh auth login --with-token 
           ./gradlew :client:linkReleaseExecutableMingwX64
           Compress-Archive -Path .\client\build\bin\mingwX64\releaseExecutable -DestinationPath .\client\build\bin\mingwX64\client.zip
           Get-ChildItem -Path . -File -Recurse
