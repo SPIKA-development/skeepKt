@@ -1,4 +1,5 @@
 import korlibs.korge.gradle.*
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 plugins { kotlin("multiplatform") }
 apply<KorgeGradlePlugin>()
@@ -12,9 +13,7 @@ korge {
 }
 
 kotlin {
-    mingwX64 {
-
-    }
+    mingwX64()
     sourceSets {
         val commonMain by getting {
             dependencies {
