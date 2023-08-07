@@ -91,7 +91,6 @@ suspend fun MainMenuState.mainMenu() {
                 try {
                     val room = createRoom()
                     joinRoom(room.uuid)
-                    websocketClient()
                     serverList.removeFromParent()
                     loading.removeFromParent()
                     WaitingRoomState().waitingRoom(room.uuid)
