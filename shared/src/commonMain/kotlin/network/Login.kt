@@ -2,6 +2,7 @@ package network
 
 import io.ktor.client.call.*
 import io.ktor.http.*
+import kotlinx.serialization.Serializable
 import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
 import network.LoginResultType.*
@@ -17,6 +18,8 @@ enum class LoginResultType {
     ALREADY_JOINED,
     SERVER_IS_NOT_AVAILABLE
 }
+
+@Serializable
 data class LoginResult(
     val result: LoginResultType,
     val uuid: UUID? = null,
