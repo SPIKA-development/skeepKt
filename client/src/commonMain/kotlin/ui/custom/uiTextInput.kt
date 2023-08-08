@@ -1,17 +1,20 @@
 package ui.custom
 
-import korlibs.event.*
-import korlibs.image.font.*
-import korlibs.image.text.HorizontalAlign
-import korlibs.image.text.TextAlignment
-import korlibs.io.async.*
-import korlibs.korge.annotations.*
-import korlibs.korge.style.*
+import korlibs.event.ISoftKeyboardConfig
+import korlibs.event.SoftKeyboardConfig
+import korlibs.image.font.Font
+import korlibs.io.async.Signal
+import korlibs.korge.annotations.KorgeExperimental
+import korlibs.korge.style.ViewStyle
+import korlibs.korge.style.ViewStyles
+import korlibs.korge.style.styles
 import korlibs.korge.ui.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.alignX
 import korlibs.korge.view.align.centerYOn
-import korlibs.math.geom.*
+import korlibs.math.geom.Margin
+import korlibs.math.geom.Rectangle
+import korlibs.math.geom.Size
 
 @KorgeExperimental
 inline fun Container.customUiTextInput(

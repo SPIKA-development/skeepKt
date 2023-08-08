@@ -10,6 +10,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.uuid.UUID
 import model.*
+import network.CreateRoom
 import network.PlayerJoinPacket
 import network.PlayerLeavePacket
 import network.ServerPacket
@@ -21,7 +22,10 @@ fun Application.configureRooms() {
         authenticate {
             route("rooms") {
                 post { call.respond(listRoom()) }
-                post("create") { call.respond(createRoom(call.getPlayer())) }
+                post("create") {
+                    val createRoom = call.receive<CreateRoom>()
+                    call.respond(createRoom(call.getPlayer(), createRoom))
+                }
                 post("join") {
                     val room = call.receive<UUID>()
                     val maxPlayers = transaction { Room.find(Rooms.id eq room).first().maxPlayers }

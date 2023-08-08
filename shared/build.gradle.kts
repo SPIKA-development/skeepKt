@@ -1,4 +1,5 @@
-import korlibs.korge.gradle.*
+import korlibs.korge.gradle.KorgeLibraryGradlePlugin
+import korlibs.korge.gradle.korge
 
 apply<KorgeLibraryGradlePlugin>()
 apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
@@ -36,7 +37,7 @@ kotlin {
                 api(libs.koin)
                 api(libs.ktor.client.auth)
                 api(libs.ktor.client.content.negotation)
-                api(libs.ktor.serialization.kotlinx.json)
+                api(libs.ktor.serialization.kotlinx.protobuf)
             }
         }
         val jsMain by getting {

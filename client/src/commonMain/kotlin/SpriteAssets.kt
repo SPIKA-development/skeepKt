@@ -1,10 +1,5 @@
 import korlibs.image.format.*
-import korlibs.io.async.async
 import korlibs.io.file.std.resourcesVfs
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 
 object SpriteAssets {
 

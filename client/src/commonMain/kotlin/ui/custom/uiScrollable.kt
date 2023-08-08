@@ -1,26 +1,32 @@
 package ui.custom
 
-import korlibs.datastructure.iterators.*
-import korlibs.image.bitmap.*
-import korlibs.image.color.*
-import korlibs.io.async.*
-import korlibs.korge.component.*
-import korlibs.korge.input.*
-import korlibs.korge.internal.*
-import korlibs.korge.render.*
-import korlibs.korge.style.styles
-import korlibs.korge.style.textColor
+import korlibs.datastructure.iterators.fastForEach
+import korlibs.image.bitmap.Bitmaps
+import korlibs.image.color.Colors
+import korlibs.image.color.RGBA
+import korlibs.io.async.Signal
+import korlibs.korge.component.decorateOutOverAlpha
+import korlibs.korge.input.mouse
+import korlibs.korge.input.onMouseDrag
+import korlibs.korge.internal.KorgeInternal
+import korlibs.korge.render.RenderContext
 import korlibs.korge.ui.UIDirection
 import korlibs.korge.ui.UIView
 import korlibs.korge.ui.uiContainer
 import korlibs.korge.view.*
-import korlibs.korge.view.property.*
-import korlibs.math.geom.*
-import korlibs.math.interpolation.*
-import korlibs.memory.*
-import korlibs.time.*
+import korlibs.korge.view.property.ViewProperty
+import korlibs.math.geom.Anchor
+import korlibs.math.geom.Point
+import korlibs.math.geom.Rectangle
+import korlibs.math.geom.Size
+import korlibs.math.interpolation.interpolate
+import korlibs.math.interpolation.toRatio
+import korlibs.memory.clamp
+import korlibs.time.TimeSpan
+import korlibs.time.seconds
 import util.ColorPalette
-import kotlin.math.*
+import kotlin.math.absoluteValue
+import kotlin.math.max
 
 inline fun Container.customUiScrollable(
     size: Size = Size(256, 256),

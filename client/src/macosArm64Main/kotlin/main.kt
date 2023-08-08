@@ -1,5 +1,4 @@
 import io.ktor.client.engine.cio.*
-import korlibs.io.async.launchImmediately
 import korlibs.io.file.std.resourcesVfs
 import korlibs.io.lang.readProperties
 import kotlinx.coroutines.runBlocking
@@ -10,7 +9,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
-import kotlin.coroutines.CoroutineContext
 
 class Main
 

@@ -12,16 +12,14 @@ import korlibs.korge.style.textSize
 import korlibs.korge.ui.*
 import korlibs.korge.view.Container
 import korlibs.korge.view.addTo
-import korlibs.korge.view.align.alignY
-import korlibs.korge.view.align.centerOn
-import korlibs.korge.view.align.centerOnStage
-import korlibs.korge.view.align.centerXOn
+import korlibs.korge.view.align.*
 import korlibs.math.geom.Size
 import network.*
 import scene.styler
 import sceneContainer
 import ui.custom.UITextInput
 import ui.custom.customUiButton
+import ui.custom.customUiSlider
 import ui.custom.customUiText
 import util.ColorPalette
 import util.launchNow
@@ -41,15 +39,8 @@ fun createRoomMenu(container: Container) {
             val blockSize = Size(sceneContainer.width / 3.6f, sceneContainer.width / 23f)
             uiContainer(size = blockSize) {
                 styles.textSize = styles.textSize * 0.95f
-                materialInput("인원 수", padding, this,
-                    border = Colors.TRANSPARENT, bg = ColorPalette.base
-                ).apply {
-                    inputText = input
-                    input.mouse {
-//                            onMove { materialLayer.borderColor = ColorPalette.hover }
-                        onMoveOutside { materialLayer.borderColor = ColorPalette.base }
-                    }
-                }
+                uiText("1").centerYOn(this)
+                customUiSlider(value = 50f, min = 2f, max = 6f, size = size).centerOn(this)
             }.centerXOn(this)
             val horizontalSize = Size(blockSize.width / 2 - padding / 2, blockSize.height)
             uiHorizontalStack(height = horizontalSize.height, adjustHeight = false, padding = padding) {
@@ -65,7 +56,7 @@ fun createRoomMenu(container: Container) {
                             onMoveOutside { borderColor = ColorPalette.base }
                         }
                     }
-                    uiText("입장 >").centerOn(this)
+                    uiText("생성 >").centerOn(this)
                     var joinOnce = false
                     suspend fun join() {
                         if (joinOnce) return

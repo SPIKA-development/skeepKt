@@ -4,6 +4,7 @@ import kotlinx.uuid.UUID
 import kotlinx.uuid.exposed.KotlinxUUIDEntity
 import kotlinx.uuid.exposed.KotlinxUUIDEntityClass
 import kotlinx.uuid.exposed.KotlinxUUIDTable
+import network.CreateRoom
 import network.ViewedRoom
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -38,12 +39,13 @@ fun getJoinedPlayersAmount(room: UUID) = transaction {
     OnlinePlayer.count(OnlinePlayers.room eq room).toInt()
 }
 
-const val defaultRoomMaxPlayers = 6
-fun createRoom(creator: UUID) = transaction {
+
+fun createRoom(creator: UUID, createRoom: CreateRoom) = transaction {
+    if (createRoom.test().not()) throw AssertionError()
     Room.new {
-        val onlinePlayer = OnlinePlayer.find(OnlinePlayers.id eq creator).first()
-        name = "${onlinePlayer.name}의 방"
-        maxPlayers = 6
+//        val onlinePlayer = OnlinePlayer.find(OnlinePlayers.id eq creator).first()
+        name = createRoom.name
+        maxPlayers = createRoom.maxPlayers
     }.run { ViewedRoom(id.value, name, maxPlayers, 0) }
 }
 

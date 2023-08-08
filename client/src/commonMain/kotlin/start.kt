@@ -1,6 +1,7 @@
 import korlibs.image.font.Font
 import korlibs.image.font.readWoffFont
-import korlibs.image.format.*
+import korlibs.image.format.readBitmap
+import korlibs.image.format.readBitmapSlice
 import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.Korge
 import korlibs.korge.scene.SceneContainer

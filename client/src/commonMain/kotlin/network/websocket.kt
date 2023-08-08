@@ -4,14 +4,14 @@ import event.PacketEvent
 import io.ktor.util.*
 import korlibs.io.net.ws.WebSocketClient
 import korlibs.korge.ui.uiContainer
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import korlibs.time.DateTime
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.protobuf.ProtoBuf
 import network.ServerPacket.*
 import scene.MainScene
 import sceneContainer
-import ui.MainMenuState
 import ui.loadingMenu
-import ui.mainMenu
 import util.launchNow
 
 var _websocketClient: WebSocketClient? = null
@@ -25,15 +25,19 @@ suspend fun websocketClient(): WebSocketClient {
     }
     return _websocketClient!!
 }
-suspend fun newWebsocketClient() =
+suspend fun newWebsocketClient(): WebSocketClient {
+    val before  = DateTime.now()
+    println(currentUrl.httpToWs())
     WebSocketClient(currentUrl.httpToWs())
-    .also { it.startWebSocket() }
+    .also { it.startWebSocket() }.also { println(DateTime.now() - before); return it }
+}
 
 @OptIn(InternalAPI::class)
 suspend inline fun <reified T> sendToServer(packet: Enum<*>, t: T) {
-    val packetFrame = PacketFrame(packet.ordinal, sessionUUID, Json.encodeToString<T>(t))
-    runCatching { websocketClient().send(Json.encodeToString(packetFrame)) }.also {
+    val packetFrame = PacketFrame(packet.ordinal, sessionUUID, ProtoBuf.encodeToByteArray<T>(t))
+    runCatching { websocketClient().send(ProtoBuf.encodeToByteArray(packetFrame)) }.also {
         if (it.isFailure) {
+            it.getOrThrow()
             connectionBroke()
         }
         it.getOrThrow()
@@ -50,9 +54,9 @@ fun connectionBroke() {
 
 
 suspend fun WebSocketClient.startWebSocket() {
-    send(Json.encodeToString(sessionUUID))
-    onStringMessage {
-        val packetFrame = Json.decodeFromString<PacketFrame>(it)
+    send(ProtoBuf.encodeToByteArray(sessionUUID))
+    onBinaryMessage {
+        val packetFrame = ProtoBuf.decodeFromByteArray<PacketFrame>(it)
         val serverPacket = ServerPacket.values()[packetFrame.type]
         val packetController = serverPacket(serverPacket)
         launchNow {

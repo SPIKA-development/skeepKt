@@ -5,21 +5,25 @@ import event.PacketEvent
 import korlibs.datastructure.getExtra
 import korlibs.datastructure.setExtra
 import korlibs.event.Key
-import korlibs.image.bitmap.*
+import korlibs.image.bitmap.Bitmap
+import korlibs.image.bitmap.slice
 import korlibs.image.color.Colors
 import korlibs.image.color.RGBA
 import korlibs.image.text.TextAlignment
 import korlibs.korge.annotations.KorgeExperimental
-import korlibs.korge.input.cursor
 import korlibs.korge.input.keys
+import korlibs.korge.input.mouse
 import korlibs.korge.input.onMouseDragCloseable
 import korlibs.korge.input.onUp
 import korlibs.korge.style.styles
 import korlibs.korge.style.textAlignment
 import korlibs.korge.ui.*
 import korlibs.korge.view.*
-import korlibs.korge.view.align.*
-import korlibs.math.geom.Point
+import korlibs.korge.view.align.alignX
+import korlibs.korge.view.align.alignY
+import korlibs.korge.view.align.centerOn
+import korlibs.korge.view.align.centerYOn
+import korlibs.math.geom.RectCorners
 import korlibs.math.geom.Size
 import korlibs.time.seconds
 import kotlinx.uuid.UUID
@@ -31,10 +35,6 @@ import sceneContainer
 import ui.custom.*
 import ui.custom.UITextInput
 import util.ColorPalette
-import network.getRoomName
-import network.leaveRoom
-import network.listPlayer
-import network.sendToServer
 import kotlin.math.max
 
 class WaitingRoomState {
@@ -200,6 +200,31 @@ fun materialInput(hint: String, padding: Float, container: Container,
         bgColor = bg
         borderColor = border
         borderSize = padding / 6
+        radius = RectCorners(borderSize*2)
     }.zIndex(1)
     return MaterialInput(input, material)
+}
+
+data class MaterialButton(val button: CustomUIButton, val materialLayer: UIMaterialLayer)
+fun materialButton(text: String, container: Container,
+                  border: RGBA = ColorPalette.hover,
+                  bg: RGBA = ColorPalette.out,
+): MaterialButton {
+    container.styles.textAlignment = TextAlignment.MIDDLE_CENTER
+    val button = container.customUiButton(size = container.size).zIndex(2)
+    val material = container.uiMaterialLayer(button.size) {
+        shadowColor = Colors.TRANSPARENT
+        bgColor = bg
+//        borderColor = Colors.ba
+//        borderSize = size.height / 15f
+        radius = RectCorners(borderSize*2)
+    }.zIndex(1)
+    container.apply {
+        uiText(text).centerOn(this).zIndex(2)
+        mouse {
+            onMove { material.bgColor = border }
+            onMoveOutside { material.bgColor = bg }
+        }
+    }
+    return MaterialButton(button, material)
 }

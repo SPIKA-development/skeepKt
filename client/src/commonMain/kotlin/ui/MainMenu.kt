@@ -12,11 +12,12 @@ import korlibs.korge.ui.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.*
 import korlibs.math.geom.Point
+import korlibs.math.geom.RectCorners
 import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
 import korlibs.time.DateTime
 import korlibs.time.milliseconds
-import network.ViewedRoom
+import network.*
 import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform.getKoin
 import scene.styler
@@ -24,7 +25,6 @@ import sceneContainer
 import ui.custom.customUiButton
 import ui.custom.customUiScrollable
 import util.ColorPalette
-import network.*
 import kotlin.math.PI
 
 class MainMenuState {
@@ -53,6 +53,7 @@ suspend fun MainMenuState.mainMenu() {
             bgColor = Colors.TRANSPARENT
             borderColor = ColorPalette.text
             borderSize = padding/2
+            radius = RectCorners(borderSize*2)
         }.centerXOn(this)
         uiContainer {
             customUiScrollable(
@@ -70,35 +71,31 @@ suspend fun MainMenuState.mainMenu() {
             }.positionY(sceneContainer.height / elementRatio)
         }
         uiText("멀티플레이").centerOn(top).alignY(top, 0.75, true)
-            .zIndex(1)
+            .zIndex(2)
         uiHorizontalStack(height = top.height*0.75f, padding = padding*2) {
             val bottomButtonSize = Size(top.heightD * PI, .0)
-            customUiButton(size = bottomButtonSize).bottomButton("방 생성").onClick {
-                lateinit var loading: Container
-                loading = sceneContainer.uiContainer {
-                    serverList.visible = false
-                    loadingMenu("방 생성 중...") {
-                        serverList.visible = true
-                        loading.removeFromParent()
-                    }
-                }
-                try {
-                    val room = createRoom()
-                    joinRoom(room.uuid)
+            materialButton("방 생성", uiContainer(bottomButtonSize) {
+                mouse.onClick {
                     serverList.removeFromParent()
-                    loading.removeFromParent()
+                    val room = createRoom(CreateRoom("asdf", 6))
+                    joinRoom(room.uuid)
+//                    loading.removeFromParent()
                     WaitingRoomState().waitingRoom(room.uuid)
-                } catch (_: Throwable) {
-                    connectionBroke()
+//                    createRoomMenu(sceneContainer)
                 }
-            }
-            customUiButton(size = bottomButtonSize).bottomButton("새로고침").onClick {
+            })
+            materialButton("새로고침", uiContainer(bottomButtonSize) {
                 rooms.removeChildrenIf { index, child -> child.isRoom }
                 getViewedRooms().forEach {
                     room(it)
                 }
-            }
-        }.centerOn(bottom).zIndex(1)
+            })
+//            uiContainer(size = bottomButtonSize).bottomButton("방 생성")
+//                    joinRoom(room.uuid)
+//                    loading.removeFromParent()
+//                    WaitingRoomState().waitingRoom(room.uuid)
+//            }
+        }.centerOn(bottom).zIndex(2)
         getViewedRooms().forEach {
             room(it)
         }
@@ -114,7 +111,6 @@ fun Container.bottomButton(text: String): Container {
     }
     uiText(text).centerOn(this)
     return this
-
 }
 
 var View.isRoom

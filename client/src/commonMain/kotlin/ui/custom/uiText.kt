@@ -1,13 +1,16 @@
 package ui.custom
 
-import korlibs.image.color.*
-import korlibs.korge.input.*
-import korlibs.korge.render.*
+import korlibs.image.color.Colors
+import korlibs.image.color.RGBA
+import korlibs.korge.input.mouse
+import korlibs.korge.render.RenderContext
 import korlibs.korge.style.*
 import korlibs.korge.ui.UIView
 import korlibs.korge.ui.uiObservable
 import korlibs.korge.view.*
-import korlibs.math.geom.*
+import korlibs.math.geom.Point
+import korlibs.math.geom.Rectangle
+import korlibs.math.geom.Size
 
 // @TODO: Replace with TextBlock
 inline fun Container.customUiText(

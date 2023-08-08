@@ -1,6 +1,5 @@
 package khangul
 
-import de.cketti.codepoints.appendCodePoint
 import korlibs.io.lang.Charset.Companion.appendCodePointV
 import kotlin.math.floor
 

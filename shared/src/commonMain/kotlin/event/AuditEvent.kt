@@ -1,7 +1,8 @@
 package event
 
-import korlibs.event.*
-import network.ChatPacket
+import korlibs.event.Event
+import korlibs.event.EventType
+import korlibs.event.TEvent
 
 class PacketEvent(
     val packet: Any,

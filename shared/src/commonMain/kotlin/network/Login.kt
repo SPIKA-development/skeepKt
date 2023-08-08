@@ -1,11 +1,11 @@
 package network
 
 import io.ktor.client.call.*
-import io.ktor.http.*
 import kotlinx.serialization.Serializable
 import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
-import network.LoginResultType.*
+import network.LoginResultType.SERVER_IS_NOT_AVAILABLE
+import network.LoginResultType.SUCCESS
 
 var username: String = generateUsername()
 lateinit var sessionId: String

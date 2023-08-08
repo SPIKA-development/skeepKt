@@ -4,9 +4,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.uuid.UUID
 
-suspend fun createRoom() = client().post("$currentUrl/rooms/create") {
-    basicAuth(username, sessionId)
-}.body<ViewedRoom>()
+suspend fun createRoom(createRoom: CreateRoom) = sendHttp("rooms/create", createRoom).body<ViewedRoom>()
 suspend fun getViewedRooms() = runCatching {
     client().post("$currentUrl/rooms") {
         basicAuth(username, sessionId)

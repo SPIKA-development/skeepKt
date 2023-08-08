@@ -7,7 +7,7 @@ package converter
 import io.ktor.util.reflect.*
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.*
-import kotlinx.serialization.modules.*
+import kotlinx.serialization.modules.SerializersModule
 
 @InternalSerializationApi
 @ExperimentalSerializationApi

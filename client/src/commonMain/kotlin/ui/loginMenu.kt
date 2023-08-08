@@ -2,10 +2,11 @@ package ui
 
 import korlibs.event.Key
 import korlibs.image.color.Colors
-import korlibs.io.async.asyncImmediately
-import korlibs.io.async.runBlockingNoSuspensions
 import korlibs.korge.annotations.KorgeExperimental
-import korlibs.korge.input.*
+import korlibs.korge.input.keys
+import korlibs.korge.input.mouse
+import korlibs.korge.input.onClick
+import korlibs.korge.input.onMouseDragCloseable
 import korlibs.korge.style.styles
 import korlibs.korge.style.textColor
 import korlibs.korge.style.textSize
@@ -16,6 +17,7 @@ import korlibs.korge.view.align.alignY
 import korlibs.korge.view.align.centerOn
 import korlibs.korge.view.align.centerOnStage
 import korlibs.korge.view.align.centerXOn
+import korlibs.math.geom.RectCorners
 import korlibs.math.geom.Size
 import network.*
 import scene.styler
@@ -25,7 +27,6 @@ import ui.custom.customUiButton
 import ui.custom.customUiText
 import util.ColorPalette
 import util.launchNow
-import network.websocketClient
 
 @KorgeExperimental
 suspend fun loginMenu(container: Container) {
@@ -62,6 +63,7 @@ suspend fun loginMenu(container: Container) {
                         bgColor = ColorPalette.base
                         borderColor = ColorPalette.base
                         borderSize = padding / 4
+                        radius = RectCorners(borderSize*2)
                         this@customUiButton.mouse {
                             onMove { borderColor = ColorPalette.hover }
                             onMoveOutside { borderColor = ColorPalette.base }
@@ -89,7 +91,7 @@ suspend fun loginMenu(container: Container) {
                         warningText.styles.textColor = ColorPalette.out
                         username = inputText.text.trim()
                         joinOnce = true
-                            val login = login()
+                        val login = login()
                             if (login == LoginResultType.ALREADY_JOINED) {
                                 warningText.text = "입력하신 닉네임은 이미 사용중입니다"
                                 joinOnce = false

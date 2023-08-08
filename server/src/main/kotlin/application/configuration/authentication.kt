@@ -1,6 +1,5 @@
 package application.configuration
 
-import network.LoginRequest
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -10,6 +9,7 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import kotlinx.uuid.UUID
 import model.*
+import network.LoginRequest
 import network.LoginResult
 import network.LoginResultType
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

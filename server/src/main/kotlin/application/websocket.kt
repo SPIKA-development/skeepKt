@@ -8,18 +8,17 @@ import io.ktor.util.*
 import io.ktor.util.reflect.*
 import io.ktor.websocket.*
 import io.ktor.websocket.serialization.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import korlibs.time.DateTime
+import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.protobuf.ProtoBuf
 import kotlinx.uuid.UUID
 import kotlinx.uuid.generateUUID
 import model.*
 import network.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
-import util.launchNow
 import java.time.Duration
 import java.util.*
-import kotlin.collections.LinkedHashSet
 
 val serverUUID = UUID.generateUUID()
 val connections: MutableSet<Connection> = Collections.synchronizedSet(LinkedHashSet())
@@ -32,12 +31,14 @@ fun Application.configureWebsocket() {
         val fifteenSeconds = Duration.ofSeconds(15)
         pingPeriod = fifteenSeconds
         timeout = fifteenSeconds
+        masking = false
         contentConverter = KotlinxWebsocketSerializationConverter(serialFormat)
     }
     routing {
         webSocket {
             val thisConnection = Connection(this, receiveDeserialized<UUID>())
             connections += thisConnection
+
             try {
                 while (true) {
                     val packet = receiveDeserialized<PacketFrame>()
@@ -46,7 +47,10 @@ fun Application.configureWebsocket() {
                     if (connections.none { it.session == packet.session }
                         && runCatching { transaction { Session.find(Sessions.id eq packet.session).first() } }.isFailure)
                         return@webSocket
+                    val before = DateTime.now()
                     packetController.invoke(decode(packet.data, packetController.typeInfo)!!)
+                    val after = DateTime.now()
+                    println(after - before)
                 }
             } catch (_: kotlinx.coroutines.channels.ClosedReceiveChannelException) {
             } catch (e: Throwable) {
@@ -82,6 +86,6 @@ inline fun <reified T : Any> transactionPacket(crossinline code: (T) -> Any) = o
 
 @OptIn(InternalAPI::class)
 suspend inline fun <reified T> DefaultWebSocketSession.sendToClient(packet: Enum<*>, t: T) {
-    val packetFrame = PacketFrame(packet.ordinal, serverUUID, Json.encodeToString<T>(t))
+    val packetFrame = PacketFrame(packet.ordinal, serverUUID, ProtoBuf.encodeToByteArray<T>(t))
     sendSerializedBase(packetFrame, typeInfo<PacketFrame>(), converter, Charsets.UTF_8)
 }
