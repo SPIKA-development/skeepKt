@@ -84,7 +84,7 @@ jobs:
           .\install.ps1 -RunAsAdmin 
           scoop install gh
           ./gradlew :client:linkReleaseExecutableMingwX64
-          Rename-Item -Path ".\client\build\bin\mingwX64\releaseExecutable" -NewName ".\client\build\bin\mingwX64\client"
+          Rename-Item -Path "client\build\bin\mingwX64\releaseExecutable\" -NewName "\client\build\bin\mingwX64\client"
           Compress-Archive -Path .\client\build\bin\mingwX64\client -DestinationPath .\client\build\bin\mingwX64\client.zip
           Get-ChildItem -Path . -File -Recurse
           gh release upload ${{github.run_number}} .\client\build\bin\mingwX64\client.zip --repo ${{ github.repository }}
