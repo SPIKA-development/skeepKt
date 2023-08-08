@@ -83,7 +83,7 @@ suspend fun MainMenuState.mainMenu() {
                     }
                 }
                 try {
-                    val room = createRoom()
+                    val room = createRoomMenu()
                     joinRoom(room.uuid)
                     serverList.removeFromParent()
                     loading.removeFromParent()
