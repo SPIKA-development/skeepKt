@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class LoginRequest(val username: String)
 
 @Serializable
-data class CreateRoom(val name: String, val maxPlayers: Int) {
+data class CreateRoom(val name: String, val maxPlayers: Int, val roomMode: RoomMode) {
     fun test() = name.length <= defaultRoomNameLength && maxPlayers <= defaultRoomMaxPlayers
     companion object {
         const val defaultRoomMaxPlayers = 6

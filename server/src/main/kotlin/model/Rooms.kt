@@ -5,6 +5,7 @@ import kotlinx.uuid.exposed.KotlinxUUIDEntity
 import kotlinx.uuid.exposed.KotlinxUUIDEntityClass
 import kotlinx.uuid.exposed.KotlinxUUIDTable
 import network.CreateRoom
+import network.RoomMode
 import network.ViewedRoom
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -15,6 +16,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object Rooms : KotlinxUUIDTable() {
     val name = varchar("name", 50)
     val maxPlayers = integer("maxPlayers")
+    val mode = enumeration<RoomMode>("mode")
     init { let { transaction { SchemaUtils.create(it) } } }
 }
 
@@ -22,6 +24,7 @@ class Room(id: EntityID<UUID>) : KotlinxUUIDEntity(id) {
     companion object : KotlinxUUIDEntityClass<Room>(Rooms)
     var name by Rooms.name
     var maxPlayers by Rooms.maxPlayers
+    var mode by Rooms.mode
 }
 
 fun listRoom() = transaction {
@@ -29,6 +32,7 @@ fun listRoom() = transaction {
         ViewedRoom(
             it.id.value,
             it.name,
+                //stopship add mode insertion
             it.maxPlayers,
             OnlinePlayer.count(OnlinePlayers.room eq it.id).toInt()
         )

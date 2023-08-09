@@ -11,3 +11,5 @@ data class ViewedRoom(
     val curPlayers: Int,
 )
 
+@Serializable
+enum class RoomMode { NORMAL, TIMED, HARDCORE }
