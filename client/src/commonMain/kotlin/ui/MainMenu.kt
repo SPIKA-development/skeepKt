@@ -8,6 +8,7 @@ import korlibs.image.color.Colors
 import korlibs.korge.input.mouse
 import korlibs.korge.input.onClick
 import korlibs.korge.style.styles
+import korlibs.korge.time.timers
 import korlibs.korge.ui.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.*
@@ -17,6 +18,7 @@ import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
 import korlibs.time.DateTime
 import korlibs.time.milliseconds
+import korlibs.time.seconds
 import network.*
 import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform.getKoin
@@ -24,6 +26,7 @@ import scene.styler
 import sceneContainer
 import ui.custom.customUiButton
 import ui.custom.customUiScrollable
+import ui.custom.customUiText
 import util.ColorPalette
 import kotlin.math.PI
 
@@ -39,7 +42,8 @@ class MainMenuState {
 }
 
 suspend fun MainMenuState.mainMenu() {
-    serverList = sceneContainer.uiContainer {
+    sceneContainer.uiContainer {
+        serverList = this
         styles(styler)
         val bottom =
             solidRect(Size(sceneContainer.widthD, sceneContainer.heightD / elementRatio*1.75), color = ColorPalette.base)
@@ -64,11 +68,22 @@ suspend fun MainMenuState.mainMenu() {
 //                positionX(sceneContainer.width*0.5)
                 it.backgroundColor = Colors.TRANSPARENT
                 uiVerticalStack(adjustSize = false, padding = padding) {
-                    uiSpacing(Size(1f, padding))
+                    uiVerticalStack(adjustSize = false, padding = padding) {
+                        uiSpacing(Size(1f, padding))
+                        styles(styler)
+                        rooms = this
+                    }
                     styles(styler)
-                    rooms = this
-                }
-            }.positionY(sceneContainer.height / elementRatio)
+                    var i = 0
+                    val icons = listOf("0 o o", "o 0 o", "o o 0", "o 0 o")
+                    customUiText("") {
+                        centerXOnStage().timers.intervalAndNow(0.15.seconds) {
+                            text = icons[i]
+                            if (i < icons.size - 1) i++
+                            else i = 0
+                        }
+                    }
+                }            }.positionY(sceneContainer.height / elementRatio)
         }
         uiText("멀티플레이").centerOn(top).alignY(top, 0.75, true)
             .zIndex(2)
@@ -86,9 +101,7 @@ suspend fun MainMenuState.mainMenu() {
             })
             materialButton("새로고침", uiContainer(bottomButtonSize) {
                 rooms.removeChildrenIf { index, child -> child.isRoom }
-                getViewedRooms().forEach {
-                    room(it)
-                }
+                loadRooms()
             })
 //            uiContainer(size = bottomButtonSize).bottomButton("방 생성")
 //                    joinRoom(room.uuid)
@@ -96,9 +109,6 @@ suspend fun MainMenuState.mainMenu() {
 //                    WaitingRoomState().waitingRoom(room.uuid)
 //            }
         }.centerOn(bottom).zIndex(2)
-        getViewedRooms().forEach {
-            room(it)
-        }
     }
 }
 
@@ -197,3 +207,14 @@ fun Container.loadingMenu(text: String, buttonText: String? = null, onClick: () 
         }
     return text
 }
+
+suspend fun MainMenuState.loadRooms() {
+    val viewedRooms = getViewedRooms()
+//    listLoading.removeFromParent()
+    if (viewedRooms.isEmpty()) {
+        rooms.uiText("")
+    } else viewedRooms.forEach {
+        room(it)
+    }
+}
+
