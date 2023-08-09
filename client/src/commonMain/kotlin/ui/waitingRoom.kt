@@ -97,7 +97,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                 onUp up@{
                     if (isDone) return@up
                     isDone = true
-                    leaveRoom(sessionUUID)
+                    requestLeaveRoom(sessionUUID)
                     waitingRoom.removeFromParent()
                     MainMenuState().mainMenu()
                 }

@@ -18,9 +18,9 @@ import korlibs.korge.view.Container
 import korlibs.korge.view.addTo
 import korlibs.korge.view.align.*
 import korlibs.korge.view.positionX
-import korlibs.korge.view.solidRect
 import korlibs.math.geom.Size
 import network.*
+import network.CreateRoomResultType.*
 import scene.styler
 import sceneContainer
 import ui.custom.*
@@ -37,7 +37,6 @@ fun createRoomMenu(container: Container) {
         val padding = 15.75f
         val minAmount = 2
         val maxAmount = 12
-        val recommendedAmount = 6
         val rangeSize = maxAmount - minAmount + 1
         val blockHeight = sceneContainer.width / 22
         val blockSize = Size(blockHeight * rangeSize, blockHeight)
@@ -77,7 +76,7 @@ fun createRoomMenu(container: Container) {
                             }
                         }
                     roomSize = customUiSlider(
-                        value = recommendedAmount,
+                        value = CreateRoom.defaultRoomMaxPlayers,
                         min = minAmount,
                         max = maxAmount,
                         size = size,
@@ -123,7 +122,21 @@ fun createRoomMenu(container: Container) {
                         createRoomMenu.removeFromParent()
                         val createRoom = CreateRoom(roomName.text,
                             roomSize.index + minAmount, RoomMode.NORMAL)
-                        val room = createRoom(createRoom).uuid
+                        val createRoomResult = createRoom(createRoom)
+                        when (createRoomResult.type) {
+                            NOT_ALlOWED_NAME -> {
+                                warningText.text = "방 이름은 한글, 영문, 숫자만 가능합니다"
+                                warningText.styles.textColor = Colors.PALEVIOLETRED
+                                return
+                            }
+                            NOT_ALLOWED_MAX_PLAYERS_AMOUNT -> {
+                                warningText.text = "방 이름은 3글자 이상 16글자 이하여야 합니다"
+                                warningText.styles.textColor = Colors.PALEVIOLETRED
+                                return
+                            }
+                            else -> {}
+                        }
+                        val room = createRoomResult.createdRoom!!.uuid
                         joinRoom(room)
                         WaitingRoomState().waitingRoom(room)
                     }
