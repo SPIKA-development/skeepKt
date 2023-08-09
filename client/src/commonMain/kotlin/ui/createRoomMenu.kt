@@ -3,6 +3,7 @@ package ui
 import korlibs.event.Key
 import korlibs.image.color.Colors
 import korlibs.image.text.TextAlignment
+import korlibs.korge.annotations.KorgeExperimental
 import korlibs.korge.input.keys
 import korlibs.korge.input.mouse
 import korlibs.korge.input.onClick
@@ -16,6 +17,8 @@ import korlibs.korge.ui.UIText
 import korlibs.korge.view.Container
 import korlibs.korge.view.addTo
 import korlibs.korge.view.align.*
+import korlibs.korge.view.positionX
+import korlibs.korge.view.solidRect
 import korlibs.math.geom.Size
 import network.*
 import scene.styler
@@ -25,8 +28,8 @@ import ui.custom.UITextInput
 import util.ColorPalette
 import util.launchNow
 
+@OptIn(KorgeExperimental::class)
 fun createRoomMenu(container: Container) {
-    lateinit var inputText: UITextInput
     lateinit var warningText: UIText
     lateinit var createRoomMenu: Container
     createRoomMenu = container.uiContainer {
@@ -35,11 +38,11 @@ fun createRoomMenu(container: Container) {
         val minAmount = 2
         val maxAmount = 12
         val recommendedAmount = 6
-        val rangeSize = maxAmount - minAmount -1
-        val blockHeight = sceneContainer.width / 23f
+        val rangeSize = maxAmount - minAmount + 1
+        val blockHeight = sceneContainer.width / 22
         val blockSize = Size(blockHeight * rangeSize, blockHeight)
-        val inputSize = Size(sceneContainer.width / 3.6f, sceneContainer.width / 23f)
-        lateinit var roomName: MaterialInput
+        val inputSize = Size(sceneContainer.width / 3.6f, sceneContainer.width / 20f)
+        lateinit var roomName: UITextInput
         lateinit var roomSize: CustomUISlider
         uiVerticalStack(adjustSize = false, padding = padding) {
             val title = customUiText("방 생성") {
@@ -47,52 +50,42 @@ fun createRoomMenu(container: Container) {
             }.centerXOn(this)
             uiVerticalStack(adjustSize = false, padding = padding) {
                 uiSpacing(size = Size(0f, title.size.height * 0.25f))
-                uiHorizontalStack {
-                    uiContainer {
-                        uiText("방 이름:") {
-                            styles.textSize = styles.textSize * 1.2f
-                        }.centerYOn(this)
-                    }
                     uiContainer(inputSize) {
                         materialInput(
                             "이름", padding, this,
                             border = Colors.TRANSPARENT, bg = ColorPalette.base
-                        ).apply {
+                        ).input.apply {
                             roomName = this
-                            input.text = "${username}의 방"
-                            input.mouse {
+                            text = "${username}의 방"
+                            mouse {
 //                            onMove { materialLayer.borderColor = ColorPalette.hover }
 //                                onMoveOutside { materialLayer.borderColor = ColorPalette.base }
                             }
                         }
-                    }
+                    }.centerXOn(this)
+                uiSpacing(blockSize.times(1))
+                uiText("최대 인원") {
+                    styles.textSize = styles.textSize * 1.2f
                 }
-                uiSpacing(blockSize)
-                uiHorizontalStack(adjustHeight = true) {
-                    uiContainer {
-                        uiText("최대 인원:") {
-                            styles.textSize = styles.textSize * 1.2f
-                        }.centerYOn(this)
-                    }
-                    uiContainer(size = blockSize) {
-                        styles.textSize = styles.textSize * 0.95f
-                        styles.textAlignment = TextAlignment.MIDDLE_CENTER
-                        uiHorizontalFill(size) {
-                            (minAmount..maxAmount).forEach {
-                                uiText("$it").centerYOn(this)
+                uiContainer(size = blockSize) {
+                    styles.textSize = styles.textSize * 0.95f
+                    styles.textAlignment = TextAlignment.MIDDLE_CENTER
+                        repeat(rangeSize) {
+                            uiContainer(Size(height, height)) {
+                                uiText("${it+minAmount}").centerOn(this)
+                                positionX(it*height)
                             }
                         }
-                        roomSize = customUiSlider(
-                            value = recommendedAmount,
-                            min = minAmount,
-                            max = maxAmount,
-                            size = size,
-                            step = 1
-                        )
-                    }
-                }
-            }.alignX(this, -.3, false)
-            val horizontalSize = Size(blockSize.width / 2 - padding / 2, blockSize.height)
+                    roomSize = customUiSlider(
+                        value = recommendedAmount,
+                        min = minAmount,
+                        max = maxAmount,
+                        size = size,
+                        step = 1
+                    )
+                }.centerXOn(this)
+            }
+            val horizontalSize = Size(inputSize.width / 2 - padding / 2, inputSize.height)
             uiHorizontalStack(height = horizontalSize.height, adjustHeight = false, padding = padding) {
                 uiSpacing(Size(0f, padding / 2))
                 customUiButton(size = horizontalSize) {
@@ -110,7 +103,7 @@ fun createRoomMenu(container: Container) {
                     var joinOnce = false
                     suspend fun join() {
                         if (joinOnce) return
-                        val txt = roomName.input.text.trim()
+                        val txt = roomName.text.trim()
                         if (txt.isEmpty()) {
                             warningText.text = "방 이름을 입력해주세요"
                             warningText.styles.textColor = Colors.PALEVIOLETRED
@@ -128,7 +121,9 @@ fun createRoomMenu(container: Container) {
                         warningText.styles.textColor = ColorPalette.out
                         joinOnce = true
                         createRoomMenu.removeFromParent()
-                        val room = createRoom(CreateRoom(roomName.input.text, roomSize.index + minAmount)).uuid
+                        val createRoom = CreateRoom(roomName.text,
+                            roomSize.index + minAmount, RoomMode.NORMAL)
+                        val room = createRoom(createRoom).uuid
                         joinRoom(room)
                         WaitingRoomState().waitingRoom(room)
                     }

@@ -32,9 +32,9 @@ fun listRoom() = transaction {
         ViewedRoom(
             it.id.value,
             it.name,
-                //stopship add mode insertion
             it.maxPlayers,
-            OnlinePlayer.count(OnlinePlayers.room eq it.id).toInt()
+            OnlinePlayer.count(OnlinePlayers.room eq it.id).toInt(),
+            it.mode
         )
     }
 }
@@ -50,7 +50,7 @@ fun createRoom(creator: UUID, createRoom: CreateRoom) = transaction {
 //        val onlinePlayer = OnlinePlayer.find(OnlinePlayers.id eq creator).first()
         name = createRoom.name
         maxPlayers = createRoom.maxPlayers
-    }.run { ViewedRoom(id.value, name, maxPlayers, 0) }
+    }.run { ViewedRoom(id.value, name, maxPlayers, 0, createRoom.roomMode) }
 }
 
 fun nameRoom(room: UUID) = transaction {

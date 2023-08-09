@@ -9,6 +9,7 @@ data class ViewedRoom(
     val name: String,
     val maxPlayers: Int,
     val curPlayers: Int,
+    val mode: RoomMode
 )
 
 @Serializable
