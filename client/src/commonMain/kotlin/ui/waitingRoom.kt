@@ -127,6 +127,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                     val packet = it.packet
                     if (packet !is PlayerJoinPacket) return@onEvent
                     val username = packet.username
+                    if (profiles.children.any { it.getExtra("profile") == username }) return@onEvent
                     chat("${username}이(가) 서버에 참여했습니다")
                     profile(username, profiles, profileSize)
                 }

@@ -57,7 +57,7 @@ class CustomUISlider(
         borderSize = size.height / 10
         radius = RectCorners(borderSize*2)
     }
-    val text = text("", alignment = TextAlignment.MIDDLE_CENTER, color = ColorPalette.text)
+//    val text = text("", alignment = TextAlignment.MIDDLE_CENTER, color = ColorPalette.text)
 
     val onChange: Signal<Float> = Signal()
 
@@ -116,15 +116,15 @@ class CustomUISlider(
     }
 
     override fun onSizeChanged() {
-        bg.size(widthD - 16.0, heightD)
+        bg.size(widthD, heightD)
         button.size(heightD, heightD)
-        text.xy(widthD - 16.0, 0.0)
+//        text.xy(widthD - 16.0, 0.0)
         reposition()
     }
 
     private fun valueChanged() {
         //text.text = value.toStringDecimal(decimalPlaces = decimalPlaces, skipTrailingZeros = true)
-        text.text = value.toStringDecimal(decimalPlaces = decimalPlaces, skipTrailingZeros = false)
+//        text.text = value.toStringDecimal(decimalPlaces = decimalPlaces, skipTrailingZeros = false)
     }
 
     init {

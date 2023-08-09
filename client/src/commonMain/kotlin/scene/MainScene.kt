@@ -9,6 +9,7 @@ import korlibs.korge.view.*
 import network.ServerClosedPacket
 import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform.getKoin
+import ui.createRoomMenu
 import ui.loadingMenu
 import ui.loginMenu
 import util.ColorPalette
@@ -39,6 +40,7 @@ class MainScene : Scene() {
             }.zIndex(100)
             zIndex(100)
         }
+//        createRoomMenu(sceneContainer)
         loginMenu(sceneContainer)
 //        MainMenuState().mainMenu()
     }

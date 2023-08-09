@@ -77,11 +77,11 @@ suspend fun MainMenuState.mainMenu() {
             materialButton("방 생성", uiContainer(bottomButtonSize) {
                 mouse.onClick {
                     serverList.removeFromParent()
-                    val room = createRoom(CreateRoom("asdf", 6))
-                    joinRoom(room.uuid)
+//                    val room = createRoom(CreateRoom("asdf", 6))
+//                    joinRoom(room.uuid)
 //                    loading.removeFromParent()
-                    WaitingRoomState().waitingRoom(room.uuid)
-//                    createRoomMenu(sceneContainer)
+//                    WaitingRoomState().waitingRoom(room.uuid)
+                    createRoomMenu(sceneContainer)
                 }
             })
             materialButton("새로고침", uiContainer(bottomButtonSize) {
