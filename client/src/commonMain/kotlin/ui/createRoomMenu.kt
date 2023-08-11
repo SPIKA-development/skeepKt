@@ -107,21 +107,12 @@ fun createRoomMenu(container: Container) {
                             warningText.text = "방 이름을 입력해주세요"
                             warningText.styles.textColor = Colors.PALEVIOLETRED
                             return
-                        } else if (txt.length !in 3..16) {
-                            warningText.text = "방 이름은 3글자 이상 16글자 이하여야 합니다"
-                            warningText.styles.textColor = Colors.PALEVIOLETRED
-                            return
-                        } else if (!usernameRegex.containsMatchIn(txt)) {
-                            warningText.text = "방 이름은 한글, 영문, 숫자만 가능합니다"
-                            warningText.styles.textColor = Colors.PALEVIOLETRED
-                            return
                         }
                         warningText.text = "방 생성 중..."
                         warningText.styles.textColor = ColorPalette.out
                         joinOnce = true
-                        createRoomMenu.removeFromParent()
                         val createRoom = CreateRoom(roomName.text,
-                            roomSize.index + minAmount, RoomMode.NORMAL)
+                            roomSize.index, RoomMode.NORMAL)
                         val createRoomResult = createRoom(createRoom)
                         when (createRoomResult.type) {
                             NOT_ALlOWED_NAME -> {
@@ -138,6 +129,7 @@ fun createRoomMenu(container: Container) {
                         }
                         val room = createRoomResult.room
                         joinRoom(room)
+                        createRoomMenu.removeFromParent()
                         WaitingRoomState().waitingRoom(room)
                     }
                     onClick { join() }
