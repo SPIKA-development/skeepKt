@@ -51,9 +51,10 @@ fun createRoom(creator: UUID, createRoom: CreateRoom) = transaction {
 //        val onlinePlayer = OnlinePlayer.find(OnlinePlayers.id eq creator).first()
         name = createRoom.name
         maxPlayers = createRoom.maxPlayers
+
     }
         .run { ViewedRoom(id.value, name, maxPlayers, 0, createRoom.roomMode) }
-        .run { CreateRoomResult(CreateRoomResultType.CREATED, this) }
+        .run { CreateRoomResult(CreateRoomResultType.CREATED, room = uuid) }
 }
 
 fun nameRoom(room: UUID) = transaction {

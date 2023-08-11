@@ -136,7 +136,7 @@ fun createRoomMenu(container: Container) {
                             }
                             else -> {}
                         }
-                        val room = createRoomResult.createdRoom!!.uuid
+                        val room = createRoomResult.room
                         joinRoom(room)
                         WaitingRoomState().waitingRoom(room)
                     }
