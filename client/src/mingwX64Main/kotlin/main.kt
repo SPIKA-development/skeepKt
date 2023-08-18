@@ -11,7 +11,7 @@ import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
 
 class Main
-
+fun runMain() = main()
 fun main() {
     runBlocking {
         val clientProps = resourcesVfs["client.properties"].readProperties()
