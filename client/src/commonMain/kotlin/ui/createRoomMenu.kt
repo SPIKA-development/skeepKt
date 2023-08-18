@@ -21,37 +21,42 @@ import korlibs.korge.view.positionX
 import korlibs.math.geom.Size
 import network.*
 import network.CreateRoomResultType.*
-import scene.styler
-import sceneContainer
+import styler
+import screen
 import ui.custom.*
 import ui.custom.UITextInput
 import util.ColorPalette
 import util.launchNow
+import util.transform
+
+class CreateRoomState {
+    val createRoomPadding = 30.75f
+    val minAmount = 2
+    val maxAmount = 12
+    val rangeSize = maxAmount - minAmount + 1
+    val blockHeight get() = screen.width / 15
+    val blockSize get() = Size(blockHeight * rangeSize, blockHeight)
+    val inputSize get() = Size(screen.width / 3f, screen.width / 16f)
+    lateinit var roomName: UITextInput
+    lateinit var roomSize: CustomUISlider
+
+}
 
 @OptIn(KorgeExperimental::class)
-fun createRoomMenu(container: Container) {
+fun Container.createRoomMenu(createRoom: CreateRoomState = CreateRoomState()): Unit = createRoom.run {
     lateinit var warningText: UIText
     lateinit var createRoomMenu: Container
-    createRoomMenu = container.uiContainer {
+    createRoomMenu = uiContainer(size) {
         styles(styler)
-        val padding = 15.75f
-        val minAmount = 2
-        val maxAmount = 12
-        val rangeSize = maxAmount - minAmount + 1
-        val blockHeight = sceneContainer.width / 22
-        val blockSize = Size(blockHeight * rangeSize, blockHeight)
-        val inputSize = Size(sceneContainer.width / 3.6f, sceneContainer.width / 20f)
-        lateinit var roomName: UITextInput
-        lateinit var roomSize: CustomUISlider
-        uiVerticalStack(adjustSize = false, padding = padding) {
+        uiVerticalStack(adjustSize = false, padding = createRoomPadding) {
             val title = customUiText("방 생성") {
                 styles.textSize = styles.textSize * 1.25f
             }.centerXOn(this)
-            uiVerticalStack(adjustSize = false, padding = padding) {
+            uiVerticalStack(adjustSize = false, padding = createRoomPadding) {
                 uiSpacing(size = Size(0f, title.size.height * 0.25f))
                     uiContainer(inputSize) {
                         materialInput(
-                            "이름", padding, this,
+                            "이름", createRoomPadding, this,
                             border = Colors.TRANSPARENT, bg = ColorPalette.base
                         ).input.apply {
                             roomName = this
@@ -84,15 +89,15 @@ fun createRoomMenu(container: Container) {
                     )
                 }.centerXOn(this)
             }
-            val horizontalSize = Size(inputSize.width / 2 - padding / 2, inputSize.height)
-            uiHorizontalStack(height = horizontalSize.height, adjustHeight = false, padding = padding) {
-                uiSpacing(Size(0f, padding / 2))
+            val horizontalSize = Size(inputSize.width / 2 - createRoomPadding / 2, inputSize.height)
+            uiHorizontalStack(height = horizontalSize.height, adjustHeight = false, padding = createRoomPadding) {
+                uiSpacing(Size(0f, createRoomPadding / 2))
                 customUiButton(size = horizontalSize) {
                     uiMaterialLayer(size) {
                         shadowColor = Colors.TRANSPARENT
                         bgColor = ColorPalette.base
                         borderColor = ColorPalette.base
-                        borderSize = padding / 4
+                        borderSize = createRoomPadding / 4
                         this@customUiButton.mouse {
                             onMove { borderColor = ColorPalette.hover }
                             onMoveOutside { borderColor = ColorPalette.base }
@@ -149,6 +154,8 @@ fun createRoomMenu(container: Container) {
             guestModeText.removeFromParent()
             guestModeText.addTo(guestModeTextContainer).centerOn(guestModeTextContainer)
         }.centerOn(this)
-    }.centerOnStage()
-        .alignY(container, 0.5, true)
+    }.transform {
+        centerOn(screen)
+        .alignY(this@createRoomMenu, 0.5, true)
+    }
 }

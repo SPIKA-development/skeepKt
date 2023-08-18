@@ -9,8 +9,8 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import network.ServerPacket.*
-import scene.MainScene
-import sceneContainer
+import MainScene
+import scene
 import ui.loadingMenu
 import util.launchNow
 
@@ -45,10 +45,10 @@ suspend inline fun <reified T> sendToServer(packet: Enum<*>, t: T) {
 }
 
 fun connectionBroke() {
-    val loading = sceneContainer.uiContainer { }
+    val loading = scene.uiContainer { }
     loading.loadingMenu("서버와의 연결이 예기치 않게 끊겼습니다", "서버 목록으로 돌아가기") {
         loading.removeFromParent()
-        launchNow { sceneContainer.changeTo<MainScene>() }
+        launchNow { scene.changeTo<MainScene>() }
     }
 }
 
@@ -74,4 +74,4 @@ fun serverPacket(serverPacket: ServerPacket): PacketController<Any> = when(serve
     SERVER_CLOSED -> packet<ServerClosedPacket>()
 } as PacketController<Any>
 
-private inline fun <reified T : Any> packet() = packet<T> { sceneContainer.dispatch(PacketEvent(it)) }
+private inline fun <reified T : Any> packet() = packet<T> { scene.dispatch(PacketEvent(it)) }

@@ -6,17 +6,19 @@ import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.Korge
 import korlibs.korge.scene.SceneContainer
 import korlibs.korge.scene.sceneContainer
+import korlibs.korge.view.*
+import korlibs.math.geom.Anchor
 import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.mp.KoinPlatform.getKoin
-import scene.MainScene
 import util.ColorPalette
 import kotlin.coroutines.coroutineContext
 
-lateinit var sceneContainer: SceneContainer
+lateinit var scene: SceneContainer
+lateinit var screen: FixedSizeContainer
 
 suspend fun startMain() {
     val coroutineContext = coroutineContext
@@ -33,13 +35,15 @@ suspend fun startMain() {
 
     }))
     Korge(
-        windowSize = Size(960, 540),
+        windowSize = Size(512, 512),
         title = "Skeep",
         icon = "images/logo.png",
-        scaleMode = ScaleMode.SHOW_ALL,
+        scaleMode = ScaleMode.NO_SCALE,
+        clipBorders = false,
+        scaleAnchor = Anchor.TOP_LEFT,
         backgroundColor = ColorPalette.background
     ) {
-        sceneContainer = sceneContainer()
-        sceneContainer.changeTo({ MainScene() })
+        scene = sceneContainer()
+        scene.changeTo({ MainScene() })
     }
 }

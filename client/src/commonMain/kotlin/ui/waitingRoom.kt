@@ -30,11 +30,12 @@ import kotlinx.uuid.UUID
 import network.*
 import org.koin.core.qualifier.named
 import org.koin.mp.KoinPlatform.getKoin
-import scene.styler
-import sceneContainer
+import styler
+import screen
 import ui.custom.*
 import ui.custom.UITextInput
 import util.ColorPalette
+import util.transform
 import kotlin.math.max
 
 class WaitingRoomState {
@@ -44,16 +45,16 @@ class WaitingRoomState {
     lateinit var chats: Container
     lateinit var space: Container
     lateinit var scroll: CustomUIScrollable
-    val sidebarSize = Size(sceneContainer.width / 4.5f, sceneContainer.height)
-    val belowElementHeight = sceneContainer.width / 25f
-    val leaveButton = Size(belowElementHeight*1.75f, belowElementHeight)
-    val inputBarSize = Size(sceneContainer.width - sidebarSize.width - padding*2 - leaveButton.width - padding*2, belowElementHeight)
-    val titleSize = Size(sceneContainer.width - sidebarSize.width, belowElementHeight * 1.5f)
+    val sidebarSize get() = Size(screen.width / 4.5f, screen.height)
+    val belowElementHeight get() = screen.width / 25f
+    val leaveButton get() = Size(belowElementHeight*1.75f, belowElementHeight)
+    val inputBarSize get() = Size(screen.width - sidebarSize.width - padding*2 - leaveButton.width - padding*2, belowElementHeight)
+    val titleSize get() = Size(screen.width - sidebarSize.width, belowElementHeight * 1.5f)
 }
 
 suspend fun WaitingRoomState.waitingRoom(room: UUID) {
     lateinit var waitingRoom: View
-    sceneContainer.uiContainer {
+    screen.uiContainer {
         waitingRoom = this
         styles(styler)
         val textInputSize = inputBarSize.minus(Size(padding / 2, 0f))
@@ -71,7 +72,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
             }
             solidRect(input.size, color = ColorPalette.base).zIndex(0)
             positionX(leaveButton.width + padding * 2)
-            positionY(sceneContainer.height - padding - input.size.height)
+            positionY(screen.height - padding - input.size.height)
         }
 
         val title = uiContainer(size = titleSize) {
@@ -84,7 +85,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
             val stackPadding = padding / 2
             profiles = uiVerticalStack(adjustSize = true, padding = stackPadding)
             solidRect(size = Size(size.width, (profileSize.height+padding/2f)*6f- stackPadding), color = ColorPalette.base).zIndex(-1)
-            positionX(sceneContainer.width - sidebarSize.width)
+            positionX(screen.width - sidebarSize.width)
             positionY(padding)
         }
         customUiButton(size = leaveButton) {
@@ -92,7 +93,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
             var isDone = false
             customUiText("나가기").centerOn(this)
             positionX(padding)
-            positionY(sceneContainer.height - padding - size.height)
+            positionY(screen.height - padding - size.height)
             onMouseDragCloseable {
                 onUp up@{
                     if (isDone) return@up
@@ -104,7 +105,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
             }
         }
 
-        val chatSize = Size(inputBarSize.width, sceneContainer.height - titleSize.height - inputBarSize.height - padding * 3)
+        val chatSize = Size(inputBarSize.width, screen.height - titleSize.height - inputBarSize.height - padding * 3)
         customUiScrollable(cache = true, disableMouseDrag = true, size = chatSize) {
             scroll = it
             it.positionX(padding + leaveButton.width + padding)
@@ -193,10 +194,16 @@ fun materialInput(hint: String, padding: Float, container: Container,
     container.styles.textAlignment = TextAlignment.MIDDLE_LEFT
     val input = container.customUiTextInput(hint, size = container.size) {
         text = " "
-        controller.caretContainer.alignY(this, 0.75, false)
-        positionX(padding / 2)
+        transform {
+            size = container.size
+            controller.caretContainer.alignY(this, 0.75, false)
+            positionX(padding / 2)
+        }
     }.zIndex(2)
-    val material = container.uiMaterialLayer(input.size) {
+    val material = container.uiMaterialLayer {
+        transform {
+            size = input.size
+        }
         shadowColor = Colors.TRANSPARENT
         bgColor = bg
         borderColor = border
@@ -212,8 +219,10 @@ fun materialButton(text: String, container: Container,
                   bg: RGBA = ColorPalette.out,
 ): MaterialButton {
     container.styles.textAlignment = TextAlignment.MIDDLE_CENTER
-    val button = container.customUiButton(size = container.size).zIndex(2)
+    val button = container.customUiButton(size = container.size)
+        .zIndex(2).transform { size = container.size }
     val material = container.uiMaterialLayer(button.size) {
+        transform { size = button.size }
         shadowColor = Colors.TRANSPARENT
         bgColor = bg
 //        borderColor = Colors.ba
@@ -221,7 +230,7 @@ fun materialButton(text: String, container: Container,
         radius = RectCorners(borderSize*2)
     }.zIndex(1)
     container.apply {
-        uiText(text).centerOn(this).zIndex(2)
+        uiText(text).transform { centerOn(container) }.zIndex(2)
         mouse {
             onMove { material.bgColor = border }
             onMoveOutside { material.bgColor = bg }

@@ -15,8 +15,8 @@ import korlibs.korge.view.align.centerYOn
 import korlibs.math.geom.Margin
 import korlibs.math.geom.Rectangle
 import korlibs.math.geom.Size
+import util.transform
 
-@KorgeExperimental
 inline fun Container.customUiTextInput(
     hint: String,
     initialText: String = " ",
@@ -28,7 +28,6 @@ inline fun Container.customUiTextInput(
 /**
  * Simple Single Line Text Input
  */
-@KorgeExperimental
 class UITextInput(hint: String, initialText: String = " ", size: Size = Size(128, 24)) :
     UIView(size),
     //UIFocusable,
@@ -46,8 +45,12 @@ class UITextInput(hint: String, initialText: String = " ", size: Size = Size(128
     private val textView = customUiText(initialText, this.size)
     //private val textView = container.text(initialText, 16.0, color = Colors.BLACK, font = DefaultTtfFont)
     val controller = TextEditController(textView.textView, uiContainer(textView.size), this, bg = bg,
-        hint = textView.uiText(" $hint", size = size) {
-            centerYOn(textView).alignX(textView, 0.1, true)
+        hint = textView.uiText(" $hint") {
+            transform {
+                this.size = this@UITextInput.size
+                textView.size = this.size
+                centerYOn(textView).alignX(textView, 0.1, true)
+            }
             alpha = 0.5f
         }
     )

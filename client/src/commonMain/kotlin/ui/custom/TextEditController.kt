@@ -36,7 +36,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sign
 
-@KorgeExperimental
 class TextEditController(
     val textView: Text,
     val caretContainer: Container = textView,
