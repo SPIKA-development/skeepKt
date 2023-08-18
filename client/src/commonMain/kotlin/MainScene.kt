@@ -2,7 +2,6 @@ import event.PacketEvent
 import event.ResizedEvent
 import korlibs.image.font.Font
 import korlibs.image.text.TextAlignment
-import korlibs.korge.ReloadEvent
 import korlibs.korge.scene.Scene
 import korlibs.korge.style.*
 import korlibs.korge.view.*
@@ -28,10 +27,6 @@ class MainScene : Scene() {
         onStageResized { width, height ->
             screen.size(width, height)
             dispatch(ResizedEvent())
-        }
-        onEvent(ReloadEvent) {
-            loginMenuView()
-
         }
         screen.onEvent(PacketEvent) {
             val packet = it.packet

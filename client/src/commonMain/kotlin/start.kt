@@ -47,3 +47,6 @@ suspend fun startMain() {
         scene.changeTo({ MainScene() })
     }
 }
+
+inline fun <reified T : List<*>> onAdd(hook: List<T>) {
+}

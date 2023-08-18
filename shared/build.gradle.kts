@@ -1,7 +1,6 @@
 import korlibs.korge.gradle.KorgeLibraryGradlePlugin
 import korlibs.korge.gradle.korge
 
-apply<KorgeLibraryGradlePlugin>()
 apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 apply(plugin = "org.jetbrains.kotlin.kapt")
 plugins {
@@ -9,26 +8,8 @@ plugins {
     kotlin("kapt")
 }
 
-korge {
-    targetJvm()
-    targetJs()
-    targetDesktopCross()
-    targetDesktop()
-    entryPoint = "runMain"
-}
-
 kotlin {
-    linuxArm64().apply {
-        configurations.filter { it.name.contains("linuxArm64") }.forEach {
-            it.exclude(libs.kotlinx.uuid.asProvider())
-            it.exclude(libs.kotlinx.serialization)
-            it.exclude(libs.koin)
-            it.exclude(libs.ktor.client.auth)
-            it.exclude(libs.ktor.client.content.negotation)
-            it.exclude(libs.ktor.serialization.kotlinx.json)
-
-        }
-    }
+    jvm()
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -40,40 +21,6 @@ kotlin {
                 api(libs.ktor.serialization.kotlinx.protobuf)
             }
         }
-        val jsMain by getting {
-            dependencies {
-                api(libs.ktor.client.js)
-            }
-        }
-        val jvmMain by getting {
-            dependencies {
-                api(libs.ktor.client.cio)
-                api(libs.logback)
-            }
-        }
-        runCatching {
-            val mingwX64Main by getting {
-                dependencies {
-                    api(libs.ktor.client.winhttp)
-                    api(libs.logback)
-                }
-            }
-            val macosArm64Main by getting {
-                dependencies {
-                    api(libs.ktor.client.cio)
-                    api(libs.logback)
-                }
-            }
-            val macosX64Main by getting {
-                dependencies {
-                    api(libs.ktor.client.cio)
-                    api(libs.logback)
-                }
-            }
-        }    }
+    }
 }
 
-fun Configuration.exclude(provider: Provider<MinimalExternalModuleDependency>) {
-    val module = provider.get().module
-    exclude(group = module.group, module = module.name)
-}

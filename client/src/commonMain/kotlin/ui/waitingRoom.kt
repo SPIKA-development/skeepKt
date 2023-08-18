@@ -50,6 +50,8 @@ class WaitingRoomState {
     val leaveButton get() = Size(belowElementHeight*1.75f, belowElementHeight)
     val inputBarSize get() = Size(screen.width - sidebarSize.width - padding*2 - leaveButton.width - padding*2, belowElementHeight)
     val titleSize get() = Size(screen.width - sidebarSize.width, belowElementHeight * 1.5f)
+    val textInputSize get() = inputBarSize.minus(Size(padding / 2, 0f))
+    val sidebarContainerSize get() = Size(sidebarSize.width - padding, sidebarSize.height - padding)
 }
 
 suspend fun WaitingRoomState.waitingRoom(room: UUID) {
@@ -57,7 +59,6 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
     screen.uiContainer {
         waitingRoom = this
         styles(styler)
-        val textInputSize = inputBarSize.minus(Size(padding / 2, 0f))
         uiContainer(textInputSize) {
             val input = materialInput("채팅을 입력하세요...", padding, this).input
             input.apply {
@@ -71,22 +72,29 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                 }
             }
             solidRect(input.size, color = ColorPalette.base).zIndex(0)
-            positionX(leaveButton.width + padding * 2)
-            positionY(screen.height - padding - input.size.height)
+                .transform { size(input.size) }
+            transform {
+                size(textInputSize)
+                positionX(leaveButton.width + padding * 2)
+                positionY(screen.height - padding - input.size.height)
+            }
         }
 
         val title = uiContainer(size = titleSize) {
-            uiText(getRoomName(room)).centerYOn(this)
-        }.position(padding, padding)
+            uiText(getRoomName(room)).transform { centerYOn(this) }
+        }.transform { size(titleSize).position(padding, padding) }
 
-        uiContainer(Size(sidebarSize.width - padding, sidebarSize.height - padding)) {
+        uiContainer(sidebarContainerSize) {
             profileSize = Size(size.width, size.height/6f - padding)
 
             val stackPadding = padding / 2
             profiles = uiVerticalStack(adjustSize = true, padding = stackPadding)
-            solidRect(size = Size(size.width, (profileSize.height+padding/2f)*6f- stackPadding), color = ColorPalette.base).zIndex(-1)
-            positionX(screen.width - sidebarSize.width)
-            positionY(padding)
+            solidRect(size = Size(size.width, (profileSize.height+padding/2f)*6f- stackPadding) , color = ColorPalette.base).zIndex(-1)
+            transform {
+                size(sidebarContainerSize)
+                positionX(screen.width - sidebarSize.width)
+                positionY(padding)
+            }
         }
         customUiButton(size = leaveButton) {
             val back = solidRect(size, color = ColorPalette.out).centerOn(this)
