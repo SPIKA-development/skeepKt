@@ -12,8 +12,6 @@ import org.koin.mp.KoinPlatform
 
 class Main
 
-actual fun runMain() = main()
-
 fun main() {
     runBlocking {
         val clientProps = resourcesVfs["client.properties"].readProperties()
