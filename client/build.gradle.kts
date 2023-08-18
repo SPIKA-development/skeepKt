@@ -22,15 +22,27 @@ korge {
     icon = File(projectDir, "src/commonMain/resources/images/logo.png"
             .replace("/", File.separator))
     exeBaseName = "Skeep"
+    name = "Skeep"
+    androidManifestChunks.addAll(setOf(
+        """<uses-permission android:name="android.permission.INTERNET" />""",
+        """<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />"""
+    ))
 }
 
 kotlin {
+    jvm()
     sourceSets {
         val commonMain by getting {
+            kotlin.addSrcDir(File(project(":shared").projectDir, "src/commonMain/kotlin"))
             dependencies {
-                api(project(":shared"))
                 api("de.cketti.unicode:kotlin-codepoints-deluxe:0.6.1")
                 api(project(":deps"))
+                api(libs.kotlinx.uuid)
+                api(libs.kotlinx.serialization)
+                api(libs.koin)
+                api(libs.ktor.client.auth)
+                api(libs.ktor.client.content.negotation)
+                api(libs.ktor.serialization.kotlinx.protobuf)
             }
         }
         val jsMain by getting {
@@ -39,6 +51,12 @@ kotlin {
             }
         }
         val jvmMain by getting {
+            dependencies {
+                api(libs.ktor.client.cio)
+                api(libs.logback)
+            }
+        }
+        val androidMain by getting {
             dependencies {
                 api(libs.ktor.client.cio)
                 api(libs.logback)
@@ -65,16 +83,16 @@ kotlin {
             }
         }
     }
-    linuxArm64().apply {
-        configurations.filter { it.name.contains("linuxArm64") }.forEach {
-            it.exclude(libs.kotlinx.uuid.asProvider())
-            it.exclude(libs.kotlinx.serialization)
-            it.exclude(libs.koin)
-            it.exclude(libs.ktor.client.auth)
-            it.exclude(libs.ktor.client.content.negotation)
-            it.exclude(libs.ktor.serialization.kotlinx.json)
+    configurations.filter { listOf(
+        "linuxArm64", "linuxArm64Main", "linuxX64", "linuxX64Main"
+    ).contains(it.name) }.forEach {
+        it.exclude(libs.kotlinx.uuid.asProvider())
+        it.exclude(libs.kotlinx.serialization)
+        it.exclude(libs.koin)
+        it.exclude(libs.ktor.client.auth)
+        it.exclude(libs.ktor.client.content.negotation)
+        it.exclude(libs.ktor.serialization.kotlinx.json)
 
-        }
     }
 }
 
@@ -82,4 +100,15 @@ kotlin {
 fun Configuration.exclude(provider: Provider<MinimalExternalModuleDependency>) {
     val module = provider.get().module
     exclude(group = module.group, module = module.name)
+}
+
+fun SourceDirectorySet.addSrcDir(file: File) {
+    setSrcDirs(srcDirs.apply { add(file) })
+}
+
+@Suppress("UnstableApiUsage")
+tasks.withType<ProcessResources> {
+    filesMatching("client.properties") {
+        expand(rootProject.properties)
+    }
 }

@@ -9,6 +9,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
 
+actual fun runMain() = Unit
 suspend fun main() {
     val clientProps = resourcesVfs["client.properties"].readProperties()
     val url = clientProps["server"]!!

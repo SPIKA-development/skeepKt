@@ -8,7 +8,6 @@ import io.ktor.util.*
 import io.ktor.util.reflect.*
 import io.ktor.websocket.*
 import io.ktor.websocket.serialization.*
-import korlibs.time.DateTime
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import kotlinx.uuid.UUID
@@ -47,10 +46,7 @@ fun Application.configureWebsocket() {
                     if (connections.none { it.session == packet.session }
                         && runCatching { transaction { Session.find(Sessions.id eq packet.session).first() } }.isFailure)
                         return@webSocket
-                    val before = DateTime.now()
                     packetController.invoke(decode(packet.data, packetController.typeInfo)!!)
-                    val after = DateTime.now()
-                    println(after - before)
                 }
             } catch (_: kotlinx.coroutines.channels.ClosedReceiveChannelException) {
             } catch (e: Throwable) {

@@ -17,7 +17,7 @@ import util.transform
 val styler: ViewStyles.() -> Unit = {
     textFont = getKoin().get<Font>()
     textAlignment = TextAlignment.MIDDLE_CENTER
-    textSize = 45f
+    textSize = 100f
     textColor = ColorPalette.text
 }
 

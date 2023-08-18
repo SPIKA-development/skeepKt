@@ -15,6 +15,7 @@ import korlibs.korge.ui.*
 import korlibs.korge.view.Container
 import korlibs.korge.view.align.*
 import korlibs.korge.view.positionX
+import korlibs.korge.view.solidRect
 import korlibs.korge.view.zIndex
 import korlibs.math.geom.RectCorners
 import korlibs.math.geom.Size
@@ -30,9 +31,9 @@ import util.transform
 
 class LoginMenuState {
     val loginMenuPadding = 40f
-    val blockSize get() = Size(480, 75)
-    val loginMenuSize get() = Size(550, 500)
-    val loginButtonSize = Size(blockSize.width / 2 - loginMenuPadding / 2, blockSize.height)
+    val blockSize get() = Size(500, 140)
+    val loginMenuSize get() = Size(500, 500)
+    val loginButtonSize = Size(blockSize.width*0.65f, blockSize.height)
     lateinit var input: UITextInput
     lateinit var warningText: UIText
     lateinit var loginMenu: Container
@@ -42,18 +43,17 @@ class LoginMenuState {
 
 fun loginMenuView(loginMenuState: LoginMenuState = LoginMenuState()): Unit = screen.run { loginMenuState.run {
     uiContainer(loginMenuSize) loginMenu@{
-
+        styles.textSize = 80f
         loginMenu = this
         styles(styler)
         uiVerticalStack(adjustSize = false, padding = loginMenuPadding) {
-            uiSpacing(size = Size(0f, loginMenuPadding))
             uiText("스키프").transform { centerXOn(this@loginMenu) }
+            uiSpacing(size = Size(0f, loginMenuPadding/2))
             uiContainer(blockSize) nickNameInput@{
                 transform { centerXOn(this@loginMenu) }
                 styles.textSize = styles.textSize * 0.95f
                 styles.textAlignment = TextAlignment.MIDDLE_LEFT
                 input = customUiTextInput("닉네임", size = size) {
-                    text = " "
                 }.zIndex(2).transform {
                     size = this@nickNameInput.size
                     controller.caretContainer.alignY(this, 0.75, false)
@@ -73,7 +73,7 @@ fun loginMenuView(loginMenuState: LoginMenuState = LoginMenuState()): Unit = scr
                     shadowColor = Colors.TRANSPARENT
                     bgColor = ColorPalette.base
                     borderColor = ColorPalette.base
-                    borderSize = loginMenuPadding / 6
+                    borderSize = height/12
                     radius = RectCorners(borderSize*2)
                     this@customUiButton.mouse {
                         onMove { borderColor = ColorPalette.hover }
@@ -84,9 +84,9 @@ fun loginMenuView(loginMenuState: LoginMenuState = LoginMenuState()): Unit = scr
                 transform { centerXOn(this@loginMenu) }
             }
             uiSpacing(size = Size(0f, loginMenuPadding))
-            warningText =uiText("") {
+            warningText = uiText("") {
                 styles(styler)
-                styles.textSize = styles.textSize * 0.75f
+                styles.textSize = styles.textSize * 0.5f
                 styles.textColor = ColorPalette.out
                 transform { centerXOn(this@loginMenu) }
             }
@@ -127,15 +127,15 @@ suspend fun LoginMenuState.join() {
     username = input.text.trim()
     joinOnce = true
     initializeClient()
-    val login = login()
+    val login: LoginResultType = login()
     if (login == LoginResultType.ALREADY_JOINED) {
         warningText.text = "입력하신 닉네임은 이미 사용중입니다"
         joinOnce = false
         return
     } else if (login == LoginResultType.SERVER_IS_NOT_AVAILABLE
         || runCatching { websocketClient() }
-            .also { it.exceptionOrNull()?.printStackTrace() }.isFailure) {
-        warningText.text = "죄송합니다, 지금은 인증 서버를 사용할 수 없습니다.\n나중에 다시 시도해 주세요."
+            .also { it.exceptionOrNull()?.apply { println(stackTraceToString()) } }.isFailure) {
+        warningText.text = "지금은 서버를 사용할 수 없습니다.\n나중에 다시 시도해 주세요."
         warningText.centerXOn(loginMenu)
         joinOnce = false
         return

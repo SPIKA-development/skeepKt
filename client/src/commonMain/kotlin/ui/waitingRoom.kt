@@ -40,7 +40,8 @@ import kotlin.math.max
 
 class WaitingRoomState {
     val padding = 25f
-    lateinit var profileSize: Size
+    val stackPadding = padding / 2
+    val profileSize get() = Size(sidebarContainerSize.width, sidebarContainerSize.height/6f - padding)
     lateinit var profiles: UIVerticalStack
     lateinit var chats: Container
     lateinit var space: Container
@@ -52,6 +53,8 @@ class WaitingRoomState {
     val titleSize get() = Size(screen.width - sidebarSize.width, belowElementHeight * 1.5f)
     val textInputSize get() = inputBarSize.minus(Size(padding / 2, 0f))
     val sidebarContainerSize get() = Size(sidebarSize.width - padding, sidebarSize.height - padding)
+    val sidebarRectSize get() = Size(sidebarContainerSize.width, (profileSize.height + padding / 2f) * 6f - stackPadding)
+    val chatSize get() = Size(inputBarSize.width, screen.height - titleSize.height - inputBarSize.height - padding * 3)
 }
 
 suspend fun WaitingRoomState.waitingRoom(room: UUID) {
@@ -85,23 +88,25 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
         }.transform { size(titleSize).position(padding, padding) }
 
         uiContainer(sidebarContainerSize) {
-            profileSize = Size(size.width, size.height/6f - padding)
 
-            val stackPadding = padding / 2
             profiles = uiVerticalStack(adjustSize = true, padding = stackPadding)
-            solidRect(size = Size(size.width, (profileSize.height+padding/2f)*6f- stackPadding) , color = ColorPalette.base).zIndex(-1)
+            solidRect(size = sidebarRectSize, color = ColorPalette.base).zIndex(-1)
+                .transform { size(sidebarRectSize) }
             transform {
                 size(sidebarContainerSize)
                 positionX(screen.width - sidebarSize.width)
                 positionY(padding)
             }
         }
-        customUiButton(size = leaveButton) {
-            val back = solidRect(size, color = ColorPalette.out).centerOn(this)
+        customUiButton(size = leaveButton) leaveButton@{
+            val back = solidRect(size, color = ColorPalette.out).transform { centerOn(this@leaveButton) }
             var isDone = false
-            customUiText("나가기").centerOn(this)
-            positionX(padding)
-            positionY(screen.height - padding - size.height)
+            customUiText("나가기").transform { centerOn(this@leaveButton) }
+            transform {
+                size(leaveButton)
+                positionX(padding)
+                positionY(screen.height - padding - size.height)
+            }
             onMouseDragCloseable {
                 onUp up@{
                     if (isDone) return@up
@@ -113,11 +118,13 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
             }
         }
 
-        val chatSize = Size(inputBarSize.width, screen.height - titleSize.height - inputBarSize.height - padding * 3)
         customUiScrollable(cache = true, disableMouseDrag = true, size = chatSize) {
             scroll = it
-            it.positionX(padding + leaveButton.width + padding)
-            it.positionY(padding + titleSize.height + padding)
+            it.transform {
+                it.size(chatSize)
+                it.positionX(padding + leaveButton.width + padding)
+                it.positionY(padding + titleSize.height + padding)
+            }
             it.backgroundColor = Colors.TRANSPARENT
             it.horizontal.view.visible = false
             it.vertical.view.visible = false
@@ -125,9 +132,12 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
             scroll.timeScrollBar = 0.seconds
             scroll.horizontal.view.visible = false
             scroll.scrollTopRatio = 1f
-            uiVerticalStack(width = size.width, padding = padding, adjustSize = false) {
+            uiVerticalStack(width = chatSize.width, padding = padding, adjustSize = false) {
+                transform {
+                    width = chatSize.width
+                }
                 chats = this
-                space = uiSpacing(Size(size.width, chatSize.height))
+                space = uiSpacing(chatSize).transform { size(chatSize) }
                 styles(styler)
                 styles {
                     textAlignment = TextAlignment.MIDDLE_LEFT
@@ -138,7 +148,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                     val username = packet.username
                     if (profiles.children.any { it.getExtra("profile") == username }) return@onEvent
                     chat("${username}이(가) 서버에 참여했습니다")
-                    profile(username, profiles, profileSize)
+                    profileView(username, profiles)
                 }
                 onEvent(PacketEvent) {
                     val packet = it.packet
@@ -158,15 +168,15 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
         }
     }
     listPlayer().forEach {
-        profile(it.username, profiles, profileSize)
+        profileView(it.username, profiles)
     }
 }
 
-fun WaitingRoomState.profile(name: String, container: Container, profileSize: Size) {
-    container.uiContainer(Size(profileSize.width, profileSize.height)) {
+fun WaitingRoomState.profileView(name: String, container: Container) {
+    container.uiContainer(profileSize) profile@{
+        transform { size(profileSize) }
 //        solidRect(size, color = Colors.WHITE)
         setExtra("profile", name)
-        val profileImageSize = Size(profileSize.height, profileSize.height)
         val imageBitmap = getKoin().get<Bitmap>(named("profile")).toBMP32().apply {
             updateColors {
                 if (it != Colors.TRANSPARENT) {
@@ -176,18 +186,20 @@ fun WaitingRoomState.profile(name: String, container: Container, profileSize: Si
             }
         }.slice()
         uiImage(size = Size(imageBitmap.width, imageBitmap.height), bitmap = imageBitmap) {
-            scaleXY = profileImageSize.width / size.width
+            transform { scaleXY = profileSize.width / size.width }
         }//}.centerYOn(this)
-        uiText(name) { styles.textAlignment = TextAlignment.MIDDLE_LEFT }
-            .alignX(this, 0.85, false)
-            .alignY(this, 0.15, true)
-
+        uiText(name) { styles.textAlignment = TextAlignment.MIDDLE_LEFT }.transform {
+            alignX(this@profile, 0.85, false)
+            alignY(this@profile, 0.15, true)
+        }
     }
 }
 
 fun WaitingRoomState.chat(chat: String) {
     val chat = chats.uiText(chat)
-    space.height = max(0f, space.height - chat.height)
+    space.transform {
+        height = max(0f, space.height - chat.height)
+    }
     scroll.scrollTopRatio = 1f
 }
 

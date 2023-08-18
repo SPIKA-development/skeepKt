@@ -12,7 +12,7 @@ import org.koin.mp.KoinPlatform
 
 class Main
 
-fun runMain() = main()
+actual fun runMain() = main()
 
 fun main() {
     runBlocking {

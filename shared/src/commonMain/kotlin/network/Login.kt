@@ -26,7 +26,7 @@ data class LoginResult(
 )
 suspend fun login(loginRequest: LoginRequest = LoginRequest(username)): LoginResultType {
     val loginResult = runCatching { sendHttp("login", loginRequest, auth = false) }
-        .getOrNull()?.body<LoginResult>() ?: return SERVER_IS_NOT_AVAILABLE
+        .apply {println(this.exceptionOrNull()?.stackTraceToString())}.getOrNull()?.body<LoginResult>() ?: return SERVER_IS_NOT_AVAILABLE
     if (loginResult.result == SUCCESS) {
         sessionUUID = loginResult.uuid!!
         sessionId = sessionUUID.toString()

@@ -1,3 +1,0 @@
-fun runMain() {
-    println("A")
-}
