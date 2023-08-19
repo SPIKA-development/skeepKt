@@ -10,6 +10,7 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import kotlinx.uuid.UUID
 
 val serialFormat = ProtoBuf
+val converter = KotlinxWebsocketSerializationConverter(ProtoBuf)
 
 interface PacketController<T : Any> {
     val typeInfo: TypeInfo

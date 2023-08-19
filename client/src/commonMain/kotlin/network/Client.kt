@@ -21,7 +21,6 @@ suspend fun websocket(): WebSocketSession = client().webSocketSession(currentUrl
 interface URLProvider { val url: String }
 interface ClientEngineFactory { fun getEngine(): HttpClientEngineFactory<HttpClientEngineConfig> }
 
-val converter = KotlinxWebsocketSerializationConverter(ProtoBuf)
 
 suspend inline fun <reified T> sendHttp(path: String, body: T, auth: Boolean = true) =
     client().post("$currentUrl/$path") {
