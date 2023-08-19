@@ -59,7 +59,9 @@ jobs:
           title: "Build #${{github.run_number}}"
           automatic_release_tag: "${{github.run_number}}"
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          files: server/build/distributions/server.zip client/build/outputs/apk/release/client.apk
+          files: |
+            server/build/distributions/server.zip
+            client/build/outputs/apk/release/client.apk
           prerelease: false
       - shell: bash
         run: |
