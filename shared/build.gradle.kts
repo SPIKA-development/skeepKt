@@ -1,10 +1,6 @@
 import korlibs.korge.gradle.KorgeGradlePlugin
-import korlibs.korge.gradle.KorgeLibraryGradlePlugin
-import korlibs.korge.gradle.Orientation
 import korlibs.korge.gradle.korge
 import korlibs.korge.gradle.typedresources.GenerateTypedResourcesTask
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import org.jetbrains.kotlin.gradle.plugin.ide.dependencyResolvers.IdeNativePlatformDependencyResolver.konanDistribution
 
 apply<KorgeGradlePlugin>()
 apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
