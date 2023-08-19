@@ -21,7 +21,15 @@ tasks.create<Delete>("disableKRes") {
 }
 
 tasks.all {
-    if (name.contains("mingwX64", ignoreCase = true)) onlyIf { false }
+    if (name.contains("mingwX64", ignoreCase = true)) {
+        File("$projectDir/$name").createNewFile()
+        onlyIf { false }
+    }
+}
+
+tasks.create<Delete>("disableBootstrap") {
+    dependsOn(tasks.named("compileKotlinMingwX64"))
+    beforeEvaluate { File(projectDir, "build/platforms/native-desktop/bootstrap.kt").delete() }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
