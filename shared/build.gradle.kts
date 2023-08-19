@@ -20,7 +20,7 @@ tasks.create<Delete>("disableKRes") {
     afterEvaluate { File(buildDir, "KR/KR.kt").delete() }
 }
 
-tasks.whenTaskAdded {
+tasks.all {
     if (name.contains("mingw64", ignoreCase = true)) onlyIf { false }
 }
 
