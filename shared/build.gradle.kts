@@ -20,9 +20,7 @@ korge {
 
 tasks.create<Delete>("disableKRes") {
     dependsOn(tasks.withType<GenerateTypedResourcesTask>())
-    afterEvaluate {
-        val file = File(buildDir, "KR/KR.kt").delete()
-    }
+    afterEvaluate { File(buildDir, "KR/KR.kt").delete() }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
