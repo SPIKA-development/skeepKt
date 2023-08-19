@@ -21,7 +21,7 @@ tasks.create<Delete>("disableKRes") {
 }
 
 tasks.whenTaskAdded {
-    if (name.contains("mingw64")) onlyIf { false }
+    if (name.contains("mingw64", ignoreCase = true)) onlyIf { false }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

@@ -86,22 +86,6 @@ kotlin {
 
 }
 
-configurations.filter { listOf(
-    "linuxArm64", "linuxArm64Main", "linuxX64", "linuxX64Main"
-).contains(it.name) }.forEach {
-    it.exclude(libs.kotlinx.uuid.asProvider())
-    it.exclude(libs.kotlinx.serialization)
-    it.exclude(libs.ktor.client.auth)
-    it.exclude(libs.ktor.client.content.negotation)
-    it.exclude(libs.ktor.serialization.kotlinx.json)
-
-}
-
-fun Configuration.exclude(provider: Provider<MinimalExternalModuleDependency>) {
-    val module = provider.get().module
-    exclude(group = module.group, module = module.name)
-}
-
 fun SourceDirectorySet.addSrcDir(file: File) {
     setSrcDirs(srcDirs.apply { add(file) })
 }
