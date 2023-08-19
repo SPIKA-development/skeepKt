@@ -1,5 +1,6 @@
 import korlibs.image.bitmap.Bitmap
 import korlibs.image.bitmap.BmpSlice
+import korlibs.image.bitmap.resized
 import korlibs.image.font.Font
 import korlibs.image.font.WoffFont
 import korlibs.image.font.readWoffFont
@@ -10,7 +11,6 @@ import korlibs.korge.Korge
 import korlibs.korge.scene.SceneContainer
 import korlibs.korge.scene.sceneContainer
 import korlibs.korge.view.*
-import korlibs.korge.view.ktree.readKTree
 import korlibs.math.geom.Anchor
 import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
@@ -26,14 +26,16 @@ lateinit var logo: BmpSlice
 lateinit var font: WoffFont
 lateinit var boldFont: WoffFont
 lateinit var profile: Bitmap
+lateinit var d_card: Bitmap
 suspend fun startMain() {
     globalCoroutineContext = coroutineContext
     logo = resourcesVfs["images/logo.png"].readBitmapSlice()
     font = resourcesVfs["fonts/NanumSquareNeoTTF-dEb.woff"].readWoffFont()
     boldFont = resourcesVfs["fonts/NanumSquareNeoTTF-eHv.woff"].readWoffFont()
     profile = resourcesVfs["images/profile.png"].readBitmap()
+    d_card = resourcesVfs["images/cards/d_card.png"].readBitmap()
     Korge(
-        windowSize = Size(512, 512),
+        windowSize = Size(960, 540),
         title = "Skeep",
         icon = "images/logo.png",
         scaleMode = ScaleMode.NO_SCALE,
