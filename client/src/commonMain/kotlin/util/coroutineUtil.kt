@@ -1,8 +1,11 @@
 package util
 
+import globalCoroutineContext
 import korlibs.io.async.launchImmediately
 import kotlinx.coroutines.CoroutineScope
-import org.koin.mp.KoinPlatform.getKoin
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlin.coroutines.CoroutineContext
 
-fun launchNow(context: CoroutineContext = getKoin().get<CoroutineContext>(), callback: suspend () -> Unit) = CoroutineScope(context).launchImmediately(callback)
+@DelicateCoroutinesApi
+fun launchNow(context: CoroutineContext = GlobalScope.coroutineContext, callback: suspend () -> Unit) = CoroutineScope(context).launchImmediately(callback)

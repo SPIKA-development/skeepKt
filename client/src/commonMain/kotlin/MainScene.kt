@@ -6,8 +6,6 @@ import korlibs.korge.scene.Scene
 import korlibs.korge.style.*
 import korlibs.korge.view.*
 import network.ServerClosedPacket
-import org.koin.core.qualifier.named
-import org.koin.mp.KoinPlatform.getKoin
 import ui.loadingMenu
 import ui.loginMenuView
 import util.ColorPalette
@@ -15,7 +13,7 @@ import util.launchNow
 import util.transform
 
 val styler: ViewStyles.() -> Unit = {
-    textFont = getKoin().get<Font>()
+    textFont = font
     textAlignment = TextAlignment.MIDDLE_CENTER
     textSize = 100f
     textColor = ColorPalette.text
@@ -38,7 +36,7 @@ class MainScene : Scene() {
         }
 
         screen.container {
-            text(getKoin().get<String>(named("version")), textSize = 30f) {
+            text(version, textSize = 30f) {
             }.zIndex(100)
             zIndex(100)
         }.transform {

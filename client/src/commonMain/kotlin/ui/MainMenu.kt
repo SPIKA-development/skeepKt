@@ -17,9 +17,8 @@ import korlibs.math.geom.*
 import korlibs.time.DateTime
 import korlibs.time.milliseconds
 import korlibs.time.seconds
+import logo
 import network.*
-import org.koin.core.qualifier.named
-import org.koin.mp.KoinPlatform.getKoin
 import scene
 import styler
 import screen
@@ -145,7 +144,7 @@ fun MainMenuState.room(room: ViewedRoom) {
     rooms.customUiButton(size = buttonSize) button@{
         transform { size(buttonSize) }
         isRoom = true
-        val logo = getKoin().get<BmpSlice>(named("logo"))
+        val logo = logo
         uiImage(size = logoSize, bitmap = logo, scaleMode = ScaleMode.FIT).transform {
             size(logoSize)
                 .centerYOn(this@button)

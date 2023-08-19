@@ -1,4 +1,7 @@
+import korlibs.image.bitmap.Bitmap
+import korlibs.image.bitmap.BmpSlice
 import korlibs.image.font.Font
+import korlibs.image.font.WoffFont
 import korlibs.image.font.readWoffFont
 import korlibs.image.format.readBitmap
 import korlibs.image.format.readBitmapSlice
@@ -10,30 +13,24 @@ import korlibs.korge.view.*
 import korlibs.math.geom.Anchor
 import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
-import org.koin.core.qualifier.named
-import org.koin.dsl.bind
-import org.koin.dsl.module
-import org.koin.mp.KoinPlatform.getKoin
 import util.ColorPalette
+import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
 lateinit var scene: SceneContainer
 lateinit var screen: FixedSizeContainer
+lateinit var globalCoroutineContext: CoroutineContext
 
+lateinit var logo: BmpSlice
+lateinit var font: WoffFont
+lateinit var boldFont: WoffFont
+lateinit var profile: Bitmap
 suspend fun startMain() {
-    val coroutineContext = coroutineContext
-    val logo = resourcesVfs["images/logo.png"].readBitmapSlice()
-    val font = resourcesVfs["fonts/NanumSquareNeoTTF-dEb.woff"].readWoffFont()
-    val boldFont = resourcesVfs["fonts/NanumSquareNeoTTF-eHv.woff"].readWoffFont()
-    val profile = resourcesVfs["images/profile.png"].readBitmap()
-    getKoin().loadModules(listOf(module {
-        single { coroutineContext }
-        single(named("bold")) { boldFont } bind Font::class
-        single { font } bind Font::class
-        single(named("logo")) { logo }
-        single(named("profile")) { profile }
-
-    }))
+    globalCoroutineContext = coroutineContext
+    logo = resourcesVfs["images/logo.png"].readBitmapSlice()
+    font = resourcesVfs["fonts/NanumSquareNeoTTF-dEb.woff"].readWoffFont()
+    boldFont = resourcesVfs["fonts/NanumSquareNeoTTF-eHv.woff"].readWoffFont()
+    profile = resourcesVfs["images/profile.png"].readBitmap()
     Korge(
         windowSize = Size(512, 512),
         title = "Skeep",
@@ -46,7 +43,4 @@ suspend fun startMain() {
         scene = sceneContainer()
         scene.changeTo({ MainScene() })
     }
-}
-
-inline fun <reified T : List<*>> onAdd(hook: List<T>) {
 }

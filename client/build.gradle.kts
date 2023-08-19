@@ -29,17 +29,23 @@ korge {
     ))
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
 kotlin {
     jvm()
     sourceSets {
         val commonMain by getting {
-            kotlin.addSrcDir(File(project(":shared").projectDir, "src/commonMain/kotlin"))
+//            kotlin.addSrcDir(File(project(":shared").projectDir, "src/commonMain/kotlin"))
             dependencies {
                 api("de.cketti.unicode:kotlin-codepoints-deluxe:0.6.1")
                 api(project(":deps"))
+                api(project(":shared"))
                 api(libs.kotlinx.uuid)
                 api(libs.kotlinx.serialization)
-                api(libs.koin)
                 api(libs.ktor.client.auth)
                 api(libs.ktor.client.content.negotation)
                 api(libs.ktor.serialization.kotlinx.protobuf)
@@ -88,7 +94,6 @@ kotlin {
     ).contains(it.name) }.forEach {
         it.exclude(libs.kotlinx.uuid.asProvider())
         it.exclude(libs.kotlinx.serialization)
-        it.exclude(libs.koin)
         it.exclude(libs.ktor.client.auth)
         it.exclude(libs.ktor.client.content.negotation)
         it.exclude(libs.ktor.serialization.kotlinx.json)

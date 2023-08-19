@@ -25,6 +25,7 @@ import styler
 import screen
 import ui.custom.*
 import ui.custom.UITextInput
+import username
 import util.ColorPalette
 import util.launchNow
 import util.transform

@@ -1,5 +1,7 @@
 package network
 
+import currentUrl
+import engine
 import io.ktor.client.*
 import io.ktor.client.engine.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -10,10 +12,9 @@ import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.protobuf.*
 import io.ktor.websocket.*
 import kotlinx.serialization.protobuf.ProtoBuf
-import org.koin.mp.KoinPlatform
+import sessionId
+import username
 
-val currentUrl get() = KoinPlatform.getKoin().get<URLProvider>().url
-val clientEngine get() = KoinPlatform.getKoin().get<ClientEngineFactory>().getEngine()
 
 private var clientInst: HttpClient? = null
 suspend fun websocket(): WebSocketSession = client().webSocketSession(currentUrl.httpToWs())
@@ -45,7 +46,7 @@ suspend fun client(): HttpClient = run {
 
 
 suspend fun initializeClient() = run {
-    clientInst = HttpClient(clientEngine) {
+    clientInst = HttpClient(engine) {
         install(io.ktor.client.plugins.websocket.WebSockets) {
             contentConverter = converter
         }

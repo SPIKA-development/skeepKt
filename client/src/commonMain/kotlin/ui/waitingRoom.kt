@@ -28,10 +28,10 @@ import korlibs.math.geom.Size
 import korlibs.time.seconds
 import kotlinx.uuid.UUID
 import network.*
-import org.koin.core.qualifier.named
-import org.koin.mp.KoinPlatform.getKoin
+import profile
 import styler
 import screen
+import sessionUUID
 import ui.custom.*
 import ui.custom.UITextInput
 import util.ColorPalette
@@ -177,7 +177,7 @@ fun WaitingRoomState.profileView(name: String, container: Container) {
         transform { size(profileSize) }
 //        solidRect(size, color = Colors.WHITE)
         setExtra("profile", name)
-        val imageBitmap = getKoin().get<Bitmap>(named("profile")).toBMP32().apply {
+        val imageBitmap = profile.toBMP32().apply {
             updateColors {
                 if (it != Colors.TRANSPARENT) {
                     val t = ColorPalette.hover

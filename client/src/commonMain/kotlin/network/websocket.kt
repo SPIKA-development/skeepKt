@@ -10,7 +10,9 @@ import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import network.ServerPacket.*
 import MainScene
+import currentUrl
 import scene
+import sessionUUID
 import ui.loadingMenu
 import util.launchNow
 
