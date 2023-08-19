@@ -41,8 +41,7 @@ suspend fun startMain() {
         scaleAnchor = Anchor.TOP_LEFT,
         backgroundColor = ColorPalette.background
     ) {
-//        scene = sceneContainer()
-//        scene.changeTo({ MainScene() })
-        addChild(resourcesVfs["scene.ktree"].readKTree(views))
+        scene = sceneContainer()
+        scene.changeTo({ MainScene() })
     }
 }
