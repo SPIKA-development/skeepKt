@@ -14,8 +14,6 @@ plugins {
 korge {
     targetJvm()
     targetJs()
-    targetDesktopCross()
-    targetDesktop()
     targetAndroid()
 }
 
