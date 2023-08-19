@@ -17,7 +17,7 @@ korge {
     targetDesktop()
     targetAndroid()
     entryPoint = "runMain"
-    orientation = Orientation.DEFAULT
+    orientation = Orientation.LANDSCAPE
     icon = File(projectDir, "src/commonMain/resources/images/logo.png"
             .replace("/", File.separator))
     exeBaseName = "Skeep"

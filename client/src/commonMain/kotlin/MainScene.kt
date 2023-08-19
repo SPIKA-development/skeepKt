@@ -6,8 +6,10 @@ import korlibs.korge.scene.Scene
 import korlibs.korge.style.*
 import korlibs.korge.view.*
 import network.ServerClosedPacket
+import ui.createRoomMenu
 import ui.loadingMenu
 import ui.loginMenuView
+import ui.newCreateRoomMenu
 import util.ColorPalette
 import util.launchNow
 import util.transform
@@ -44,10 +46,7 @@ class MainScene : Scene() {
             positionY(screen.height - height - padding)
             positionX(padding*2)
         }
-//        screen.createRoomMenu()
-//        loginMenu(sceneContainer)
-//        screen.loginMenu()
-        loginMenuView()
-//        MainMenuState().mainMenu()
+        newCreateRoomMenu()
+//        loginMenuView()
     }
 }

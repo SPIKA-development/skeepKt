@@ -10,6 +10,7 @@ import korlibs.korge.Korge
 import korlibs.korge.scene.SceneContainer
 import korlibs.korge.scene.sceneContainer
 import korlibs.korge.view.*
+import korlibs.korge.view.ktree.readKTree
 import korlibs.math.geom.Anchor
 import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
@@ -40,7 +41,8 @@ suspend fun startMain() {
         scaleAnchor = Anchor.TOP_LEFT,
         backgroundColor = ColorPalette.background
     ) {
-        scene = sceneContainer()
-        scene.changeTo({ MainScene() })
+//        scene = sceneContainer()
+//        scene.changeTo({ MainScene() })
+        addChild(resourcesVfs["scene.ktree"].readKTree(views))
     }
 }

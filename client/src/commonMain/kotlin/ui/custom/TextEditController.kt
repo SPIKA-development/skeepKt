@@ -278,6 +278,7 @@ class TextEditController(
         //val endX = getCaretAtIndex(range.endExclusive)
         val xOffset =
             if (textView.styles.textAlignment.horizontal.equals(HorizontalAlign.CENTER)) textView.width/2f else 0f
+        val xOffsetPoint = Point(xOffset, 0)
         val array = PointArrayList(if (range.isEmpty()) 2 else (range.length + 1) * 2)
         if (range.isEmpty()) {
             val last = (range.first >= this.text.length)
@@ -286,19 +287,19 @@ class TextEditController(
             val normal = caret.normal(0f) * (2.0 * sign)
             val p0 = caret.points.first
             val p1 = caret.points.last
-            array.add(p0 + Point(xOffset, 0))
-            array.add(p1 + Point(xOffset, 0))
-            array.add(p0 + normal + Point(xOffset, 0))
-            array.add(p1 + normal + Point(xOffset, 0))
+            array.add(p0 + xOffsetPoint)
+            array.add(p1 + xOffsetPoint)
+            array.add(p0 + normal + xOffsetPoint)
+            array.add(p1 + normal + xOffsetPoint)
         } else {
             for (n in range.first..range.last + 1) {
                 val caret = getCaretAtIndex(n)
-                array.add(caret.points.first)
-                array.add(caret.points.last)
+                array.add(caret.points.first + xOffsetPoint)
+                array.add(caret.points.last + xOffsetPoint)
                 //println("caret[$n]=$caret")
             }
         }
-        caret.colorMul = Colors.WHITE
+        caret.color = Colors.WHITE
         caret.pointsList = listOf(array)
         /*
         caret.x = startX.x0

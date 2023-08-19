@@ -3,10 +3,7 @@ package ui
 import korlibs.event.Key
 import korlibs.image.color.Colors
 import korlibs.image.text.TextAlignment
-import korlibs.korge.input.keys
-import korlibs.korge.input.mouse
-import korlibs.korge.input.onClick
-import korlibs.korge.input.onMouseDragCloseable
+import korlibs.korge.input.*
 import korlibs.korge.style.styles
 import korlibs.korge.style.textAlignment
 import korlibs.korge.style.textColor
@@ -96,7 +93,7 @@ fun loginMenuView(loginMenuState: LoginMenuState = LoginMenuState()): Unit = scr
             var joinOnce = false
             joinButton.apply {
                 onClick { join() }
-                onMouseDragCloseable { launchNow { join() } }
+                onMouseDrag { launchNow { join() } }
                 keys { down(Key.ENTER) { join() } }
             }
 

@@ -55,7 +55,11 @@ class UITextInput(parent: View, hint: String, initialText: String = " ", size: S
             }
             alpha = 0.5f
         }
-    )
+    ).apply {
+        caretContainer.transform {
+            caretContainer.alignY(this@UITextInput, 0.75, false)
+        }
+    }
 
     //init { uiScrollable {  } }
 
