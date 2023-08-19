@@ -2,11 +2,27 @@ import korlibs.korge.gradle.KorgeGradlePlugin
 import korlibs.korge.gradle.KorgeLibraryGradlePlugin
 import korlibs.korge.gradle.Orientation
 import korlibs.korge.gradle.korge
+import korlibs.korge.gradle.typedresources.GenerateTypedResourcesTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
+apply<KorgeGradlePlugin>()
 apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 plugins {
     kotlin("multiplatform")
+}
+
+korge {
+    targetJvm()
+    targetJs()
+    targetDesktopCross()
+    targetDesktop()
+}
+
+tasks.create<Delete>("disableKRes") {
+    dependsOn(tasks.withType<GenerateTypedResourcesTask>())
+    afterEvaluate {
+        val file = File(buildDir, "KR/KR.kt").delete()
+    }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
@@ -16,7 +32,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 }
 
 kotlin {
-    jvm()
     sourceSets {
         val commonMain by getting {
             dependencies {

@@ -7,7 +7,6 @@ apply<KorgeGradlePlugin>()
 apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 plugins {
     kotlin("multiplatform")
-    id("com.android.application")
 }
 
 korge {
@@ -31,7 +30,7 @@ korge {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
 }
 
@@ -44,11 +43,6 @@ kotlin {
                 api("de.cketti.unicode:kotlin-codepoints-deluxe:0.6.1")
                 api(project(":deps"))
                 api(project(":shared"))
-                api(libs.kotlinx.uuid)
-                api(libs.kotlinx.serialization)
-                api(libs.ktor.client.auth)
-                api(libs.ktor.client.content.negotation)
-                api(libs.ktor.serialization.kotlinx.protobuf)
             }
         }
         val jsMain by getting {
@@ -89,18 +83,19 @@ kotlin {
             }
         }
     }
-    configurations.filter { listOf(
-        "linuxArm64", "linuxArm64Main", "linuxX64", "linuxX64Main"
-    ).contains(it.name) }.forEach {
-        it.exclude(libs.kotlinx.uuid.asProvider())
-        it.exclude(libs.kotlinx.serialization)
-        it.exclude(libs.ktor.client.auth)
-        it.exclude(libs.ktor.client.content.negotation)
-        it.exclude(libs.ktor.serialization.kotlinx.json)
 
-    }
 }
 
+configurations.filter { listOf(
+    "linuxArm64", "linuxArm64Main", "linuxX64", "linuxX64Main"
+).contains(it.name) }.forEach {
+    it.exclude(libs.kotlinx.uuid.asProvider())
+    it.exclude(libs.kotlinx.serialization)
+    it.exclude(libs.ktor.client.auth)
+    it.exclude(libs.ktor.client.content.negotation)
+    it.exclude(libs.ktor.serialization.kotlinx.json)
+
+}
 
 fun Configuration.exclude(provider: Provider<MinimalExternalModuleDependency>) {
     val module = provider.get().module
