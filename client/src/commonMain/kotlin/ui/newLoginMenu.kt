@@ -50,7 +50,7 @@ fun loginMenuView(loginMenuState: LoginMenuState = LoginMenuState()): Unit = scr
         styles(styler)
         uiVerticalStack(adjustSize = false, padding = loginMenuPadding) {
             uiText("스키프").transform { centerXOn(this@loginMenu) }
-            uiSpacing(size = Size(0f, loginMenuPadding/2))
+            uiSpacing(size = Size(0f, loginMenuPadding))
             uiContainer(blockSize) nickNameInput@{
                 transform { centerXOn(this@loginMenu) }
                 styles.textSize = styles.textSize * 0.95f
@@ -70,6 +70,7 @@ fun loginMenuView(loginMenuState: LoginMenuState = LoginMenuState()): Unit = scr
                     radius = RectCorners(borderSize * 2)
                 }.zIndex(1)
             }
+            uiSpacing(size = Size(0f, loginMenuPadding/4))
             customUiButton(size = loginButtonSize) {
                 uiMaterialLayer(size) {
                     shadowColor = Colors.TRANSPARENT
@@ -85,7 +86,7 @@ fun loginMenuView(loginMenuState: LoginMenuState = LoginMenuState()): Unit = scr
                 joinButton = uiText(" 입장 >").transform { centerOn(this@customUiButton) }
                 transform { centerXOn(this@loginMenu) }
             }
-            uiSpacing(size = Size(0f, loginMenuPadding))
+            uiSpacing(size = Size(0f, loginMenuPadding/2))
             warningText = uiText("") {
                 styles(styler)
                 styles.textSize = styles.textSize * 0.5f
