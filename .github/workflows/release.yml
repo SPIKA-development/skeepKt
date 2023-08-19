@@ -40,11 +40,18 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Buid
+      - name: Build
         run: |
           ./gradlew :client:jsBrowserProductionWebpack
       - name: server.zip
         run: ./gradlew :server:distZip
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+      - name: Build apk
+        run: ./gradlew :client:installAndroidRelease
+      - name: rename .apk
+        run: cd client/build/outputs/apk/release && mv client-release.apk client.apk
 
       - name: release
         uses: marvinpinto/action-automatic-releases@latest
@@ -52,7 +59,7 @@ jobs:
           title: "Build #${{github.run_number}}"
           automatic_release_tag: "${{github.run_number}}"
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          files: server/build/distributions/server.zip
+          files: server/build/distributions/server.zip client/build/outputs/apk/release/client.apk
           prerelease: false
       - shell: bash
         run: |

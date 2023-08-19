@@ -4,17 +4,9 @@ import korlibs.korge.gradle.Orientation
 import korlibs.korge.gradle.korge
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
-apply<KorgeGradlePlugin>()
 apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 plugins {
     kotlin("multiplatform")
-    id("com.android.application")
-}
-
-korge {
-    targetJvm()
-    targetJs()
-    targetAndroid()
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
