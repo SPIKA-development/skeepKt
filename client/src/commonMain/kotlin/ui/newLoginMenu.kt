@@ -33,7 +33,7 @@ import util.transform
 
 class LoginMenuState {
     val loginMenuPadding = 40f
-    val blockSize get() = Size(500, 140)
+    val blockSize get() = Size(650, 140)
     val loginMenuSize get() = Size(500, 500)
     val loginButtonSize = Size(blockSize.width*0.65f, blockSize.height)
     lateinit var input: UITextInput
