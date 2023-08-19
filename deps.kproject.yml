@@ -1,3 +1,2 @@
-dependencies:
-  - "https://github.com/korlibs/korge-ext/tree/main/korge-ktree"
+#dependencies:
 #  - https://github.com/korlibs/korge-fleks/tree/main/fleks

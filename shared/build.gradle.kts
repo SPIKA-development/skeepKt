@@ -22,13 +22,12 @@ tasks.create<Delete>("disableKRes") {
 
 tasks.all {
     if (name.contains("mingwX64", ignoreCase = true)) {
-        onlyIf { false }
+        onlyIf { it.name == "compileKotlinMingwX64" }
     }
 }
 
 tasks.create<Delete>("disableBootstrap") {
     mustRunAfter("compileKotlinMingwX64")
-//    dependsOn(tasks.getByName("compileKotlinMingwX64"))
     beforeEvaluate { File(projectDir, "build/platforms/native-desktop/bootstrap.kt").delete() }
 }
 
