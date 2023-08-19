@@ -5,7 +5,6 @@ import event.PacketEvent
 import korlibs.datastructure.getExtra
 import korlibs.datastructure.setExtra
 import korlibs.event.Key
-import korlibs.image.bitmap.Bitmap
 import korlibs.image.bitmap.slice
 import korlibs.image.color.Colors
 import korlibs.image.color.RGBA
@@ -113,7 +112,7 @@ suspend fun WaitingRoomState.waitingRoom(room: UUID) {
                     isDone = true
                     requestLeaveRoom(sessionUUID)
                     waitingRoom.removeFromParent()
-                    MainMenuState().mainMenu()
+                    MainMenuState().serverListMenu()
                 }
             }
         }

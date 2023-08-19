@@ -7,4 +7,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlin.coroutines.CoroutineContext
 
-fun launchNow(context: CoroutineContext = GlobalScope.coroutineContext, callback: suspend () -> Unit) = CoroutineScope(context).launchImmediately(callback)
+fun launchNow(context: CoroutineContext = GlobalScope.coroutineContext, callback: suspend () -> Unit) {
+    CoroutineScope(context).launchImmediately(callback)
+}

@@ -3,11 +3,9 @@ package ui
 import io.ktor.http.*
 import korlibs.datastructure.getExtra
 import korlibs.datastructure.setExtra
-import korlibs.image.bitmap.BmpSlice
 import korlibs.image.color.Colors
 import korlibs.korge.input.mouse
 import korlibs.korge.input.onClick
-import korlibs.korge.render.SDFShaders.pow
 import korlibs.korge.style.styles
 import korlibs.korge.time.timers
 import korlibs.korge.ui.*
@@ -22,7 +20,6 @@ import network.*
 import scene
 import styler
 import screen
-import screen
 import ui.custom.customUiButton
 import ui.custom.customUiScrollable
 import ui.custom.customUiText
@@ -30,7 +27,6 @@ import util.ColorPalette
 import util.transform
 import kotlin.math.PI
 import kotlin.math.pow
-import kotlin.math.sqrt
 
 class MainMenuState {
     val elementRatio = 9
@@ -52,7 +48,7 @@ class MainMenuState {
 
 }
 
-suspend fun MainMenuState.mainMenu() {
+suspend fun MainMenuState.serverListMenu() {
 
     screen.uiContainer mainMenu@{
         serverList = this

@@ -35,7 +35,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 }
 
 kotlin {
-    jvm()
     sourceSets {
         val commonMain by getting {
 //            kotlin.addSrcDir(File(project(":shared").projectDir, "src/commonMain/kotlin"))
@@ -43,6 +42,11 @@ kotlin {
                 api("de.cketti.unicode:kotlin-codepoints-deluxe:0.6.1")
                 api(project(":deps"))
                 api(project(":shared"))
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                kotlin("test")
             }
         }
         val jsMain by getting {

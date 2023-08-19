@@ -22,7 +22,6 @@ tasks.create<Delete>("disableKRes") {
 
 tasks.all {
     if (name.contains("mingwX64", ignoreCase = true)) {
-        File("$projectDir/temp/$name").createNewFile()
         onlyIf { false }
     }
 }

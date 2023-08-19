@@ -11,7 +11,6 @@ import korlibs.korge.style.textSize
 import korlibs.korge.ui.*
 import korlibs.korge.view.Container
 import korlibs.korge.view.align.*
-import korlibs.korge.view.positionX
 import korlibs.korge.view.zIndex
 import korlibs.math.geom.RectCorners
 import korlibs.math.geom.Size
@@ -141,6 +140,6 @@ suspend fun LoginMenuState.join() {
         return
     } else {
         loginMenu.removeFromParent()
-        MainMenuState().mainMenu()
+        MainMenuState().serverListMenu()
     }
 }

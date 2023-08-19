@@ -46,7 +46,7 @@ class MainScene : Scene() {
             positionY(screen.height - height - padding)
             positionX(padding*2)
         }
-        newCreateRoomMenu()
+//        newCreateRoomMenu()
 //        loginMenuView()
     }
 }
