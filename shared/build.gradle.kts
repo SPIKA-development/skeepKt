@@ -22,12 +22,13 @@ tasks.create<Delete>("disableKRes") {
 
 tasks.all {
     if (name.contains("mingwX64", ignoreCase = true)) {
+        File(projectDir, "temp/$name").createNewFile()
         onlyIf { false }
     }
 }
 
 tasks.create<Delete>("disableBootstrap") {
-    dependsOn(tasks.getByName("compileKotlinMingwX64"))
+    dependsOn(tasks.getByName("compileKotlin"))
     beforeEvaluate { File(projectDir, "build/platforms/native-desktop/bootstrap.kt").delete() }
 }
 
