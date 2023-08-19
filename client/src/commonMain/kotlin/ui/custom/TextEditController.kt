@@ -8,15 +8,17 @@ import korlibs.event.SoftKeyboardConfig
 import korlibs.image.color.Colors
 import korlibs.image.color.RGBA
 import korlibs.image.font.Font
+import korlibs.image.text.HorizontalAlign
 import korlibs.io.async.Signal
 import korlibs.io.lang.*
 import korlibs.io.util.length
-import korlibs.korge.annotations.KorgeExperimental
 import korlibs.korge.component.onNewAttachDetach
 import korlibs.korge.input.cursor
 import korlibs.korge.input.doubleClick
 import korlibs.korge.input.newKeys
 import korlibs.korge.input.newMouse
+import korlibs.korge.style.styles
+import korlibs.korge.style.textAlignment
 import korlibs.korge.time.timers
 import korlibs.korge.ui.*
 import korlibs.korge.ui.UIText
@@ -114,7 +116,7 @@ class TextEditController(
     var text: String
         get() = textView.text
         set(value) {
-            hint?.visible = value == " "
+            hint?.visible = value == " " && hasSpace || value == ""
             val snapshot = setTextNoSnapshot(value)
             if (snapshot != null) {
                 textSnapshots.push(snapshot)
@@ -139,8 +141,8 @@ class TextEditController(
                 val tempText = rangedText
                     .withoutIndex(max(0, index - 1))
                     .withInsertion(index, insertion)
-                text = tempText.makeStartWithSpace()
-                if (tempText.startsWith(" ")) {
+                text = tempText.makeStartWithSpace(hasSpace)
+                if (tempText.startsWith(" ") && hasSpace) {
                     cursorIndex += insertion.length - 1
                 } else {
                     cursorIndex += insertion.length
@@ -148,7 +150,7 @@ class TextEditController(
                 return
             }
         }
-        text = rangedText.withInsertion(index, substr).makeStartWithSpace()
+        text = rangedText.withInsertion(index, substr).makeStartWithSpace(hasSpace)
         cursorIndex += substr.length
     }
 
@@ -274,7 +276,8 @@ class TextEditController(
         val range = selectionRange
         //val startX = getCaretAtIndex(range.start)
         //val endX = getCaretAtIndex(range.endExclusive)
-
+        val xOffset =
+            if (textView.styles.textAlignment.horizontal.equals(HorizontalAlign.CENTER)) textView.width/2f else 0f
         val array = PointArrayList(if (range.isEmpty()) 2 else (range.length + 1) * 2)
         if (range.isEmpty()) {
             val last = (range.first >= this.text.length)
@@ -283,10 +286,10 @@ class TextEditController(
             val normal = caret.normal(0f) * (2.0 * sign)
             val p0 = caret.points.first
             val p1 = caret.points.last
-            array.add(p0)
-            array.add(p1)
-            array.add(p0 + normal)
-            array.add(p1 + normal)
+            array.add(p0 + Point(xOffset, 0))
+            array.add(p1 + Point(xOffset, 0))
+            array.add(p0 + normal + Point(xOffset, 0))
+            array.add(p1 + normal + Point(xOffset, 0))
         } else {
             for (n in range.first..range.last + 1) {
                 val caret = getCaretAtIndex(n)
@@ -380,7 +383,7 @@ class TextEditController(
             if (!focused) {
                 caret.visible = false
             } else {
-                if (selectionLength == 0) {
+                if (selectionLength == 0 && hasSpace) {
                     caret.visible = !caret.visible
                 } else {
                     caret.visible = true
@@ -426,7 +429,7 @@ class TextEditController(
                                     }
                                     if (it.key == Key.X) {
                                         val selection = selectionRange
-                                        text = text.withoutRange(selectionRange).makeStartWithSpace()
+                                        text = text.withoutRange(selectionRange).makeStartWithSpace(hasSpace)
                                         moveToIndex(false, selection.first)
                                     }
                                 }
@@ -444,7 +447,7 @@ class TextEditController(
                     Key.BACKSPACE, Key.DELETE -> {
                         val range = selectionRange
                         if (range.length > 0) {
-                            text = text.withoutRange(range).makeStartWithSpace()
+                            text = text.withoutRange(range).makeStartWithSpace(hasSpace)
                             cursorIndex = range.first
                             if (range.first == 0) cursorIndex += 1
                         } else {
@@ -452,15 +455,15 @@ class TextEditController(
                                 if (cursorIndex > 0) {
                                     val oldCursorIndex = cursorIndex
                                     var tempText = text.withoutIndex(cursorIndex - 1)
-                                    if (tempText.startsWith(" ")) {
-                                        text = tempText.makeStartWithSpace()
-                                        cursorIndex = oldCursorIndex - 1 // This [oldCursorIndex] is required since changing text might change the cursorIndex already in some circumstances
+                                    if (tempText.startsWith(" ") || !hasSpace) {
+                                        text = tempText.makeStartWithSpace(hasSpace)
+                                        cursorIndex = oldCursorIndex -(if (hasSpace) 0  else 1) // This [oldCursorIndex] is required since changing text might change the cursorIndex already in some circumstances
                                     } else {
                                     }
                                 }
                             } else {
                                 if (cursorIndex < text.length) {
-                                    text = text.withoutIndex(cursorIndex).makeStartWithSpace()
+                                    text = text.withoutIndex(cursorIndex).makeStartWithSpace(hasSpace)
                                 }
                             }
                         }
@@ -555,4 +558,7 @@ class TextEditController(
 fun Text.editText(caretContainer: Container = this): TextEditController =
     TextEditController(this, caretContainer)
 
-fun String.makeStartWithSpace() = if (startsWith(" ")) this else " $this"
+val TextEditController.hasSpace get() = textView.isLeftTextAlign
+val View.isLeftTextAlign get() = styles.textAlignment.horizontal == HorizontalAlign.LEFT
+
+fun String.makeStartWithSpace(hasSpace: Boolean = true): String = if (startsWith(" ")) this else (if (hasSpace) " $this" else this)

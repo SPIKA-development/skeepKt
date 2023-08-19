@@ -11,10 +11,12 @@ import korlibs.korge.style.styles
 import korlibs.korge.ui.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.alignX
+import korlibs.korge.view.align.alignY
 import korlibs.korge.view.align.centerYOn
 import korlibs.math.geom.Margin
 import korlibs.math.geom.Rectangle
 import korlibs.math.geom.Size
+import screen
 import util.transform
 
 inline fun Container.customUiTextInput(
@@ -22,13 +24,13 @@ inline fun Container.customUiTextInput(
     initialText: String = " ",
     size: Size = Size(128, 24),
     block: @ViewDslMarker UITextInput.() -> Unit = {}
-): UITextInput = UITextInput(hint, initialText, size)
+): UITextInput = UITextInput(parent = this, hint, initialText, size)
     .addTo(this).also { block(it) }
 
 /**
  * Simple Single Line Text Input
  */
-class UITextInput(hint: String, initialText: String = " ", size: Size = Size(128, 24)) :
+class UITextInput(parent: View, hint: String, initialText: String = " ", size: Size = Size(128, 24)) :
     UIView(size),
     //UIFocusable,
     ISoftKeyboardConfig by SoftKeyboardConfig() {
@@ -42,14 +44,14 @@ class UITextInput(hint: String, initialText: String = " ", size: Size = Size(128
     var skin by bg::viewRenderer
     private val container = clipContainer(Size.ZERO)
     //private val container = fixedSizeContainer(width - 4.0, height - 4.0).position(2.0, 3.0)
-    private val textView = customUiText(initialText, this.size)
+    private val textView = customUiText(if (!parent.isLeftTextAlign && initialText == " ") "" else initialText, this.size)
     //private val textView = container.text(initialText, 16.0, color = Colors.BLACK, font = DefaultTtfFont)
     val controller = TextEditController(textView.textView, uiContainer(textView.size), this, bg = bg,
-        hint = textView.uiText(" $hint") {
+        hint = textView.uiText(hint.makeStartWithSpace(parent.isLeftTextAlign)) {
             transform {
                 this.size = this@UITextInput.size
                 textView.size = this.size
-                centerYOn(textView).alignX(textView, 0.1, true)
+                centerYOn(textView).alignX(textView, if (parent.isLeftTextAlign) 0.1 else 0.0, true)
             }
             alpha = 0.5f
         }

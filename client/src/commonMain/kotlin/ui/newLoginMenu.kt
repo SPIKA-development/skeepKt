@@ -54,12 +54,12 @@ fun loginMenuView(loginMenuState: LoginMenuState = LoginMenuState()): Unit = scr
             uiContainer(blockSize) nickNameInput@{
                 transform { centerXOn(this@loginMenu) }
                 styles.textSize = styles.textSize * 0.95f
-                styles.textAlignment = TextAlignment.MIDDLE_LEFT
-                input = customUiTextInput("닉네임", size = size) {
-                }.zIndex(2).transform {
+                styles.textAlignment = TextAlignment.MIDDLE_CENTER
+                input = customUiTextInput("닉네임", size = size).zIndex(2).transform {
+                    styles.textAlignment = TextAlignment.MIDDLE_CENTER
                     size = this@nickNameInput.size
                     controller.caretContainer.alignY(this, 0.75, false)
-                    positionX(loginMenuPadding / 2)
+//                    positionX(loginMenuPadding / 2)
                 }
                 uiMaterialLayer {
                     transform { size = input.size }
